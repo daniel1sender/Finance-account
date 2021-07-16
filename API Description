@@ -1,0 +1,24 @@
+-----------------------------DOMINIO DA APLICAÇÃO----------------------------------
+Entities:
+Account: id, name, cpf, secret, balance, created_at
+Login: cpf, secret 
+Transfer: id, account_origin_id, account_destination_id, amount, created_at
+Token: idToken, AccountId, created_at
+
+Use cases:
+
+Account:
+- Create Account
+Create Account method - func (r reference) nameFunc (a Account) error{return nil}
+- Get Accounts - func (r refence) nameFunc (a Account) []Accounts, err{return if err!=nil{[]Accounts, err}
+- Get Balance Account - func (r refence) nameFunc (id string) int, err{return if err!=nil{[]Accounts, err}
+
+Colocar as contas maps onde a chave é o id e o valor a conta
+
+Login:
+- Login (enter)
+- Verify Token
+
+Transfer:
+- Get transfer by Account
+- Make Transfer 
