@@ -15,10 +15,10 @@ func TestCreateAccount(t *testing.T) {
 	t.Run("If the Cpf does not have 11 digits the account is not created", func(t *testing.T) {
 		// preparação
 		account := domain.Account{
-			Id:      "1",
+			Id:      1,
 			Name:    "daniel",
 			Cpf:     "1333330",
-			Balance: 0,
+			Balance: 15,
 		}
 		expectedErrMessage := fmt.Sprintf("CPF %s is not correct", account.Cpf)
 
@@ -37,10 +37,10 @@ func TestCreateAccount(t *testing.T) {
 
 	t.Run("If the Cpf has 11 digits the account is created", func(t *testing.T) {
 		account := domain.Account{
-			Id:      "2",
+			Id:      2,
 			Name:    "joão",
 			Cpf:     "12345678910",
-			Balance: 0,
+			Balance: 10,
 		}
 
 		expectedErrMessage := fmt.Sprintf("CPF %s is not correct", account.Cpf)
@@ -55,39 +55,19 @@ func TestCreateAccount(t *testing.T) {
 			t.Errorf("err must be %s but it is %s", err, expectedErrMessage)
 		}
 	})
-}
+} 
 
-func TestGetAccounts(t *testing.T) {
-	t.Run("If any account was created", func(t *testing.T) {
-
-		AccountsList := domain.GetAccounts()
-
-		if AccountsList != nil {
-			t.Errorf("No account created")
-		}
-	})
-
-	t.Run("If accounts was created", func(t *testing.T) {
-
-		AccountsList := domain.GetAccounts()
-
-		if AccountsList == nil {
-			t.Errorf("Accounts created")
-		}
-
-	})
-}
 
 func TestGetBalanceById(t *testing.T) {
 	t.Run("if the id is not found", func(t *testing.T) {
 
-		id := "5"
-		expectedErrMessage := fmt.Sprintf("No id %s found", id)
+		id := 5
+		expectedErrMessage := fmt.Sprintf("no id %d found", id)
 
 		BalanceAccount, err := domain.GetBalanceById(id)
 
 		if BalanceAccount != 0 {
-			t.Errorf("BalanceAccount must be nill but it is %s", id)
+			t.Errorf("BalanceAccount must be nill but it is %d", id)
 		}
 
 		if err.Error() != expectedErrMessage {
@@ -98,18 +78,54 @@ func TestGetBalanceById(t *testing.T) {
 
 	t.Run("if the id it is found", func(t *testing.T) {
 
-		id := "3"
+		id := 2
 
-		expectedErrMessage := fmt.Sprintf("No id %s found", id)
+		fmt.Printf("A account was created %v\n", domain.AccountsMap)
+
+		//expectedErrMessage := fmt.Sprintf("no id %d found", id)
 
 		BalanceAccount, err := domain.GetBalanceById(id)
 
 		if BalanceAccount == 0 {
-			t.Errorf("BalanceAccount must be %d but it is nil", BalanceAccount)
+			t.Errorf("BalanceAccount must be %g but it is nil", BalanceAccount)
 		}
 
-		if err.Error() == expectedErrMessage {
-			t.Errorf("err must be nil but it is %s", expectedErrMessage)
+		if err != nil {
+			t.Errorf("err must be nil")
 		}
 	})
 }
+
+
+func TestGetAccounts(t *testing.T) {
+	//limpar o map
+	//numero de contas estar zero
+	//testar com o tamanho da lista
+
+	t.Run("If accounts was created", func(t *testing.T) {
+
+		AccountsList := domain.GetAccounts()
+
+		if len(AccountsList) == 0 {
+			t.Errorf("Accounts created")
+		}
+
+	})
+
+	t.Run("should return a empty list when no account was created", func(t *testing.T) {
+
+		domain.AccountsMap = make(map[int]domain.Account)
+
+		fmt.Println(domain.AccountsMap)
+
+		AccountsList := domain.GetAccounts()
+
+
+		if len(AccountsList) != 0 {
+			t.Errorf("No account created")
+		}
+	})
+
+
+} 
+
