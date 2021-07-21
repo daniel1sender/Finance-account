@@ -15,7 +15,7 @@ func TestMakeTransfer(t *testing.T) {
 			Amount:10,
 		}
 
-/* 		account1 := domain.Account{
+ 		account1 := domain.Account{
 			Id:      2,
 			Name:    "joão",
 			Cpf:     "12345678910",
@@ -30,11 +30,11 @@ func TestMakeTransfer(t *testing.T) {
 		}
 		 
 		domain.AccountsMap[1] = account1
-		domain.AccountsMap[2] = account2 */
+		domain.AccountsMap[2] = account2 
 
 		transferMap, err := domain.MakeTransfer(transfer)
 
-		if transferMap != nil {
+		if len(transferMap) == 0 {
 			t.Errorf("transferMap should not be empty %v", transferMap)
 		}
 
@@ -91,8 +91,8 @@ func TestMakeTransfer(t *testing.T) {
 
 		transfer := domain.Transfer{
 			Id:"1",
-			Account_origin_id:2 ,
-			Account_destinantion_id:1,
+			Account_origin_id:6 ,
+			Account_destinantion_id:4,
 			Amount:10,
 		}
 		
@@ -104,7 +104,7 @@ func TestMakeTransfer(t *testing.T) {
 			t.Errorf("transferMap should be nil but it is %v", transferMap)
 		}
 
-		if err.Error() != expectedErrMessage{
+		if err!=nil && err.Error() != expectedErrMessage{
 			t.Errorf("err menssage should be %s but it is %s", expectedErrMessage, err)
 		}
 
