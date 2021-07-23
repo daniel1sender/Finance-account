@@ -25,7 +25,7 @@ func MakeTransfer(t Transfer)(map[int]Transfer, error){
 	if t.Account_origin_id == t.Account_destinantion_id{
 		return nil, fmt.Errorf("transfer is to the same id")
 	}
-
+	//posso substituir isso usando o comma ok no mapa para checar se o id existe no mapa
 	for _, v := range AccountsMap{
 		if t.Account_origin_id == v.Id{
 			count++

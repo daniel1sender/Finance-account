@@ -22,10 +22,11 @@ func CreateAccount(a Account) (map[int]Account, error) {
 		return nil, fmt.Errorf("CPF %s is not correct", a.Cpf)
 	}
 
+	a.Id = AccountNumber
 	AccountsMap[AccountNumber] = a
 	AccountNumber++
 
-	return AccountsMap, fmt.Errorf("cpf is %s correct", a.Cpf)
+	return AccountsMap, nil
 }
 
 func GetAccounts() []Account {
@@ -52,3 +53,36 @@ func GetBalanceById(id int) (float64, error) {
 	}
 	return 0, fmt.Errorf("no id %d found", id)
 }
+
+func AccountTransfer(t Transfer)(Account, Account, error) {
+	//aqui preciso alterar o valor da conta e não do map
+
+	fmt.Println("TRANSFER ACCOUNT")
+
+	origin := t.Account_origin_id
+	destination := t.Account_destinantion_id
+	amount := t.Amount
+fmt.Println("origin: ", origin, "destination: ", destination)
+
+	balanceOrigin := AccountsMap[origin].Balance
+	balanceDestination := AccountsMap[destination].Balance
+	fmt.Println("BalanceOrigin: ", balanceOrigin, "BalanceDestination: ", balanceDestination)
+
+	if (balanceOrigin - amount) < 0 {
+		return AccountsMap[origin], AccountsMap[destination], fmt.Errorf("the origin account does not have enough balance")
+	}
+
+	balanceOrigin -= amount
+	balanceDestination += amount
+
+	accountOrigin := AccountsMap[origin]
+	accountDestination := AccountsMap[destination]
+
+	accountOrigin.Balance = balanceOrigin
+	accountDestination.Balance = balanceDestination
+
+	AccountsMap[origin] = accountOrigin
+	AccountsMap[destination] = accountDestination
+
+	return accountOrigin, accountDestination, nil
+}  

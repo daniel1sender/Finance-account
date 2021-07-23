@@ -8,7 +8,7 @@ import (
 func TestMakeTransfer(t *testing.T) {
 
 	t.Run("Should return transfersMap when amount is diferrent from zero", func(t *testing.T){
-		transfer := domain.Transfer{
+		transfer1 := domain.Transfer{
 			Id:"1",
 			Account_origin_id:2 ,
 			Account_destinantion_id:3,
@@ -29,10 +29,10 @@ func TestMakeTransfer(t *testing.T) {
 			Balance: 10,
 		}
 		 
-		domain.AccountsMap[1] = account1
-		domain.AccountsMap[2] = account2 
+		domain.AccountsMap[0] = account1
+		domain.AccountsMap[1] = account2 
 
-		transferMap, err := domain.MakeTransfer(transfer)
+		transferMap, err := domain.MakeTransfer(transfer1)
 
 		if len(transferMap) == 0 {
 			t.Errorf("transferMap should not be empty %v", transferMap)

@@ -24,16 +24,20 @@ func main() {
 		fmt.Printf("Mapa de Contas: %+v\n", accountMap)
 	} 
 
-	listAccounts := domain.GetAccounts()
+	//listAccounts := domain.GetAccounts()
 
-	fmt.Println(len(listAccounts))
+	//fmt.Println(len(listAccounts))
 	//fmt.Println(domain.GetBalanceById("3"))
 
 	/* ---------------------------------------------------------------------------- */
-	fmt.Println("make transfer:")
+	fmt.Println("\nmake transfer:")
 
-	transfer := domain.Transfer{"1", 3, 4, 20}
+	transfer := domain.Transfer{"1", 0, 1, 2}
 	
 	fmt.Println(domain.MakeTransfer(transfer))
+
+	fmt.Println(domain.AccountTransfer(transfer))
+
+	/* ----------------------------------------------------------------------- */
 	
 }
