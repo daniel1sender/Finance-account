@@ -36,7 +36,7 @@ func main() {
 	
 	fmt.Println(domain.MakeTransfer(transfer))
 
-	fmt.Println(domain.AccountTransfer(transfer))
+	//fmt.Println(domain.AccountTransfer(transfer))
 
 	/* ----------------------------------------------------------------------- */
 	

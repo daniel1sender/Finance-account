@@ -17,7 +17,6 @@ var transferNumber = 0
 func MakeTransfer(t Transfer)(map[int]Transfer, error){
 	count := 0
 
-
 	if t.Amount == 0 {
 		return nil, fmt.Errorf("amount equal zero")
 	}
@@ -25,21 +24,17 @@ func MakeTransfer(t Transfer)(map[int]Transfer, error){
 	if t.Account_origin_id == t.Account_destinantion_id{
 		return nil, fmt.Errorf("transfer is to the same id")
 	}
-	//posso substituir isso usando o comma ok no mapa para checar se o id existe no mapa
-	for _, v := range AccountsMap{
-		if t.Account_origin_id == v.Id{
-			count++
-		}
-		if t.Account_destinantion_id == v.Id{
-			count++
-		}
-	}
 
-	if count == 2{
+	if _, ok := AccountsMap[t.Account_origin_id]; ok {
+		count++
+	}
+	if _, ok := AccountsMap[t.Account_destinantion_id]; ok{
+		count++
+	}
+	if count ==2 {
 		transfersMap[transferNumber] = t
 		transferNumber++
-		return transfersMap, nil 
+		return transfersMap, nil
 	}
-
 	return nil, fmt.Errorf("id not found")
 }
