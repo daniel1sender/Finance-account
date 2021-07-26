@@ -1,6 +1,8 @@
 package domain
 
-import "fmt"
+import (
+	"fmt"
+)
 
 type Transfer struct {
 	Id                      string
@@ -12,29 +14,26 @@ type Transfer struct {
 
 var transfersMap = make(map[int]Transfer)
 var transferNumber = 0
+
 //Essa função é similar a função createAccount
 
-func MakeTransfer(t Transfer)(map[int]Transfer, error){
-	count := 0
+func MakeTransfer(t Transfer) (map[int]Transfer, error) {
+	//count := 0
 
 	if t.Amount == 0 {
 		return nil, fmt.Errorf("amount equal zero")
 	}
 
-	if t.Account_origin_id == t.Account_destinantion_id{
+	if t.Account_origin_id == t.Account_destinantion_id {
 		return nil, fmt.Errorf("transfer is to the same id")
 	}
 
-	if _, ok := AccountsMap[t.Account_origin_id]; ok {
-		count++
+	if CheckAccounts(t.Account_origin_id) != nil && CheckAccounts(t.Account_destinantion_id) != nil {
+		return nil, fmt.Errorf("id not found")
 	}
-	if _, ok := AccountsMap[t.Account_destinantion_id]; ok{
-		count++
-	}
-	if count ==2 {
-		transfersMap[transferNumber] = t
-		transferNumber++
-		return transfersMap, nil
-	}
-	return nil, fmt.Errorf("id not found")
+
+	transfersMap[transferNumber] = t
+	transferNumber++
+	return transfersMap, nil
+
 }

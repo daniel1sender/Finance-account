@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
- 	accounts := []domain.Account{
+	accounts := []domain.Account{
 		{1, "daniel", "123", 10},
 		{2, "erika", "12364", 0},
 		{3, "daniel", "12345678910", 10},
@@ -22,7 +22,7 @@ func main() {
 		}
 		// para saber mais sobre fmt: https://golang.org/pkg/fmt/
 		fmt.Printf("Mapa de Contas: %+v\n", accountMap)
-	} 
+	}
 
 	//listAccounts := domain.GetAccounts()
 
@@ -33,11 +33,11 @@ func main() {
 	fmt.Println("\nmake transfer:")
 
 	transfer := domain.Transfer{"1", 0, 1, 2}
-	
+
 	fmt.Println(domain.MakeTransfer(transfer))
 
 	//fmt.Println(domain.AccountTransfer(transfer))
 
 	/* ----------------------------------------------------------------------- */
-	
+
 }

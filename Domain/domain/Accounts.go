@@ -54,6 +54,13 @@ func GetBalanceById(id int) (float64, error) {
 	return 0, fmt.Errorf("no id %d found", id)
 }
 
+func CheckAccounts(id int)(error){
+	if _, ok := AccountsMap[id]; ok{
+		return nil
+	}
+	return fmt.Errorf("no account found with id %d", id)
+}
+
 func AccountTransfer(t Transfer)(Account, Account, error) {
 	//aqui preciso alterar o valor da conta e não do map
 
@@ -86,3 +93,4 @@ fmt.Println("origin: ", origin, "destination: ", destination)
 
 	return accountOrigin, accountDestination, nil
 }  
+
