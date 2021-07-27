@@ -54,14 +54,16 @@ func GetBalanceById(id int) (float64, error) {
 	return 0, fmt.Errorf("no id %d found", id)
 }
 
-func CheckAccounts(id int)(error){
-	if _, ok := AccountsMap[id]; ok{
-		return nil
+func CheckAccounts(id ...int) error {
+	for _, v := range id {
+		if _, ok := AccountsMap[v]; !ok {
+			return fmt.Errorf("no account found with id %d", id)
+		}
 	}
-	return fmt.Errorf("no account found with id %d", id)
+	return nil
 }
 
-func AccountTransfer(t Transfer)(Account, Account, error) {
+func AccountTransfer(t Transfer) (Account, Account, error) {
 	//aqui preciso alterar o valor da conta e não do map
 
 	fmt.Println("TRANSFER ACCOUNT")
@@ -69,7 +71,7 @@ func AccountTransfer(t Transfer)(Account, Account, error) {
 	origin := t.Account_origin_id
 	destination := t.Account_destinantion_id
 	amount := t.Amount
-fmt.Println("origin: ", origin, "destination: ", destination)
+	fmt.Println("origin: ", origin, "destination: ", destination)
 
 	balanceOrigin := AccountsMap[origin].Balance
 	balanceDestination := AccountsMap[destination].Balance
@@ -92,5 +94,4 @@ fmt.Println("origin: ", origin, "destination: ", destination)
 	AccountsMap[destination] = accountDestination
 
 	return accountOrigin, accountDestination, nil
-}  
-
+}

@@ -34,6 +34,10 @@ func main() {
 
 	transfer := domain.Transfer{"1", 0, 1, 2}
 
+	fmt.Println("\nCheck Accounts:")
+	fmt.Println(domain.CheckAccounts(transfer.Account_origin_id, transfer.Account_destinantion_id))
+	fmt.Println("\n")
+
 	fmt.Println(domain.MakeTransfer(transfer))
 
 	//fmt.Println(domain.AccountTransfer(transfer))

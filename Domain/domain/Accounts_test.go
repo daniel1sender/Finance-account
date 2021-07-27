@@ -55,8 +55,7 @@ func TestCreateAccount(t *testing.T) {
 			t.Errorf("err must be %s but it is %s", err, expectedErrMessage)
 		}
 	})
-} 
-
+}
 
 func TestGetBalanceById(t *testing.T) {
 	t.Run("if the id is not found", func(t *testing.T) {
@@ -96,7 +95,6 @@ func TestGetBalanceById(t *testing.T) {
 	})
 }
 
-
 func TestGetAccounts(t *testing.T) {
 	//limpar o map
 	//numero de contas estar zero
@@ -120,15 +118,43 @@ func TestGetAccounts(t *testing.T) {
 
 		AccountsList := domain.GetAccounts()
 
-
 		if len(AccountsList) != 0 {
 			t.Errorf("No account created")
 		}
 	})
-} 
+}
 
- func TestAccountTransfer(t *testing.T){
-	t.Run("Should return two maps when the transfer is made", func(t *testing.T){
+func TestCheckAccounts(t *testing.T) {
+
+	t.Run("should return nil when accounts exist", func(t *testing.T) {
+
+		account := domain.Account{
+			Id:      2,
+			Name:    "joão",
+			Cpf:     "12345678910",
+			Balance: 20,
+		}
+		domain.AccountsMap[0] = account
+		id := 0
+		result := domain.CheckAccounts(id)
+
+		if result != nil {
+			t.Errorf("result should be nil but it is errMessage")
+		}
+	})
+
+	t.Run("should return nil when accounts exist", func(t *testing.T) {
+		id := 5
+		result := domain.CheckAccounts(id)
+
+		if result == nil {
+			t.Errorf("result should be err message but it is nil")
+		}
+	})
+}
+
+func TestAccountTransfer(t *testing.T) {
+	t.Run("Should return two maps when the transfer is made", func(t *testing.T) {
 
 		account1 := domain.Account{
 			Id:      2,
@@ -147,19 +173,19 @@ func TestGetAccounts(t *testing.T) {
 		domain.AccountsMap[0] = account1
 		domain.AccountsMap[1] = account2
 
-		transfer := domain.Transfer{"1", 0, 1, 1,}
+		transfer := domain.Transfer{"1", 0, 1, 1}
 
 		originEmptyAccount, destinationEmptyAccount := domain.Account{}, domain.Account{}
 
-		originAccount, destinationAccount, err:= domain.AccountTransfer(transfer)
+		originAccount, destinationAccount, err := domain.AccountTransfer(transfer)
 
 		expectedErrMessage := "the origin account does not have enough balance"
 
-		if originAccount == originEmptyAccount{
+		if originAccount == originEmptyAccount {
 			t.Errorf("struct of origin account returned %v should not be empty", originAccount)
 		}
 
-		if destinationAccount == destinationEmptyAccount{
+		if destinationAccount == destinationEmptyAccount {
 			t.Errorf("struct of destination account returned %v should not be empty", destinationAccount)
 		}
 
@@ -168,4 +194,4 @@ func TestGetAccounts(t *testing.T) {
 		}
 
 	})
-} 
+}
