@@ -19,6 +19,11 @@ Colocar as contas maps onde a chave é o id e o valor a conta
 Login:
 - Login (enter)
 - Verify Token
+
+- Incluir o campo na Account para secret e armazenar e depois trabalhar para encriptar o secret (parte de Account) - armazenar o secret encriptado 
+- Bcript serve para encriptar o secret
+- incluir os erros sentinela
+
 --------------------------------------------------------
 Transfer:
 - Get transfer by Account
@@ -32,3 +37,4 @@ transferencia para a mesma conta
 Atualizar os saldos das contas fica no Accounts.go
 
 Criar a transferencia fica no Tranfers.go
+
