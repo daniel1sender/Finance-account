@@ -24,6 +24,8 @@ Login:
 - Bcript serve para encriptar o secret
 - incluir os erros sentinela
 
+
+
 --------------------------------------------------------
 Transfer:
 - Get transfer by Account

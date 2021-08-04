@@ -1,8 +1,6 @@
 package transfers
 
 import (
-	"fmt"
-
 	"exemplo.com/pkg/domain/entities"
 )
 
@@ -22,12 +20,7 @@ func NewTransferUseCase(numberOfTransfers int, storage map[int]entities.Transfer
 }
 
 func (tu *TransferUseCase) MakeTransfer(transfer entities.Transfer) (entities.Transfer, error) {
-	if transfer.Amount <= 0 {
-		return entities.Transfer{}, fmt.Errorf("amount equal zero")
-	}
-	if transfer.Account_origin_id == transfer.Account_destinantion_id {
-		return entities.Transfer{}, fmt.Errorf("transfer is to the same id")
-	}
+
 	transfer.Id = tu.numberOfTransfers
 	tu.storage[tu.numberOfTransfers] = transfer
 	tu.numberOfTransfers++

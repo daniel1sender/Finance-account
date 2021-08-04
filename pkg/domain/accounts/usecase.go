@@ -6,9 +6,6 @@ import (
 	"exemplo.com/pkg/domain/entities"
 )
 
-var AccountNumber int = 0
-var AccountsMap = make(map[int]entities.Account)
-
 type AccountUseCase struct {
 	numberOfAccounts int
 	storage          map[int]entities.Account
@@ -22,9 +19,6 @@ func NewAccountUseCase(numberOfAccounts int, storage map[int]entities.Account) A
 }
 
 func (au AccountUseCase) CreateAccount(account entities.Account) (entities.Account, error) {
-	if len(account.Cpf) != 11 {
-		return entities.Account{}, fmt.Errorf("CPF %s is not correct", account.Cpf)
-	}
 
 	for _, storedAccount := range au.storage {
 		if storedAccount.Cpf == account.Cpf {
@@ -67,22 +61,6 @@ func (au AccountUseCase) CheckAccounts(id ...int) error {
 	}
 	return nil
 }
-
-// # opção 1 - atualizar somente o balance
-// func UpdateAccountBalance(id int, balance int) error
-// amount := 10
-// originAccount := Account{id: 21, balance: 20}
-// destinationAccount := Account{id: 12, balance: 5}
-// UpdateAccountBalance(originAccount.id, originAccount.balance-amount)
-// UpdateAccountBalance(destinationAccount.id, destinatonAccount.balance+amount)
-
-// # opção 2 - atualizar a conta inteira
-// UpdateAccount(originAccount.id, originAccount.balance-amount)
-// UpdateAccount(destinationAccount.id, destinatonAccount.balance+amount)
-
-// Para atualizar devemos alterar o valor do campo balance da conta
-// atualizar uma conta existente
-//saldo não pode ficar negativo
 
 func (au AccountUseCase) UpdateAccountBalance(id int, balance float64) error {
 	account, err := au.GetAccountByID(id)

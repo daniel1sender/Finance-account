@@ -1,10 +1,15 @@
 package main
 
+import (
+	"fmt"
+
+	"exemplo.com/pkg/domain/entities"
+)
+
 func main() {
 
 	//criando duas contas
-
-	//account1 := entities.Account{0, "daniel", "12345678910", 10}
+	fmt.Println(entities.NewAccount(1, "John Doe", "11111111030", "123", 0))
 	//account2 := entities.Account{1, "joão", "12345678910", 0}
 
 	/* 	number := new(int)

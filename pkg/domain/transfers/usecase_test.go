@@ -10,7 +10,13 @@ func TestAccountUseCase_MakeTransfer(t *testing.T) {
 
 	t.Run("Should return a transfer", func(t *testing.T) {
 
-		transfer := entities.Transfer{Id: 0, Account_origin_id: 0, Account_destinantion_id: 1, Amount: 20}
+		transfer := entities.Transfer{
+			Id:                   0,
+			AccountOriginId:      0,
+			AccountDestinationId: 0,
+			Amount:               0,
+			CreatedAt:            time.Time{},
+		}
 		storage := make(map[int]entities.Transfer)
 		TransferUsecase := NewTransferUseCase(0, storage)
 		storage[0] = transfer

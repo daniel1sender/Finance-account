@@ -14,7 +14,8 @@ func TestAccountUseCase_CreateAccount(t *testing.T) {
 		account := entities.Account{Name: "John Doe", Cpf: "11111111030", Balance: 0}
 
 		createdAccount, err := accountUsecase.CreateAccount(account)
-
+		account.Secret = createdAccount.Secret
+//preciso garantir que o secret passado é diferente do hash
 		if createdAccount != account {
 			t.Errorf("expected %+v but got %+v", account, createdAccount)
 		}
