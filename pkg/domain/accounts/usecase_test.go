@@ -11,13 +11,18 @@ func TestAccountUseCase_CreateAccount(t *testing.T) {
 
 		storage := make(map[int]entities.Account)
 		accountUsecase := NewAccountUseCase(0, storage)
-		account := entities.Account{Name: "John Doe", Cpf: "11111111030", Balance: 0}
+		accountEntity := entities.Account{Id: 0, Name: "John Doe", Cpf: "11111111030", Secret: "123", Balance: 10.0}
+		account, err := entities.NewAccount(accountEntity.Id, accountEntity.Name, accountEntity.Cpf, accountEntity.Secret, accountEntity.Balance)
+
+		if err != nil{
+			t.Error("Err to create an new account")
+		}
 
 		createdAccount, err := accountUsecase.CreateAccount(account)
-		account.Secret = createdAccount.Secret
+
 //preciso garantir que o secret passado é diferente do hash
-		if createdAccount != account {
-			t.Errorf("expected %+v but got %+v", account, createdAccount)
+		if createdAccount.Secret == account.Secret {
+			t.Errorf("expected %+v but got %+v", account.Secret, createdAccount.Secret)
 		}
 
 		if err != nil {
@@ -25,7 +30,7 @@ func TestAccountUseCase_CreateAccount(t *testing.T) {
 		}
 	})
 
-	t.Run("should return err when trying to create account with already created cpf", func(t *testing.T) {
+	t.Run("should return err when trying to create account with already created account cpf", func(t *testing.T) {
 
 		storage := make(map[int]entities.Account)
 		currentAccount := entities.Account{Id: 0, Name: "John Doe", Cpf: "11111111030"}

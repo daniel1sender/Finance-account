@@ -1,6 +1,8 @@
 package transfers
 
 import (
+	"fmt"
+
 	"exemplo.com/pkg/domain/entities"
 )
 
@@ -20,6 +22,12 @@ func NewTransferUseCase(numberOfTransfers int, storage map[int]entities.Transfer
 }
 
 func (tu *TransferUseCase) MakeTransfer(transfer entities.Transfer) (entities.Transfer, error) {
+
+	transfer, err := entities.NewTransfer(transfer.Id, transfer.AccountOriginId, transfer.AccountDestinationId, transfer.Amount)
+
+	if err != nil {
+		return entities.Transfer{}, fmt.Errorf("err to create an new transfer")
+	}
 
 	transfer.Id = tu.numberOfTransfers
 	tu.storage[tu.numberOfTransfers] = transfer

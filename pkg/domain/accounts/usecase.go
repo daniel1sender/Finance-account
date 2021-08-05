@@ -26,6 +26,12 @@ func (au AccountUseCase) CreateAccount(account entities.Account) (entities.Accou
 		}
 	}
 
+	account, err := entities.NewAccount(account.Id, account.Name, account.Cpf, account.Secret, account.Balance)
+
+	if err != nil {
+		return entities.Account{}, fmt.Errorf("err to create an new account")
+	}
+
 	account.Id = au.numberOfAccounts
 	au.storage[au.numberOfAccounts] = account
 	au.numberOfAccounts++

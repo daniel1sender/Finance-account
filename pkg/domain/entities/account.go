@@ -30,24 +30,30 @@ func NewAccount(id int, name, cpf, secret string, balance float64) (Account, err
 	}
 
 	return Account{
-		Id:      id,
-		Name:    name,
-		Cpf:     cpf,
-		Secret:  hash,
-		Balance: balance,
+		Id:        id,
+		Name:      name,
+		Cpf:       cpf,
+		Secret:    hash,
+		Balance:   balance,
 		CreatedAt: time.Now().UTC(),
 	}, nil
 }
 
-
-
 //essa função será resposável por criar o hash a partir do secret/password passado.
+//comparar se o hash gerado é diferente do secret
+
 func HashGenerator(secret string) (string, error) {
 
 	hash, err := bcrypt.GenerateFromPassword([]byte(secret), 4)
 
 	if err != nil {
 		return " ", fmt.Errorf("err to generate the hash %s", hash)
+	}
+
+	err = bcrypt.CompareHashAndPassword(hash, []byte(secret))
+
+	if err != nil {
+		return " ", fmt.Errorf("hash: %s equal secret: %s", hash, secret)
 	}
 
 	return string(hash), nil
