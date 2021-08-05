@@ -2,6 +2,7 @@ package accounts
 
 import (
 	"testing"
+	"time"
 
 	"exemplo.com/pkg/domain/entities"
 )
@@ -9,18 +10,24 @@ import (
 func TestAccountUseCase_CreateAccount(t *testing.T) {
 	t.Run("should successfully create an account and return it", func(t *testing.T) {
 
-		storage := make(map[int]entities.Account)
-		accountUsecase := NewAccountUseCase(0, storage)
-		accountEntity := entities.Account{Id: 0, Name: "John Doe", Cpf: "11111111030", Secret: "123", Balance: 10.0}
-		account, err := entities.NewAccount(accountEntity.Id, accountEntity.Name, accountEntity.Cpf, accountEntity.Secret, accountEntity.Balance)
+		storage := make(map[string]entities.Account)
+		accountUsecase := NewAccountUseCase(storage)
+		account, err := entities.NewAccount("John Doe", "11111111030", "123", 10)
 
-		if err != nil{
-			t.Error("Err to create an new account")
+		if err != nil {
+			t.Error("Err should be nil if account was successfully created")
 		}
 
-		createdAccount, err := accountUsecase.CreateAccount(account)
+		createdAccount, err := accountUsecase.CreateAccount("John Doe", "11111111030", "123", 10)
 
-//preciso garantir que o secret passado é diferente do hash
+		if createdAccount == (entities.Account{}) {
+			t.Error("returned account is empty")
+		}
+
+		if createdAccount.CreatedAt == (time.Time{}) {
+			t.Error("returned createAt is empty")
+		}
+
 		if createdAccount.Secret == account.Secret {
 			t.Errorf("expected %+v but got %+v", account.Secret, createdAccount.Secret)
 		}
@@ -28,16 +35,21 @@ func TestAccountUseCase_CreateAccount(t *testing.T) {
 		if err != nil {
 			t.Errorf("expected nil err but got %v", err)
 		}
+
+		//checar se o tempo não é zero(time.Time{}), e se não retorna uma conta fazia
 	})
 
 	t.Run("should return err when trying to create account with already created account cpf", func(t *testing.T) {
 
-		storage := make(map[int]entities.Account)
-		currentAccount := entities.Account{Id: 0, Name: "John Doe", Cpf: "11111111030"}
-		storage[0] = currentAccount
-		accountUsecase := NewAccountUseCase(0, storage)
+		storage := make(map[string]entities.Account)
+		accountUsecase := NewAccountUseCase(storage)
+		account, err := entities.NewAccount("John Doe", "11111111030", "123", 10)
+		if err != nil {
+			t.Error("Err should be nil if account was successfully created")
+		}
+		storage[account.Id] = account
 
-		createdAccount, err := accountUsecase.CreateAccount(currentAccount)
+		createdAccount, err := accountUsecase.CreateAccount("John Doe", "11111111030", "123", 10)
 
 		if createdAccount != (entities.Account{}) {
 			t.Errorf("expected blank account, but got %+v", createdAccount)
@@ -53,15 +65,18 @@ func TestAccountUseCase_GetBalanceById(t *testing.T) {
 
 	t.Run("should return an account when id is found", func(t *testing.T) {
 
-		account := entities.Account{Id: 0, Name: "John Doe", Cpf: "11111111030", Balance: 10.0}
-		storage := make(map[int]entities.Account)
-		AccountUseCase := NewAccountUseCase(0, storage)
-		storage[0] = account
+		storage := make(map[string]entities.Account)
+		AccountUseCase := NewAccountUseCase(storage)
+		account, err := entities.NewAccount("John Doe", "11111111030", "123", 10)
+		if err != nil {
+			t.Error("Err should be nil if account was successfully created")
+		}
+		storage[account.Id] = account
 
 		getBalance, err := AccountUseCase.GetBalanceById(account.Id)
 
 		if getBalance == 0 {
-			t.Errorf("Balance account %g should be different from 0", getBalance)
+			t.Errorf("Balance account %d should be different from 0", getBalance)
 		}
 
 		if err != nil {
@@ -72,13 +87,13 @@ func TestAccountUseCase_GetBalanceById(t *testing.T) {
 
 	t.Run("should return a blank account when id isn't found", func(t *testing.T) {
 
-		storage := make(map[int]entities.Account)
-		AccountUseCase := NewAccountUseCase(0, storage)
+		storage := make(map[string]entities.Account)
+		AccountUseCase := NewAccountUseCase(storage)
 
-		getBalance, err := AccountUseCase.GetBalanceById(1)
+		getBalance, err := AccountUseCase.GetBalanceById(" ")
 
 		if getBalance != 0 {
-			t.Errorf("Balance Account should be 0 but it is %g", getBalance)
+			t.Errorf("Balance Account should be 0 but it is %d", getBalance)
 		}
 
 		if err == nil {
@@ -93,10 +108,13 @@ func TestAccountUseCase_GetAccounts(t *testing.T) {
 
 	t.Run("should return a full list of accounts", func(t *testing.T) {
 
-		account := entities.Account{Id: 0, Name: "John Doe", Cpf: "11111111030"}
-		storage := make(map[int]entities.Account)
-		AccountUseCase := NewAccountUseCase(0, storage)
-		storage[0] = account
+		storage := make(map[string]entities.Account)
+		AccountUseCase := NewAccountUseCase(storage)
+		account, err := entities.NewAccount("John Doe", "11111111030", "123", 10)
+		if err != nil {
+			t.Error("Err should be nil if account was successfully created")
+		}
+		storage[account.Id] = account
 
 		getAccounts := AccountUseCase.GetAccounts()
 
@@ -108,8 +126,8 @@ func TestAccountUseCase_GetAccounts(t *testing.T) {
 
 	t.Run("should return an empty list", func(t *testing.T) {
 
-		storage := make(map[int]entities.Account)
-		AccountUseCase := NewAccountUseCase(0, storage)
+		storage := make(map[string]entities.Account)
+		AccountUseCase := NewAccountUseCase(storage)
 
 		getAccounts := AccountUseCase.GetAccounts()
 
@@ -125,13 +143,18 @@ func TestAccountUseCase_CheckAccounts(t *testing.T) {
 
 	t.Run("should return nil when accounts have already been created", func(t *testing.T) {
 
-		account := entities.Account{Id: 0, Name: "John Doe", Cpf: "11111111030"}
-		storage := make(map[int]entities.Account)
-		AccountUseCase := NewAccountUseCase(0, storage)
-		storage[0] = account
-		err := AccountUseCase.CheckAccounts(account.Id)
-
+		storage := make(map[string]entities.Account)
+		AccountUseCase := NewAccountUseCase(storage)
+		account, err := entities.NewAccount("John Doe", "11111111030", "123", 10)
 		if err != nil {
+			t.Error("err should be nil if account was successfully created")
+		}
+
+		storage[account.Id] = account
+
+		CheckAccountsError := AccountUseCase.CheckAccounts(account.Id)
+
+		if CheckAccountsError != nil {
 			t.Error("expected nil when account exists")
 		}
 
@@ -139,11 +162,16 @@ func TestAccountUseCase_CheckAccounts(t *testing.T) {
 
 	t.Run("should return an err message when id isn't found", func(t *testing.T) {
 
-		storage := make(map[int]entities.Account)
-		AccountUseCase := NewAccountUseCase(0, storage)
-		err := AccountUseCase.CheckAccounts(0)
+		storage := make(map[string]entities.Account)
+		AccountUseCase := NewAccountUseCase(storage)
+		account, err := entities.NewAccount("John Doe", "11111111030", "123", 10)
+		if err != nil {
+			t.Error("err should be nil if account was successfully created")
+		}
 
-		if err == nil {
+		CheckAccountsError := AccountUseCase.CheckAccounts(account.Id)
+
+		if CheckAccountsError == nil {
 			t.Error("expected a err message")
 		}
 
@@ -155,25 +183,31 @@ func TestAccountUseCase_UpdateAccountBalance(t *testing.T) {
 
 	t.Run("Should return nil when account was updated", func(t *testing.T) {
 
-		account := entities.Account{Id: 0, Name: "John Doe", Cpf: "11111111030", Balance: 0}
-		storage := make(map[int]entities.Account)
-		AccountUseCase := NewAccountUseCase(0, storage)
-		storage[0] = account
+		storage := make(map[string]entities.Account)
+		AccountUseCase := NewAccountUseCase(storage)
+		account, err := entities.NewAccount("John Doe", "11111111030", "123", 10)
+		if err != nil {
+			t.Error("err should be nil if account was successfully created")
+		}
+		storage[account.Id] = account
 
-		ErrUpdateAccount := AccountUseCase.UpdateAccountBalance(account.Id, 20.0)
+		UpdateAccountError := AccountUseCase.UpdateAccountBalance(account.Id, 20.0)
 
-		if ErrUpdateAccount != nil {
-			t.Errorf("Expected nil but got %s", ErrUpdateAccount)
+		if UpdateAccountError != nil {
+			t.Errorf("Expected nil but got %s", UpdateAccountError)
 		}
 
 	})
 
 	t.Run("Should return an err massage when account don't exists", func(t *testing.T) {
 
-		storage := make(map[int]entities.Account)
-		AccountUseCase := NewAccountUseCase(0, storage)
-
-		ErrUpdateAccount := AccountUseCase.UpdateAccountBalance(0, 20.0)
+		storage := make(map[string]entities.Account)
+		AccountUseCase := NewAccountUseCase(storage)
+		account, err := entities.NewAccount("John Doe", "11111111030", "123", 10)
+		if err != nil {
+			t.Error("err should be nil if account was successfully created")
+		}
+		ErrUpdateAccount := AccountUseCase.UpdateAccountBalance(account.Id, 20.0)
 
 		if ErrUpdateAccount == nil {
 			t.Error("Expected err message but got nil")
@@ -183,10 +217,13 @@ func TestAccountUseCase_UpdateAccountBalance(t *testing.T) {
 
 	t.Run("Should return an err message when balance account is less than zero", func(t *testing.T) {
 
-		account := entities.Account{Id: 0, Name: "John Doe", Cpf: "11111111030", Balance: -10}
-		storage := make(map[int]entities.Account)
-		AccountUseCase := NewAccountUseCase(0, storage)
-		storage[0] = account
+		storage := make(map[string]entities.Account)
+		AccountUseCase := NewAccountUseCase(storage)
+		account, err := entities.NewAccount("John Doe", "11111111030", "123", -10)
+		if err != nil {
+			t.Error("err should be nil if account was successfully created")
+		}
+		storage[account.Id] = account
 
 		ErrUpdateAccount := AccountUseCase.UpdateAccountBalance(account.Id, account.Balance)
 
@@ -201,10 +238,13 @@ func TestAccountUseCase_GetAccountById(t *testing.T) {
 
 	t.Run("Should return an account when the searched account is found", func(t *testing.T) {
 
-		account := entities.Account{Id: 0, Name: "John Doe", Cpf: "11111111030"}
-		storage := make(map[int]entities.Account)
-		AccountUseCase := NewAccountUseCase(0, storage)
-		storage[0] = account
+		storage := make(map[string]entities.Account)
+		AccountUseCase := NewAccountUseCase(storage)
+		account, err := entities.NewAccount("John Doe", "11111111030", "123", -10)
+		if err != nil {
+			t.Error("err should be nil if account was successfully created")
+		}
+		storage[account.Id] = account
 
 		GetAccountById, err := AccountUseCase.GetAccountByID(account.Id)
 
@@ -220,10 +260,13 @@ func TestAccountUseCase_GetAccountById(t *testing.T) {
 
 	t.Run("Should return an empty account and a err message when account don't exists", func(t *testing.T) {
 
-		storage := make(map[int]entities.Account)
-		AccountUseCase := NewAccountUseCase(0, storage)
-
-		GetAccountById, err := AccountUseCase.GetAccountByID(0)
+		storage := make(map[string]entities.Account)
+		AccountUseCase := NewAccountUseCase(storage)
+		account, err := entities.NewAccount("John Doe", "11111111030", "123", -10)
+		if err != nil {
+			t.Error("err should be nil if account was successfully created")
+		}
+		GetAccountById, err := AccountUseCase.GetAccountByID(account.Id)
 
 		if GetAccountById != (entities.Account{}) {
 			t.Errorf("Expected empty account but got %+v", GetAccountById)

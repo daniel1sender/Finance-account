@@ -10,7 +10,7 @@ type Transfer struct {
 	AccountOriginId      int
 	AccountDestinationId int
 	Amount               float64
-	CreatedAt            time.Time //?
+	CreatedAt            time.Time
 }
 
 func NewTransfer(id, originId, destinationId int, amount float64) (Transfer, error) {

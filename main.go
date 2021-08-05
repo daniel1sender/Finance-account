@@ -9,7 +9,7 @@ import (
 func main() {
 
 	//criando duas contas
-	fmt.Println(entities.NewAccount(1, "John Doe", "11111111030", "123", 0))
+	fmt.Println(entities.NewAccount("John Doe", "11111111030", "123", 0))
 	//account2 := entities.Account{1, "joão", "12345678910", 0}
 
 	/* 	number := new(int)
