@@ -1,9 +1,13 @@
 package transfers
 
 import (
-	"fmt"
+	"errors"
 
 	"exemplo.com/pkg/domain/entities"
+)
+
+var (
+	ErrToCallNewTransfer = errors.New("error to call function NewTransfer")
 )
 
 type TransferUseCase struct {
@@ -16,12 +20,12 @@ func NewTransferUseCase(storage map[string]entities.Transfer) TransferUseCase {
 	}
 }
 
-func (tu *TransferUseCase) MakeTransfer(originId, destinationId int, amount float64) (entities.Transfer, error) {
+func (tu *TransferUseCase) MakeTransfer(originId, destinationId int, amount int) (entities.Transfer, error) {
 
 	transfer, err := entities.NewTransfer(originId, destinationId, amount)
 
 	if err != nil {
-		return entities.Transfer{}, fmt.Errorf("err to create a new transfer")
+		return entities.Transfer{}, ErrToCallNewTransfer
 	}
 
 	tu.storage[transfer.Id] = transfer
