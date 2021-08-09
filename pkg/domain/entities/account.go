@@ -1,6 +1,7 @@
 package entities
 
 import (
+	"errors"
 	"fmt"
 	"time"
 
@@ -8,9 +9,13 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-//passar a função hasheamento para a aprte de entidades
-//time.Now().UTC()
-//mudar o id
+//Letramaiuscula
+//descrição> Err,
+var (
+	ErrInvalidCPF     = errors.New("invalid informed cpf")
+	ErrToGenerateHash = errors.New("could not generate the hash")
+	ErrInvalidName    = errors.New("empty informed name")
+)
 
 type Account struct {
 	Id        string
@@ -23,13 +28,17 @@ type Account struct {
 
 func NewAccount(name, cpf, secret string, balance int) (Account, error) {
 
+	if len(name) == 0 {
+		return Account{}, ErrInvalidName
+	}
+
 	if len(cpf) != 11 {
-		return Account{}, fmt.Errorf("CPF %s is not correct", cpf)
+		return Account{}, ErrInvalidCPF
 	}
 
 	hash, err := HashGenerator(secret)
 	if err != nil {
-		return Account{}, fmt.Errorf("err to generate the hash %s", hash)
+		return Account{}, ErrToGenerateHash
 	}
 
 	id := uuid.NewString()
@@ -45,8 +54,6 @@ func NewAccount(name, cpf, secret string, balance int) (Account, error) {
 }
 
 //essa função será resposável por criar o hash a partir do secret/password passado.
-//comparar se o hash gerado é diferente do secret
-
 func HashGenerator(secret string) (string, error) {
 
 	hash, err := bcrypt.GenerateFromPassword([]byte(secret), 4)
@@ -54,13 +61,6 @@ func HashGenerator(secret string) (string, error) {
 	if err != nil {
 		return " ", fmt.Errorf("err to generate the hash %s", hash)
 	}
-
-	//passar para os testes
-	/* 	err = bcrypt.CompareHashAndPassword(hash, []byte(secret))
-
-	   	if err != nil {
-	   		return " ", fmt.Errorf("hash: %s equal secret: %s", hash, secret)
-	   	} */
 
 	return string(hash), nil
 

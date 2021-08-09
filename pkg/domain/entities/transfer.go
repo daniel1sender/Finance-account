@@ -1,34 +1,43 @@
 package entities
 
 import (
-	"fmt"
+	"errors"
 	"time"
+
+	"github.com/google/uuid"
+)
+
+var (
+	ErrAmountLessThanZero  = errors.New("amount is less then zero")
+	ErrSameAccountTransfer = errors.New("transfer attempt to the same account")
 )
 
 type Transfer struct {
-	Id                   int
+	Id                   string
 	AccountOriginId      int
 	AccountDestinationId int
-	Amount               float64
+	Amount               int
 	CreatedAt            time.Time
 }
 
-func NewTransfer(id, originId, destinationId int, amount float64) (Transfer, error) {
+func NewTransfer(originId, destinationId int, amount int) (Transfer, error) {
 
 	if amount <= 0 {
-		return Transfer{}, fmt.Errorf("amount equal zero")
+		return Transfer{}, ErrAmountLessThanZero
+
+	}
+	if originId == destinationId {
+		return Transfer{}, ErrSameAccountTransfer
 	}
 
-	if originId == destinationId {
-		return Transfer{}, fmt.Errorf("transfer is to the same id")
-	}
+	id := uuid.NewString()
 
 	return Transfer{
 		Id:                   id,
 		AccountOriginId:      originId,
 		AccountDestinationId: destinationId,
 		Amount:               amount,
-		CreatedAt:            time.Time{},
+		CreatedAt:            time.Now().UTC(),
 	}, nil
 
 }
