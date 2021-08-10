@@ -1,6 +1,7 @@
 package entities
 
 import (
+	"errors"
 	"testing"
 )
 
@@ -56,7 +57,19 @@ func TestNewAccount(t *testing.T) {
 			t.Errorf("Expected %s but got %s", name, account.Name)
 		}
 
-		if account.Cpf == cpf {
+		if errors.Is(err, ErrInvalidName) == false {
+			t.Errorf("Expected error %s but got %s", err, ErrInvalidName)
+		}
+
+		if errors.Is(err, ErrInvalidCPF) {
+			t.Errorf("Expected error %s but got %s", err, ErrInvalidCPF)
+		}
+
+		if errors.Is(err, ErrToGenerateHash) {
+			t.Errorf("Expected error %s but got %s", err, ErrToGenerateHash)
+		}
+
+		/* 		if account.Cpf == cpf {
 			t.Errorf("Expected %s but got %s", cpf, account.Cpf)
 		}
 
@@ -70,7 +83,7 @@ func TestNewAccount(t *testing.T) {
 
 		if account.Secret == secret {
 			t.Error("Expected incripted secret")
-		}
+		} */
 
 	})
 
@@ -90,7 +103,19 @@ func TestNewAccount(t *testing.T) {
 			t.Errorf("Expected %s but got %s", name, account.Name)
 		}
 
-		if account.Cpf == cpf {
+		if errors.Is(err, ErrInvalidName) {
+			t.Errorf("Expected error %s but got %s", err, ErrInvalidName)
+		}
+
+		if errors.Is(err, ErrInvalidCPF) == false {
+			t.Errorf("Expected error %s but got %s", err, ErrInvalidCPF)
+		}
+
+		if errors.Is(err, ErrToGenerateHash) {
+			t.Errorf("Expected error %s but got %s", err, ErrToGenerateHash)
+		}
+
+		/* if account.Cpf == cpf {
 			t.Errorf("Expected %s but got %s", cpf, account.Cpf)
 		}
 
@@ -104,7 +129,7 @@ func TestNewAccount(t *testing.T) {
 
 		if account.Secret == secret {
 			t.Error("Expected incripted secret")
-		}
+		}  */
 
 	})
 
@@ -124,28 +149,39 @@ func TestNewAccount(t *testing.T) {
 			t.Errorf("Expected %s but got %s", name, account.Name)
 		}
 
-		if account.Cpf == cpf {
-			t.Errorf("Expected %s but got %s", cpf, account.Cpf)
+		if errors.Is(err, ErrInvalidName) {
+			t.Errorf("Expected error %s but got %s", err, ErrInvalidName)
 		}
 
-		if account.Balance == balance {
-			t.Errorf("Expected %d but got %d", balance, account.Balance)
+		if errors.Is(err, ErrInvalidCPF) == false {
+			t.Errorf("Expected error %s but got %s", err, ErrInvalidCPF)
 		}
 
-		if account.CreatedAt.IsZero() != true {
-			t.Errorf("Expected time different from zero time")
+		if errors.Is(err, ErrToGenerateHash) {
+			t.Errorf("Expected error %s but got %s", err, ErrToGenerateHash)
 		}
+		/* 		if account.Cpf == cpf {
+		   			t.Errorf("Expected %s but got %s", cpf, account.Cpf)
+		   		}
 
-		if account.Secret == secret {
-			t.Error("Expected incripted secret")
-		}
+		   		if account.Balance == balance {
+		   			t.Errorf("Expected %d but got %d", balance, account.Balance)
+		   		}
+
+		   		if account.CreatedAt.IsZero() != true {
+		   			t.Errorf("Expected time different from zero time")
+		   		}
+
+		   		if account.Secret == secret {
+		   			t.Error("Expected incripted secret")
+		   		} */
 
 	})
 
-	t.Run("Should return a empty account and a error message when balance is less or equal zero", func(t *testing.T) {
+	t.Run("Should return a empty account and a error message when balance is less zero", func(t *testing.T) {
 
 		name := "John Doe"
-		cpf := "1111111030"
+		cpf := "11111111030"
 		secret := "123"
 		balance := -1
 
@@ -158,21 +194,37 @@ func TestNewAccount(t *testing.T) {
 			t.Errorf("Expected %s but got %s", name, account.Name)
 		}
 
-		if account.Cpf == cpf {
-			t.Errorf("Expected %s but got %s", cpf, account.Cpf)
+		if errors.Is(err, ErrInvalidName) {
+			t.Errorf("Expected error %s but got %s", err, ErrInvalidName)
 		}
 
-		if account.Balance == balance {
-			t.Errorf("Expected %d but got %d", balance, account.Balance)
+		if errors.Is(err, ErrInvalidCPF) == false {
+			t.Errorf("Expected error %s but got %s", err, ErrInvalidCPF)
 		}
 
-		if account.CreatedAt.IsZero() != true {
-			t.Errorf("Expected time different from zero time")
+		if errors.Is(err, ErrToGenerateHash) {
+			t.Errorf("Expected error %s but got %s", err, ErrToGenerateHash)
 		}
 
-		if account.Secret == secret {
-			t.Error("Expected incripted secret")
+		if errors.Is(err, ErrBalanceLessZero) {
+			t.Errorf("Expected error %s but got %s", err, ErrBalanceLessZero)
 		}
+
+		/* 		if account.Cpf == cpf {
+		   			t.Errorf("Expected %s but got %s", cpf, account.Cpf)
+		   		}
+
+		   		if account.Balance == balance {
+		   			t.Errorf("Expected %d but got %d", balance, account.Balance)
+		   		}
+
+		   		if account.CreatedAt.IsZero() != true {
+		   			t.Errorf("Expected time different from zero time")
+		   		}
+
+		   		if account.Secret == secret {
+		   			t.Error("Expected incripted secret")
+		   		} */
 
 	})
 

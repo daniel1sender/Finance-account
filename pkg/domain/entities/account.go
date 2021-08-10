@@ -12,9 +12,10 @@ import (
 //Letramaiuscula
 //descrição> Err,
 var (
-	ErrInvalidCPF     = errors.New("invalid informed cpf")
-	ErrToGenerateHash = errors.New("could not generate the hash")
-	ErrInvalidName    = errors.New("empty informed name")
+	ErrInvalidCPF      = errors.New("invalid informed cpf")
+	ErrToGenerateHash  = errors.New("could not generate the hash")
+	ErrInvalidName     = errors.New("empty informed name")
+	ErrBalanceLessZero = errors.New("balance account is less than zero")
 )
 
 type Account struct {
@@ -39,6 +40,10 @@ func NewAccount(name, cpf, secret string, balance int) (Account, error) {
 	hash, err := HashGenerator(secret)
 	if err != nil {
 		return Account{}, ErrToGenerateHash
+	}
+
+	if balance < 0 {
+		return Account{}, ErrBalanceLessZero
 	}
 
 	id := uuid.NewString()
