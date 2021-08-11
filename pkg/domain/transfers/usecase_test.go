@@ -20,7 +20,7 @@ func TestAccountUseCase_MakeTransfer(t *testing.T) {
 		}
 
 		if err != nil {
-			t.Errorf("Expected null error but got %s", err)
+			t.Errorf("Expected nil error but got %s", err)
 		}
 
 	})

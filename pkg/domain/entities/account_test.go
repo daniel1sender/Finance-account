@@ -30,7 +30,7 @@ func TestNewAccount(t *testing.T) {
 			t.Errorf("Expected %d but got %d", balance, account.Balance)
 		}
 
-		if account.CreatedAt.IsZero() == true {
+		if account.CreatedAt.IsZero() {
 			t.Errorf("Expected time different from zero time")
 		}
 
@@ -48,9 +48,6 @@ func TestNewAccount(t *testing.T) {
 		balance := 10
 
 		account, err := NewAccount(name, cpf, secret, balance)
-		if err == nil {
-			t.Errorf("Expected %d but got %s", ErrInvalidName, err)
-		}
 
 		if account != (Account{}) {
 			t.Errorf("Expected %+v but got %+v", Account{}, account)
@@ -70,9 +67,6 @@ func TestNewAccount(t *testing.T) {
 		balance := 10
 
 		account, err := NewAccount(name, cpf, secret, balance)
-		if err == nil {
-			t.Errorf("Expected %s but got %s", ErrInvalidCPF, err)
-		}
 
 		if account != (Account{}) {
 			t.Errorf("Expected %v but got %v", account, Account{})
@@ -92,15 +86,12 @@ func TestNewAccount(t *testing.T) {
 		balance := -1
 
 		account, err := NewAccount(name, cpf, secret, balance)
-		if err == nil {
-			t.Errorf("Expected %s but got %s", ErrBalanceLessZero, err)
-		}
 
 		if account != (Account{}) {
 			t.Errorf("Expected %v but got %v", account, Account{})
 		}
 
-		if errors.Is(err, ErrBalanceLessZero) == false {
+		if !errors.Is(err, ErrBalanceLessZero) {
 			t.Errorf("Expected error %s but got %s", ErrBalanceLessZero, err)
 		}
 
