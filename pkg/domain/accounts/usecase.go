@@ -10,7 +10,7 @@ var (
 	ErrExistingCpf         = errors.New("cpf informed already exists")
 	ErrToCallNewAccount    = errors.New("error to call function new account")
 	ErrIdNotFound          = errors.New("account id isn't found")
-	ErrBalanceLessThanZero = errors.New("balance less than zero")
+	ErrBalanceLessThanZero = errors.New("balance account less than zero")
 )
 
 type AccountUseCase struct {
