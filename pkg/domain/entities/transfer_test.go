@@ -66,14 +66,10 @@ func TestNewTransfer(t *testing.T) {
 		destinationId := 1
 		transfer, err := NewTransfer(originId, destinationId, amount)
 		if err == nil {
-			t.Error("Should successfully create a new transfer")
+			t.Errorf("Expected %s but got %s", ErrSameAccountTransfer, err)
 		}
 
-		if errors.Is(err, ErrAmountLessThanZero) {
-			t.Errorf("Expected %d but got %d", ErrSameAccountTransfer, err)
-		}
-
-		if errors.Is(err, ErrSameAccountTransfer) {
+		if !errors.Is(err, ErrSameAccountTransfer) {
 			t.Errorf("Expected error %d but got %d", ErrSameAccountTransfer, err)
 		}
 
@@ -81,26 +77,6 @@ func TestNewTransfer(t *testing.T) {
 			t.Errorf("Expected empty trasnfer but got %+v", transfer)
 		}
 
-		/* 		if transfer.Amount == amount {
-		   			t.Errorf("Should return amount %d but got %d", transfer.Amount, amount)
-		   		}
-
-		   		if transfer.AccountOriginId == originId {
-		   			t.Errorf("Expected originId %d but got %d", originId, transfer.AccountOriginId)
-		   		}
-
-		   		if transfer.AccountDestinationId == destinationId {
-		   			t.Errorf("Expected originId %d but got %d", destinationId, transfer.AccountDestinationId)
-		   		}
-
-		   		if transfer.AccountOriginId != transfer.AccountDestinationId {
-		   			t.Error("Should return a transfer to different accounts")
-		   		}
-
-		   		if transfer.CreatedAt.IsZero() != true {
-		   			t.Error("Expected a time different from zero")
-		   		}
-		*/
 	})
 
 }
