@@ -64,7 +64,7 @@ func HashGenerator(secret string) (string, error) {
 	hash, err := bcrypt.GenerateFromPassword([]byte(secret), 4)
 
 	if err != nil {
-		return " ", fmt.Errorf("err to generate the hash %s", hash)
+		return "", fmt.Errorf("err to generate the hash %s", hash)
 	}
 
 	return string(hash), nil

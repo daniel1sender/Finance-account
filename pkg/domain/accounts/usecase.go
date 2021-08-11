@@ -1,9 +1,16 @@
 package accounts
 
 import (
-	"fmt"
+	"errors"
 
 	"exemplo.com/pkg/domain/entities"
+)
+
+var (
+	ErrExistingCpf         = errors.New("cpf informed already exists")
+	ErrToCallNewAccount    = errors.New("error to call function new account")
+	ErrIdNotFound          = errors.New("account id isn't found")
+	ErrBalanceLessThanZero = errors.New("balance less than zero")
 )
 
 type AccountUseCase struct {
@@ -20,14 +27,13 @@ func (au AccountUseCase) CreateAccount(name, cpf, secret string, balance int) (e
 
 	for _, storedAccount := range au.storage {
 		if storedAccount.Cpf == cpf {
-			return entities.Account{}, fmt.Errorf("account with cpf %s already exists", cpf)
+			return entities.Account{}, ErrExistingCpf
 		}
 	}
 
 	account, err := entities.NewAccount(name, cpf, secret, balance)
-
 	if err != nil {
-		return entities.Account{}, fmt.Errorf("err to create an new account")
+		return entities.Account{}, ErrToCallNewAccount
 	}
 
 	au.storage[account.Id] = account
@@ -42,7 +48,7 @@ func (au AccountUseCase) GetBalanceById(id string) (int, error) {
 			return balance, nil
 		}
 	}
-	return 0, fmt.Errorf("no id %s found", id)
+	return 0, ErrIdNotFound
 }
 
 func (au AccountUseCase) GetAccounts() []entities.Account {
@@ -58,7 +64,7 @@ func (au AccountUseCase) GetAccounts() []entities.Account {
 func (au AccountUseCase) CheckAccounts(id ...string) error {
 	for _, v := range id {
 		if _, ok := au.storage[v]; !ok {
-			return fmt.Errorf("no account found with id %s", id)
+			return ErrIdNotFound
 		}
 	}
 	return nil
@@ -70,7 +76,7 @@ func (au AccountUseCase) UpdateAccountBalance(id string, balance int) error {
 		return err
 	}
 	if balance < 0 {
-		return fmt.Errorf("can't update account with value %d below zero", balance)
+		return ErrBalanceLessThanZero
 	}
 
 	account.Balance = balance
@@ -82,7 +88,7 @@ func (au AccountUseCase) UpdateAccountBalance(id string, balance int) error {
 func (au AccountUseCase) GetAccountByID(id string) (entities.Account, error) {
 	account, ok := au.storage[id]
 	if !ok {
-		return entities.Account{}, fmt.Errorf("account with id %s not found", id)
+		return entities.Account{}, ErrIdNotFound
 	}
 
 	return account, nil

@@ -12,19 +12,6 @@ func main() {
 	fmt.Println(entities.NewAccount("John Doe", "11111111030", "123", 0))
 	//account2 := entities.Account{1, "joão", "12345678910", 0}
 
-	/* 	number := new(int)
-	   	*number = 0
-	   	sto := new(map[int]entities.Account)
-	   	*sto = make(map[int]entities.Account)
-	   	useCase := accounts.NewAccountUseCase(number, sto)
-	   	fmt.Println(*number, *sto)
-
-	   	x, err := useCase.CreateAccount(account1)
-
-	   	fmt.Println(x, err)
-
-	   	fmt.Println(*number, *sto) */
-
 	// Criando a transferência
 
 	//transfer := entities.Transfer{1, 0, 1, 2}

@@ -1,6 +1,7 @@
 package entities
 
 import (
+	"errors"
 	"testing"
 )
 
@@ -13,7 +14,7 @@ func TestNewTransfer(t *testing.T) {
 		destinationId := 2
 		transfer, err := NewTransfer(originId, destinationId, amount)
 		if err != nil {
-			t.Error("Should successfully create a new transfer")
+			t.Errorf("Expected nil error but got %s", err)
 		}
 
 		if transfer.Amount != amount {
@@ -45,27 +46,15 @@ func TestNewTransfer(t *testing.T) {
 		destinationId := 2
 		transfer, err := NewTransfer(originId, destinationId, amount)
 		if err == nil {
-			t.Error("Should successfully create a new transfer")
+			t.Errorf("Expected %s but got %s", ErrAmountLessThanZero, err)
 		}
 
-		if transfer.Amount != amount {
-			t.Errorf("Should return amount %d but got %d", transfer.Amount, amount)
+		if !errors.Is(err, ErrAmountLessThanZero) {
+			t.Errorf("Expected error %d but got %d", ErrAmountLessThanZero, err)
 		}
 
-		if transfer.AccountOriginId == originId {
-			t.Errorf("Expected originId %d but got %d", originId, transfer.AccountOriginId)
-		}
-
-		if transfer.AccountDestinationId == destinationId {
-			t.Errorf("Expected originId %d but got %d", destinationId, transfer.AccountDestinationId)
-		}
-
-		if transfer.AccountOriginId != transfer.AccountDestinationId {
-			t.Error("Should return a transfer to different accounts")
-		}
-
-		if transfer.CreatedAt.IsZero() != true {
-			t.Error("Expected a time different from zero")
+		if transfer != (Transfer{}) {
+			t.Errorf("Expected %+v but got %+v", Transfer{}, transfer)
 		}
 
 	})
@@ -80,26 +69,38 @@ func TestNewTransfer(t *testing.T) {
 			t.Error("Should successfully create a new transfer")
 		}
 
-		if transfer.Amount == amount {
-			t.Errorf("Should return amount %d but got %d", transfer.Amount, amount)
+		if errors.Is(err, ErrAmountLessThanZero) {
+			t.Errorf("Expected %d but got %d", ErrSameAccountTransfer, err)
 		}
 
-		if transfer.AccountOriginId == originId {
-			t.Errorf("Expected originId %d but got %d", originId, transfer.AccountOriginId)
+		if errors.Is(err, ErrSameAccountTransfer) {
+			t.Errorf("Expected error %d but got %d", ErrSameAccountTransfer, err)
 		}
 
-		if transfer.AccountDestinationId == destinationId {
-			t.Errorf("Expected originId %d but got %d", destinationId, transfer.AccountDestinationId)
+		if transfer != (Transfer{}) {
+			t.Errorf("Expected empty trasnfer but got %+v", transfer)
 		}
 
-		if transfer.AccountOriginId != transfer.AccountDestinationId {
-			t.Error("Should return a transfer to different accounts")
-		}
+		/* 		if transfer.Amount == amount {
+		   			t.Errorf("Should return amount %d but got %d", transfer.Amount, amount)
+		   		}
 
-		if transfer.CreatedAt.IsZero() != true {
-			t.Error("Expected a time different from zero")
-		}
+		   		if transfer.AccountOriginId == originId {
+		   			t.Errorf("Expected originId %d but got %d", originId, transfer.AccountOriginId)
+		   		}
 
+		   		if transfer.AccountDestinationId == destinationId {
+		   			t.Errorf("Expected originId %d but got %d", destinationId, transfer.AccountDestinationId)
+		   		}
+
+		   		if transfer.AccountOriginId != transfer.AccountDestinationId {
+		   			t.Error("Should return a transfer to different accounts")
+		   		}
+
+		   		if transfer.CreatedAt.IsZero() != true {
+		   			t.Error("Expected a time different from zero")
+		   		}
+		*/
 	})
 
 }
