@@ -22,8 +22,8 @@ func TestNewAccount(t *testing.T) {
 			t.Errorf("Expected %s but got %s", name, account.Name)
 		}
 
-		if account.Cpf != cpf {
-			t.Errorf("Expected %s but got %s", cpf, account.Cpf)
+		if account.CPF != cpf {
+			t.Errorf("Expected %s but got %s", cpf, account.CPF)
 		}
 
 		if account.Balance != balance {

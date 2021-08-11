@@ -7,9 +7,9 @@ import (
 )
 
 var (
-	ErrExistingCpf         = errors.New("cpf informed already exists")
+	ErrExistingCPF         = errors.New("cpf informed already exists")
 	ErrToCallNewAccount    = errors.New("error to call function new account")
-	ErrIdNotFound          = errors.New("account id isn't found")
+	ErrIDNotFound          = errors.New("account id isn't found")
 	ErrBalanceLessThanZero = errors.New("balance account less than zero")
 )
 
@@ -26,8 +26,8 @@ func NewAccountUseCase(storage map[string]entities.Account) AccountUseCase {
 func (au AccountUseCase) CreateAccount(name, cpf, secret string, balance int) (entities.Account, error) {
 
 	for _, storedAccount := range au.storage {
-		if storedAccount.Cpf == cpf {
-			return entities.Account{}, ErrExistingCpf
+		if storedAccount.CPF == cpf {
+			return entities.Account{}, ErrExistingCPF
 		}
 	}
 
@@ -36,19 +36,19 @@ func (au AccountUseCase) CreateAccount(name, cpf, secret string, balance int) (e
 		return entities.Account{}, ErrToCallNewAccount
 	}
 
-	au.storage[account.Id] = account
+	au.storage[account.ID] = account
 
 	return account, nil
 }
 
-func (au AccountUseCase) GetBalanceById(id string) (int, error) {
+func (au AccountUseCase) GetBalanceByID(id string) (int, error) {
 	for key, value := range au.storage {
-		if value.Id == id {
+		if value.ID == id {
 			balance := au.storage[key].Balance
 			return balance, nil
 		}
 	}
-	return 0, ErrIdNotFound
+	return 0, ErrIDNotFound
 }
 
 func (au AccountUseCase) GetAccounts() []entities.Account {
@@ -64,7 +64,7 @@ func (au AccountUseCase) GetAccounts() []entities.Account {
 func (au AccountUseCase) CheckAccounts(id ...string) error {
 	for _, v := range id {
 		if _, ok := au.storage[v]; !ok {
-			return ErrIdNotFound
+			return ErrIDNotFound
 		}
 	}
 	return nil
@@ -88,7 +88,7 @@ func (au AccountUseCase) UpdateAccountBalance(id string, balance int) error {
 func (au AccountUseCase) GetAccountByID(id string) (entities.Account, error) {
 	account, ok := au.storage[id]
 	if !ok {
-		return entities.Account{}, ErrIdNotFound
+		return entities.Account{}, ErrIDNotFound
 	}
 
 	return account, nil

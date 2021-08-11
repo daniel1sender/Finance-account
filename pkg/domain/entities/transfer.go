@@ -13,29 +13,29 @@ var (
 )
 
 type Transfer struct {
-	Id                   string
-	AccountOriginId      int
-	AccountDestinationId int
+	ID                   string
+	AccountOriginID      int
+	AccountDestinationID int
 	Amount               int
 	CreatedAt            time.Time
 }
 
-func NewTransfer(originId, destinationId int, amount int) (Transfer, error) {
+func NewTransfer(originID, destinationID int, amount int) (Transfer, error) {
 
 	if amount <= 0 {
 		return Transfer{}, ErrAmountLessThanZero
 
 	}
-	if originId == destinationId {
+	if originID == destinationID {
 		return Transfer{}, ErrSameAccountTransfer
 	}
 
 	id := uuid.NewString()
 
 	return Transfer{
-		Id:                   id,
-		AccountOriginId:      originId,
-		AccountDestinationId: destinationId,
+		ID:                   id,
+		AccountOriginID:      originID,
+		AccountDestinationID: destinationID,
 		Amount:               amount,
 		CreatedAt:            time.Now().UTC(),
 	}, nil

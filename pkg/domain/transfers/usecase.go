@@ -20,15 +20,15 @@ func NewTransferUseCase(storage map[string]entities.Transfer) TransferUseCase {
 	}
 }
 
-func (tu *TransferUseCase) MakeTransfer(originId, destinationId int, amount int) (entities.Transfer, error) {
+func (tu *TransferUseCase) MakeTransfer(originID, destinationID int, amount int) (entities.Transfer, error) {
 
-	transfer, err := entities.NewTransfer(originId, destinationId, amount)
+	transfer, err := entities.NewTransfer(originID, destinationID, amount)
 
 	if err != nil {
 		return entities.Transfer{}, ErrToCallNewTransfer
 	}
 
-	tu.storage[transfer.Id] = transfer
+	tu.storage[transfer.ID] = transfer
 
 	return transfer, nil
 }

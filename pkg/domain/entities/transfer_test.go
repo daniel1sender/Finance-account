@@ -10,9 +10,9 @@ func TestNewTransfer(t *testing.T) {
 	t.Run("Should successfully return a transfer", func(t *testing.T) {
 
 		amount := 10
-		originId := 1
-		destinationId := 2
-		transfer, err := NewTransfer(originId, destinationId, amount)
+		originID := 1
+		destinationID := 2
+		transfer, err := NewTransfer(originID, destinationID, amount)
 		if err != nil {
 			t.Errorf("Expected nil error but got %s", err)
 		}
@@ -21,15 +21,15 @@ func TestNewTransfer(t *testing.T) {
 			t.Errorf("Expected amount %d but got %d", transfer.Amount, amount)
 		}
 
-		if transfer.AccountOriginId != originId {
-			t.Errorf("Expected originId %d but got %d", originId, transfer.AccountOriginId)
+		if transfer.AccountOriginID != originID {
+			t.Errorf("Expected originId %d but got %d", originID, transfer.AccountOriginID)
 		}
 
-		if transfer.AccountDestinationId != destinationId {
-			t.Errorf("Expected originId %d but got %d", destinationId, transfer.AccountDestinationId)
+		if transfer.AccountDestinationID != destinationID {
+			t.Errorf("Expected originId %d but got %d", destinationID, transfer.AccountDestinationID)
 		}
 
-		if transfer.AccountOriginId == transfer.AccountDestinationId {
+		if transfer.AccountOriginID == transfer.AccountDestinationID {
 			t.Error("Expected a transfer to different accounts")
 		}
 
@@ -42,9 +42,9 @@ func TestNewTransfer(t *testing.T) {
 	t.Run("Should return a empty transfer when amount is less or equal zero", func(t *testing.T) {
 
 		amount := 0
-		originId := 1
-		destinationId := 2
-		transfer, err := NewTransfer(originId, destinationId, amount)
+		originID := 1
+		destinationID := 2
+		transfer, err := NewTransfer(originID, destinationID, amount)
 
 		if !errors.Is(err, ErrAmountLessThanZero) {
 			t.Errorf("Expected error %s but got %s", ErrAmountLessThanZero, err)
@@ -59,16 +59,16 @@ func TestNewTransfer(t *testing.T) {
 	t.Run("Should return a empty transfer when transfer is to the same account", func(t *testing.T) {
 
 		amount := 10
-		originId := 1
-		destinationId := 1
-		transfer, err := NewTransfer(originId, destinationId, amount)
+		originID := 1
+		destinationID := 1
+		transfer, err := NewTransfer(originID, destinationID, amount)
 
 		if !errors.Is(err, ErrSameAccountTransfer) {
 			t.Errorf("Expected error %s but got %s", ErrSameAccountTransfer, err)
 		}
 
 		if transfer != (Transfer{}) {
-			t.Errorf("Expected empty trasnfer but got %+v", transfer)
+			t.Errorf("Expected empty transfer but got %+v", transfer)
 		}
 
 	})

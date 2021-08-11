@@ -19,9 +19,9 @@ var (
 )
 
 type Account struct {
-	Id        string
+	ID        string
 	Name      string
-	Cpf       string
+	CPF       string
 	Secret    string
 	Balance   int
 	CreatedAt time.Time
@@ -49,9 +49,9 @@ func NewAccount(name, cpf, secret string, balance int) (Account, error) {
 	id := uuid.NewString()
 
 	return Account{
-		Id:        id,
+		ID:        id,
 		Name:      name,
-		Cpf:       cpf,
+		CPF:       cpf,
 		Secret:    hash,
 		Balance:   balance,
 		CreatedAt: time.Now().UTC(),
