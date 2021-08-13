@@ -78,6 +78,25 @@ func TestNewAccount(t *testing.T) {
 
 	})
 
+	t.Run("Should return a blank account and a error message when secret informed is empty", func(t *testing.T) {
+
+		name := "John Doe"
+		cpf := "11111111030"
+		secret := ""
+		balance := 10
+
+		account, err := NewAccount(name, cpf, secret, balance)
+
+		if account != (Account{}) {
+			t.Errorf("Expected %+v but got %+v", Account{}, account)
+		}
+
+		if !errors.Is(err, ErrBlankSecret) {
+			t.Errorf("Expected %s but got %s", ErrBlankSecret, err)
+		}
+
+	})
+
 	t.Run("Should return a empty account and a error message when balance is less than zero", func(t *testing.T) {
 
 		name := "John Doe"
