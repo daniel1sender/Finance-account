@@ -29,10 +29,6 @@ func TestNewTransfer(t *testing.T) {
 			t.Errorf("Expected originId %d but got %d", destinationID, transfer.AccountDestinationID)
 		}
 
-		if transfer.AccountOriginID == transfer.AccountDestinationID {
-			t.Error("Expected a transfer to different accounts")
-		}
-
 		if transfer.CreatedAt.IsZero() == true {
 			t.Error("Expected a time different from zero")
 		}
