@@ -7,10 +7,10 @@ import (
 )
 
 var (
-	ErrExistingCPF         = errors.New("cpf informed already exists")
+	ErrExistingCPF         = errors.New("cpf informed is invalid")
 	ErrToCallNewAccount    = errors.New("error to call function new account")
 	ErrIDNotFound          = errors.New("account id isn't found")
-	ErrBalanceLessThanZero = errors.New("balance account less than zero")
+	ErrBalanceLessOrEqualZero = errors.New("balance account less or equal zero")
 )
 
 type AccountUseCase struct {
@@ -76,7 +76,7 @@ func (au AccountUseCase) UpdateAccountBalance(id string, balance int) error {
 		return err
 	}
 	if balance < 0 {
-		return ErrBalanceLessThanZero
+		return ErrBalanceLessOrEqualZero
 	}
 
 	account.Balance = balance

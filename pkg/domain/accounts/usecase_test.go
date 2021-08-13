@@ -236,8 +236,8 @@ func TestAccountUseCase_UpdateAccountBalance(t *testing.T) {
 
 		err = AccountUseCase.UpdateAccountBalance(account.ID, -10)
 
-		if !errors.Is(err, ErrBalanceLessThanZero) {
-			t.Errorf("Expected %s but got %s", ErrBalanceLessThanZero, err)
+		if !errors.Is(err, ErrBalanceLessOrEqualZero) {
+			t.Errorf("Expected %s but got %s", ErrBalanceLessOrEqualZero, err)
 		}
 
 	})
