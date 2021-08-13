@@ -14,7 +14,7 @@ var (
 	ErrToGenerateHash  = errors.New("could not generate the hash")
 	ErrInvalidName     = errors.New("name informed is empty")
 	ErrBalanceLessZero = errors.New("balance account is less than zero")
-/* 	ErrBlankSecret     = errors.New("secret informed is blank") */
+ 	ErrBlankSecret     = errors.New("secret informed is blank") 
 )
 
 type Account struct {
@@ -36,9 +36,9 @@ func NewAccount(name, cpf, secret string, balance int) (Account, error) {
 		return Account{}, ErrInvalidCPF
 	}
 
-/* 	if secret == "" {
+ 	if secret == "" {
 		return Account{}, ErrBlankSecret
-	} */
+	} 
 
 	hash, err := HashGenerator(secret)
 	if err != nil {
