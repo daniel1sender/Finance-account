@@ -35,7 +35,7 @@ func TestNewAccount(t *testing.T) {
 		}
 
 		if account.Secret == secret {
-			t.Error("Expected incripted secret")
+			t.Error("Expected encrypted secret")
 		}
 
 	})

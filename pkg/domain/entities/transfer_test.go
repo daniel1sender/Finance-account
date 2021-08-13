@@ -46,8 +46,8 @@ func TestNewTransfer(t *testing.T) {
 		destinationID := 2
 		transfer, err := NewTransfer(originID, destinationID, amount)
 
-		if !errors.Is(err, ErrAmountLessThanZero) {
-			t.Errorf("Expected error %s but got %s", ErrAmountLessThanZero, err)
+		if !errors.Is(err, ErrAmountLessOrEqualZero) {
+			t.Errorf("Expected error %s but got %s", ErrAmountLessOrEqualZero, err)
 		}
 
 		if transfer != (Transfer{}) {

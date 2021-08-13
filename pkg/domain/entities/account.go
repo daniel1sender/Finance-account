@@ -9,13 +9,12 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-//Letramaiuscula
-//descrição> Err,
 var (
-	ErrInvalidCPF      = errors.New("invalid informed cpf")
+	ErrInvalidCPF      = errors.New("cpf informed is invalid")
 	ErrToGenerateHash  = errors.New("could not generate the hash")
-	ErrInvalidName     = errors.New("empty informed name")
+	ErrInvalidName     = errors.New("name informed is empty")
 	ErrBalanceLessZero = errors.New("balance account is less than zero")
+/* 	ErrBlankSecret     = errors.New("secret informed is blank") */
 )
 
 type Account struct {
@@ -29,7 +28,7 @@ type Account struct {
 
 func NewAccount(name, cpf, secret string, balance int) (Account, error) {
 
-	if len(name) == 0 {
+	if name == "" {
 		return Account{}, ErrInvalidName
 	}
 
@@ -37,9 +36,13 @@ func NewAccount(name, cpf, secret string, balance int) (Account, error) {
 		return Account{}, ErrInvalidCPF
 	}
 
+/* 	if secret == "" {
+		return Account{}, ErrBlankSecret
+	} */
+
 	hash, err := HashGenerator(secret)
 	if err != nil {
-		return Account{}, ErrToGenerateHash
+		return Account{}, fmt.Errorf("%s, function returned the error: %w", ErrToGenerateHash, err)
 	}
 
 	if balance < 0 {
@@ -64,7 +67,7 @@ func HashGenerator(secret string) (string, error) {
 	hash, err := bcrypt.GenerateFromPassword([]byte(secret), 4)
 
 	if err != nil {
-		return "", fmt.Errorf("err to generate the hash %s", hash)
+		return "", err
 	}
 
 	return string(hash), nil
