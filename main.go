@@ -1,15 +1,9 @@
 package main
 
-import (
-	"fmt"
-
-	"exemplo.com/pkg/domain/entities"
-)
-
 func main() {
 
 	//criando duas contas
-	fmt.Println(entities.NewAccount("John Doe", "11111111030", "123", 0))
+	//fmt.Println(entities.NewAccount("John Doe", "11111111030", "123", 0))
 	//account2 := entities.Account{1, "joão", "12345678910", 0}
 
 	// Criando a transferência
