@@ -1,14 +1,14 @@
 package transfers
 
 import (
-	"exemplo.com/pkg/store"
+	"exemplo.com/pkg/store/transfers"
 )
 
 type TransferUseCase struct {
-	storage store.TransferStorage
+	storage transfers.TransferStorage
 }
 
-func NewTransferUseCase(storage store.TransferStorage) TransferUseCase {
+func NewTransferUseCase(storage transfers.TransferStorage) TransferUseCase {
 	return TransferUseCase{
 		storage: storage,
 	}
