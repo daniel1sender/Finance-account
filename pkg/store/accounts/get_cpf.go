@@ -1,4 +1,4 @@
-package store
+package accounts
 
 func (s AccountStorage) GetCPF(cpf string) error {
 	for _, storedAccount := range s.storage {

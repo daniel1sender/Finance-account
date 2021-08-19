@@ -5,14 +5,14 @@ import (
 	"testing"
 
 	"exemplo.com/pkg/domain/entities"
-	"exemplo.com/pkg/store"
+	"exemplo.com/pkg/store/accounts"
 )
 
 func TestAccountUseCase_UpdateAccountBalance(t *testing.T) {
 
 	t.Run("Should return nil when account was updated", func(t *testing.T) {
 
-		storage := store.NewAccountStorage()
+		storage := accounts.NewAccountStorage()
 		AccountUseCase := NewAccountUseCase(storage)
 		account, err := entities.NewAccount("John Doe", "11111111030", "123", 10)
 		if err != nil {
@@ -30,21 +30,21 @@ func TestAccountUseCase_UpdateAccountBalance(t *testing.T) {
 
 	t.Run("Should return an error massage when account don't exists", func(t *testing.T) {
 
-		storage := store.NewAccountStorage()
+		storage := accounts.NewAccountStorage()
 		AccountUseCase := NewAccountUseCase(storage)
 
 		//passando qualquer id, sem criar a conta
 		err := AccountUseCase.UpdateAccountBalance("1", 20.0)
 
-		if err != store.ErrIDNotFound {
-			t.Errorf("Expected %s but got %s", store.ErrIDNotFound, err)
+		if err != accounts.ErrIDNotFound {
+			t.Errorf("Expected %s but got %s", accounts.ErrIDNotFound, err)
 		}
 
 	})
 
 	t.Run("Should return an error message when balance account is less than zero", func(t *testing.T) {
 
-		storage := store.NewAccountStorage()
+		storage := accounts.NewAccountStorage()
 		AccountUseCase := NewAccountUseCase(storage)
 
 		name := "John Doe"

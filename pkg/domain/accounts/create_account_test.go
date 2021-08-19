@@ -5,13 +5,13 @@ import (
 	"testing"
 
 	"exemplo.com/pkg/domain/entities"
-	"exemplo.com/pkg/store"
+	"exemplo.com/pkg/store/accounts"
 )
 
 func TestAccountUseCase_CreateAccount(t *testing.T) {
 	t.Run("should successfully create an account and return it", func(t *testing.T) {
 
-		storage := store.NewAccountStorage()
+		storage := accounts.NewAccountStorage()
 		accountUsecase := NewAccountUseCase(storage)
 		name := "John Doe"
 		cpf := "11111111030"
@@ -32,7 +32,7 @@ func TestAccountUseCase_CreateAccount(t *testing.T) {
 
 	t.Run("should return error when trying to create account with already created cpf account", func(t *testing.T) {
 
-		storage := store.NewAccountStorage()
+		storage := accounts.NewAccountStorage()
 		accountUsecase := NewAccountUseCase(storage)
 
 		name := "John Doe"
@@ -52,8 +52,8 @@ func TestAccountUseCase_CreateAccount(t *testing.T) {
 
 		createdAccount1, err1 := accountUsecase.CreateAccount(name, cpf, secret, balance)
 
-		if !errors.Is(err1, store.ErrExistingCPF) {
-			t.Errorf("Expected %s but got %s", store.ErrExistingCPF, err1)
+		if !errors.Is(err1, accounts.ErrExistingCPF) {
+			t.Errorf("Expected %s but got %s", accounts.ErrExistingCPF, err1)
 		}
 
 		if createdAccount1 != (entities.Account{}) {

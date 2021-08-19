@@ -1,4 +1,4 @@
-package store
+package accounts
 
 func (s AccountStorage) CheckAccountsByID(id []string) error {
 	for _, v := range id {
