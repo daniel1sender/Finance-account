@@ -5,14 +5,14 @@ import (
 	"testing"
 
 	"exemplo.com/pkg/domain/entities"
-	"exemplo.com/pkg/store"
+	"exemplo.com/pkg/store/accounts"
 )
 
 func TestAccountUseCase_GetAccountById(t *testing.T) {
 
 	t.Run("Should return an account when the searched account is found", func(t *testing.T) {
 
-		storage := store.NewAccountStorage()
+		storage := accounts.NewAccountStorage()
 		AccountUseCase := NewAccountUseCase(storage)
 
 		name := "John Doe"
@@ -39,7 +39,7 @@ func TestAccountUseCase_GetAccountById(t *testing.T) {
 
 	t.Run("Should return an empty account and a error message when account don't exist", func(t *testing.T) {
 
-		storage := store.NewAccountStorage()
+		storage := accounts.NewAccountStorage()
 		AccountUseCase := NewAccountUseCase(storage)
 
 		//passando qualquer id
@@ -49,8 +49,8 @@ func TestAccountUseCase_GetAccountById(t *testing.T) {
 			t.Errorf("Expected empty account but got %+v", GetAccountByID)
 		}
 
-		if !errors.Is(err, store.ErrIDNotFound) {
-			t.Errorf("Expected %s but got %s", store.ErrIDNotFound, err)
+		if !errors.Is(err, accounts.ErrIDNotFound) {
+			t.Errorf("Expected %s but got %s", accounts.ErrIDNotFound, err)
 		}
 
 	})

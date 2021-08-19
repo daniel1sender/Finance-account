@@ -1,14 +1,14 @@
 package accounts
 
 import (
-	"exemplo.com/pkg/store"
+	"exemplo.com/pkg/store/accounts"
 )
 
 type AccountUseCase struct {
-	storage store.AccountStorage
+	storage accounts.AccountStorage
 }
 
-func NewAccountUseCase(storage store.AccountStorage) AccountUseCase {
+func NewAccountUseCase(storage accounts.AccountStorage) AccountUseCase {
 	return AccountUseCase{
 		storage: storage,
 	}

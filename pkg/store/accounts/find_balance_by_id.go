@@ -1,4 +1,4 @@
-package store
+package accounts
 
 func (s AccountStorage) FindBalanceByID(id string) (int, error) {
 	for key, value := range s.storage {
