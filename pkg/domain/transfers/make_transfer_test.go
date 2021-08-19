@@ -4,14 +4,14 @@ import (
 	"testing"
 
 	"exemplo.com/pkg/domain/entities"
-	"exemplo.com/pkg/store"
+	"exemplo.com/pkg/store/transfers"
 )
 
 func TestAccountUseCase_MakeTransfer(t *testing.T) {
 
 	t.Run("Should return a transfer", func(t *testing.T) {
 
-		storage := store.NewTransferStorage()
+		storage := transfers.NewTransferStorage()
 		TransferUsecase := NewTransferUseCase(storage)
 
 		MakeTransfer, err := TransferUsecase.MakeTransfer(1, 2, 10)

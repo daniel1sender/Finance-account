@@ -1,4 +1,4 @@
-package store
+package transfers
 
 import "exemplo.com/pkg/domain/entities"
 
