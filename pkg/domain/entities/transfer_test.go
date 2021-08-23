@@ -14,19 +14,19 @@ func TestNewTransfer(t *testing.T) {
 		destinationID := 2
 		transfer, err := NewTransfer(originID, destinationID, amount)
 		if err != nil {
-			t.Errorf("Expected nil error but got %s", err)
+			t.Errorf("Expected nil error but got '%s'", err)
 		}
 
 		if transfer.Amount != amount {
-			t.Errorf("Expected amount %d but got %d", transfer.Amount, amount)
+			t.Errorf("Expected amount '%d' but got '%d'", transfer.Amount, amount)
 		}
 
 		if transfer.AccountOriginID != originID {
-			t.Errorf("Expected originId %d but got %d", originID, transfer.AccountOriginID)
+			t.Errorf("Expected originId '%d' but got '%d'", originID, transfer.AccountOriginID)
 		}
 
 		if transfer.AccountDestinationID != destinationID {
-			t.Errorf("Expected originId %d but got %d", destinationID, transfer.AccountDestinationID)
+			t.Errorf("Expected originId '%d' but got '%d'", destinationID, transfer.AccountDestinationID)
 		}
 
 		if transfer.CreatedAt.IsZero() == true {
@@ -43,11 +43,11 @@ func TestNewTransfer(t *testing.T) {
 		transfer, err := NewTransfer(originID, destinationID, amount)
 
 		if !errors.Is(err, ErrAmountLessOrEqualZero) {
-			t.Errorf("Expected error %s but got %s", ErrAmountLessOrEqualZero, err)
+			t.Errorf("Expected error '%s' but got '%s'", ErrAmountLessOrEqualZero, err)
 		}
 
 		if transfer != (Transfer{}) {
-			t.Errorf("Expected %+v but got %+v", Transfer{}, transfer)
+			t.Errorf("Expected '%+v' but got '%+v'", Transfer{}, transfer)
 		}
 
 	})
@@ -60,11 +60,11 @@ func TestNewTransfer(t *testing.T) {
 		transfer, err := NewTransfer(originID, destinationID, amount)
 
 		if !errors.Is(err, ErrSameAccountTransfer) {
-			t.Errorf("Expected error %s but got %s", ErrSameAccountTransfer, err)
+			t.Errorf("Expected error '%s' but got '%s'", ErrSameAccountTransfer, err)
 		}
 
 		if transfer != (Transfer{}) {
-			t.Errorf("Expected empty transfer but got %+v", transfer)
+			t.Errorf("Expected blank transfer but got '%+v'", transfer)
 		}
 
 	})
