@@ -21,7 +21,7 @@ func TestAccountUseCase_UpdateAccountBalance(t *testing.T) {
 
 		account, err := entities.NewAccount(name, cpf, secret, balance)
 		if err != nil {
-			t.Errorf("Expected nil error to create a new account but got %s", err)
+			t.Errorf("Expected nil error to create a new account but got '%s'", err)
 		}
 
 		storage.UpdateStorage(account.ID, account)
@@ -29,7 +29,7 @@ func TestAccountUseCase_UpdateAccountBalance(t *testing.T) {
 		UpdateAccountError := AccountUseCase.UpdateAccountBalance(account.ID, 20.0)
 
 		if UpdateAccountError != nil {
-			t.Errorf("Expected nil but got %s", UpdateAccountError)
+			t.Errorf("Expected nil error but got '%s'", UpdateAccountError)
 		}
 
 	})
@@ -43,7 +43,7 @@ func TestAccountUseCase_UpdateAccountBalance(t *testing.T) {
 		err := AccountUseCase.UpdateAccountBalance("1", 20.0)
 
 		if err != accounts.ErrIDNotFound {
-			t.Errorf("Expected %s but got %s", accounts.ErrIDNotFound, err)
+			t.Errorf("Expected '%s' but got '%s'", accounts.ErrIDNotFound, err)
 		}
 
 	})
@@ -60,7 +60,7 @@ func TestAccountUseCase_UpdateAccountBalance(t *testing.T) {
 
 		account, err := entities.NewAccount(name, cpf, secret, balance)
 		if err != nil {
-			t.Errorf("Expected nil error to create a new account but got %s", err)
+			t.Errorf("Expected nil error to create a new account but got '%s'", err)
 		}
 
 		storage.UpdateStorage(account.ID, account)
@@ -68,7 +68,7 @@ func TestAccountUseCase_UpdateAccountBalance(t *testing.T) {
 		err = AccountUseCase.UpdateAccountBalance(account.ID, -10)
 
 		if !errors.Is(err, ErrBalanceLessOrEqualZero) {
-			t.Errorf("Expected %s but got %s", ErrBalanceLessOrEqualZero, err)
+			t.Errorf("Expected '%s' but got '%s'", ErrBalanceLessOrEqualZero, err)
 		}
 
 	})

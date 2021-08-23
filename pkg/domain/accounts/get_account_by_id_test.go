@@ -22,17 +22,18 @@ func TestAccountUseCase_GetAccountById(t *testing.T) {
 
 		account, err := entities.NewAccount(name, cpf, secret, balance)
 		if err != nil {
-			t.Errorf("Expected nil error to create a new account but got %s", err)
+			t.Errorf("Expected nil error to create a new account but got '%s'", err)
 		}
+
 		storage.UpdateStorage(account.ID, account)
 		GetAccountByID, err := AccountUseCase.GetAccountByID(account.ID)
 
 		if GetAccountByID == (entities.Account{}) {
-			t.Errorf("Expected account but got %+v", GetAccountByID)
+			t.Errorf("Expected an account but got %+v", GetAccountByID)
 		}
 
 		if err != nil {
-			t.Error("Expected error equal nil")
+			t.Errorf("Expected error equal nil but got '%s'", err)
 		}
 
 	})
@@ -50,7 +51,7 @@ func TestAccountUseCase_GetAccountById(t *testing.T) {
 		}
 
 		if !errors.Is(err, accounts.ErrIDNotFound) {
-			t.Errorf("Expected %s but got %s", accounts.ErrIDNotFound, err)
+			t.Errorf("Expected '%s' but got '%s'", accounts.ErrIDNotFound, err)
 		}
 
 	})
