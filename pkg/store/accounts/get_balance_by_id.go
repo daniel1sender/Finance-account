@@ -1,6 +1,6 @@
 package accounts
 
-func (s AccountStorage) FindBalanceByID(id string) (int, error) {
+func (s AccountStorage) GetBalanceByID(id string) (int, error) {
 	for key, value := range s.storage {
 		if value.ID == id {
 			balance := s.storage[key].Balance
