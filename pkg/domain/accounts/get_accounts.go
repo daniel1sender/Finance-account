@@ -5,5 +5,5 @@ import (
 )
 
 func (au AccountUseCase) GetAccounts() []entities.Account {
-	return au.storage.JoinAccounts()
+	return au.storage.GetAccounts()
 }
