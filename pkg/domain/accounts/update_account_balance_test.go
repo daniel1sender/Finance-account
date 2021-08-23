@@ -14,10 +14,16 @@ func TestAccountUseCase_UpdateAccountBalance(t *testing.T) {
 
 		storage := accounts.NewAccountStorage()
 		AccountUseCase := NewAccountUseCase(storage)
-		account, err := entities.NewAccount("John Doe", "11111111030", "123", 10)
+		name := "John Doe"
+		cpf := "11111111030"
+		secret := "123"
+		balance := 10
+
+		account, err := entities.NewAccount(name, cpf, secret, balance)
 		if err != nil {
-			t.Error("error should be nil if account was successfully created")
+			t.Errorf("Expected nil error to create a new account but got %s", err)
 		}
+
 		storage.UpdateStorage(account.ID, account)
 
 		UpdateAccountError := AccountUseCase.UpdateAccountBalance(account.ID, 20.0)
@@ -56,6 +62,7 @@ func TestAccountUseCase_UpdateAccountBalance(t *testing.T) {
 		if err != nil {
 			t.Errorf("Expected nil error to create a new account but got %s", err)
 		}
+
 		storage.UpdateStorage(account.ID, account)
 
 		err = AccountUseCase.UpdateAccountBalance(account.ID, -10)
