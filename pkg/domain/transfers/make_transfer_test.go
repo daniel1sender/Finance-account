@@ -20,11 +20,11 @@ func TestAccountUseCase_MakeTransfer(t *testing.T) {
 		MakeTransfer, err := TransferUsecase.MakeTransfer(originID, destinationID, amount)
 
 		if MakeTransfer == (entities.Transfer{}) {
-			t.Errorf("Expected a transfer but got %+v", MakeTransfer)
+			t.Errorf("Expected a transfer but got '%+v'", MakeTransfer)
 		}
 
 		if err != nil {
-			t.Errorf("Expected nil error but got %s", err)
+			t.Errorf("Expected nil error but got '%s'", err)
 		}
 
 	})
