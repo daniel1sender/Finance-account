@@ -15,19 +15,19 @@ func TestNewAccount(t *testing.T) {
 		balance := 10
 		account, err := NewAccount(name, cpf, secret, balance)
 		if err != nil {
-			t.Errorf("Expected nil but got %s", err)
+			t.Errorf("Expected nil but got '%s'", err)
 		}
 
 		if account.Name != name {
-			t.Errorf("Expected %s but got %s", name, account.Name)
+			t.Errorf("Expected '%s' but got '%s'", name, account.Name)
 		}
 
 		if account.CPF != cpf {
-			t.Errorf("Expected %s but got %s", cpf, account.CPF)
+			t.Errorf("Expected '%s' but got '%s'", cpf, account.CPF)
 		}
 
 		if account.Balance != balance {
-			t.Errorf("Expected %d but got %d", balance, account.Balance)
+			t.Errorf("Expected '%d' but got '%d'", balance, account.Balance)
 		}
 
 		if account.CreatedAt.IsZero() {
@@ -50,11 +50,11 @@ func TestNewAccount(t *testing.T) {
 		account, err := NewAccount(name, cpf, secret, balance)
 
 		if account != (Account{}) {
-			t.Errorf("Expected %+v but got %+v", Account{}, account)
+			t.Errorf("Expected '%+v' but got '%+v'", Account{}, account)
 		}
 
 		if !errors.Is(err, ErrInvalidName) {
-			t.Errorf("Expected error %s but got %s", ErrInvalidName, err)
+			t.Errorf("Expected error '%s' but got '%s'", ErrInvalidName, err)
 		}
 
 	})
@@ -69,11 +69,11 @@ func TestNewAccount(t *testing.T) {
 		account, err := NewAccount(name, cpf, secret, balance)
 
 		if account != (Account{}) {
-			t.Errorf("Expected %v but got %v", account, Account{})
+			t.Errorf("Expected '%+v' but got '%+v'", account, Account{})
 		}
 
 		if !errors.Is(err, ErrInvalidCPF) {
-			t.Errorf("Expected error %s but got %s", ErrInvalidCPF, err)
+			t.Errorf("Expected error '%s' but got '%s'", ErrInvalidCPF, err)
 		}
 
 	})
@@ -88,11 +88,11 @@ func TestNewAccount(t *testing.T) {
 		account, err := NewAccount(name, cpf, secret, balance)
 
 		if account != (Account{}) {
-			t.Errorf("Expected %+v but got %+v", Account{}, account)
+			t.Errorf("Expected '%+v' but got '%+v'", Account{}, account)
 		}
 
 		if !errors.Is(err, ErrBlankSecret) {
-			t.Errorf("Expected %s but got %s", ErrBlankSecret, err)
+			t.Errorf("Expected '%s' but got '%s'", ErrBlankSecret, err)
 		}
 
 	})
@@ -107,11 +107,11 @@ func TestNewAccount(t *testing.T) {
 		account, err := NewAccount(name, cpf, secret, balance)
 
 		if account != (Account{}) {
-			t.Errorf("Expected %v but got %v", account, Account{})
+			t.Errorf("Expected '%+v' but got '%+v'", account, Account{})
 		}
 
 		if !errors.Is(err, ErrBalanceLessZero) {
-			t.Errorf("Expected error %s but got %s", ErrBalanceLessZero, err)
+			t.Errorf("Expected error '%s' but got '%s'", ErrBalanceLessZero, err)
 		}
 
 	})
