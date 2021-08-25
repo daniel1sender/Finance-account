@@ -5,11 +5,12 @@ import (
 
 	"exemplo.com/pkg/domain/entities"
 	"exemplo.com/pkg/store/transfers"
+	"github.com/daniel1sender/Desafio-API/pkg/store/transfers"
 )
 
 func TestAccountUseCase_MakeTransfer(t *testing.T) {
 
-	t.Run("Should return a transfer", func(t *testing.T) {
+	t.Run("should return a transfer", func(t *testing.T) {
 
 		storage := transfers.NewTransferStorage()
 		TransferUsecase := NewTransferUseCase(storage)
@@ -20,11 +21,11 @@ func TestAccountUseCase_MakeTransfer(t *testing.T) {
 		MakeTransfer, err := TransferUsecase.MakeTransfer(originID, destinationID, amount)
 
 		if MakeTransfer == (entities.Transfer{}) {
-			t.Errorf("Expected a transfer but got '%+v'", MakeTransfer)
+			t.Errorf("expected a transfer but got '%+v'", MakeTransfer)
 		}
 
 		if err != nil {
-			t.Errorf("Expected nil error but got '%s'", err)
+			t.Errorf("expected nil error but got '%s'", err)
 		}
 
 	})

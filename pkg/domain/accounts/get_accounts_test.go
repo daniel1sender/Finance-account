@@ -3,8 +3,8 @@ package accounts
 import (
 	"testing"
 
-	"exemplo.com/pkg/domain/entities"
-	"exemplo.com/pkg/store/accounts"
+	"github.com/daniel1sender/Desafio-API/pkg/domain/entities"
+	"github.com/daniel1sender/Desafio-API/pkg/store/accounts"
 )
 
 func TestAccountUseCase_GetAccounts(t *testing.T) {
@@ -20,7 +20,7 @@ func TestAccountUseCase_GetAccounts(t *testing.T) {
 
 		account, err := entities.NewAccount(name, cpf, secret, balance)
 		if err != nil {
-			t.Errorf("Expected nil error to create a new account but got '%s'", err)
+			t.Errorf("expected nil error to create a new account but got '%s'", err)
 		}
 
 		storage.UpdateStorage(account.ID, account)

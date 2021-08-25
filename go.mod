@@ -1,4 +1,4 @@
-module exemplo.com
+module github.com/daniel1sender/Desafio-API
 
 go 1.13
 

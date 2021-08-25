@@ -3,13 +3,13 @@ package accounts
 import (
 	"testing"
 
-	"exemplo.com/pkg/domain/entities"
-	"exemplo.com/pkg/store/accounts"
+	"github.com/daniel1sender/Desafio-API/pkg/domain/entities"
+	"github.com/daniel1sender/Desafio-API/pkg/store/accounts"
 )
 
 func TestAccountUseCase_CheckAccounts(t *testing.T) {
 
-	t.Run("should return nil when accounts have already been created", func(t *testing.T) {
+	t.Run("should return nil error when accounts have already been created", func(t *testing.T) {
 
 		storage := accounts.NewAccountStorage()
 		AccountUseCase := NewAccountUseCase(storage)
@@ -20,7 +20,7 @@ func TestAccountUseCase_CheckAccounts(t *testing.T) {
 
 		account, err := entities.NewAccount(name, cpf, secret, balance)
 		if err != nil {
-			t.Errorf("Expected nil error to create a new account but got '%s'", err)
+			t.Errorf("expected nil error to create a new account but got '%s'", err)
 		}
 
 		storage.UpdateStorage(account.ID, account)
@@ -44,13 +44,13 @@ func TestAccountUseCase_CheckAccounts(t *testing.T) {
 
 		account, err := entities.NewAccount(name, cpf, secret, balance)
 		if err != nil {
-			t.Errorf("Expected nil error to create a new account but got '%s'", err)
+			t.Errorf("expected nil error to create a new account but got '%s'", err)
 		}
 
 		CheckAccountsError := AccountUseCase.CheckAccounts(account.ID)
 
 		if CheckAccountsError == nil {
-			t.Error("Expected a error message but got nil")
+			t.Error("expected a error message but got nil")
 		}
 
 	})

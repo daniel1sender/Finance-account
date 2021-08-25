@@ -4,13 +4,13 @@ import (
 	"errors"
 	"testing"
 
-	"exemplo.com/pkg/domain/entities"
-	"exemplo.com/pkg/store/accounts"
+	"github.com/daniel1sender/Desafio-API/pkg/domain/entities"
+	"github.com/daniel1sender/Desafio-API/pkg/store/accounts"
 )
 
 func TestAccountUseCase_UpdateAccountBalance(t *testing.T) {
 
-	t.Run("Should return nil when account was updated", func(t *testing.T) {
+	t.Run("should return nil when account was updated", func(t *testing.T) {
 
 		storage := accounts.NewAccountStorage()
 		AccountUseCase := NewAccountUseCase(storage)
@@ -21,7 +21,7 @@ func TestAccountUseCase_UpdateAccountBalance(t *testing.T) {
 
 		account, err := entities.NewAccount(name, cpf, secret, balance)
 		if err != nil {
-			t.Errorf("Expected nil error to create a new account but got '%s'", err)
+			t.Errorf("expected nil error to create a new account but got '%s'", err)
 		}
 
 		storage.UpdateStorage(account.ID, account)
@@ -29,12 +29,12 @@ func TestAccountUseCase_UpdateAccountBalance(t *testing.T) {
 		UpdateAccountError := AccountUseCase.UpdateAccountBalance(account.ID, 20.0)
 
 		if UpdateAccountError != nil {
-			t.Errorf("Expected nil error but got '%s'", UpdateAccountError)
+			t.Errorf("expected nil error but got '%s'", UpdateAccountError)
 		}
 
 	})
 
-	t.Run("Should return an error massage when account don't exists", func(t *testing.T) {
+	t.Run("should return an error massage when account don't exists", func(t *testing.T) {
 
 		storage := accounts.NewAccountStorage()
 		AccountUseCase := NewAccountUseCase(storage)
@@ -43,12 +43,12 @@ func TestAccountUseCase_UpdateAccountBalance(t *testing.T) {
 		err := AccountUseCase.UpdateAccountBalance("1", 20.0)
 
 		if err != accounts.ErrIDNotFound {
-			t.Errorf("Expected '%s' but got '%s'", accounts.ErrIDNotFound, err)
+			t.Errorf("expected '%s' but got '%s'", accounts.ErrIDNotFound, err)
 		}
 
 	})
 
-	t.Run("Should return an error message when balance account is less than zero", func(t *testing.T) {
+	t.Run("should return an error message when balance account is less than zero", func(t *testing.T) {
 
 		storage := accounts.NewAccountStorage()
 		AccountUseCase := NewAccountUseCase(storage)
@@ -60,7 +60,7 @@ func TestAccountUseCase_UpdateAccountBalance(t *testing.T) {
 
 		account, err := entities.NewAccount(name, cpf, secret, balance)
 		if err != nil {
-			t.Errorf("Expected nil error to create a new account but got '%s'", err)
+			t.Errorf("expected nil error to create a new account but got '%s'", err)
 		}
 
 		storage.UpdateStorage(account.ID, account)
@@ -68,7 +68,7 @@ func TestAccountUseCase_UpdateAccountBalance(t *testing.T) {
 		err = AccountUseCase.UpdateAccountBalance(account.ID, -10)
 
 		if !errors.Is(err, ErrBalanceLessOrEqualZero) {
-			t.Errorf("Expected '%s' but got '%s'", ErrBalanceLessOrEqualZero, err)
+			t.Errorf("expected '%s' but got '%s'", ErrBalanceLessOrEqualZero, err)
 		}
 
 	})

@@ -1,6 +1,6 @@
 package accounts
 
-import "exemplo.com/pkg/domain/entities"
+import "github.com/daniel1sender/Desafio-API/pkg/domain/entities"
 
 func (s AccountStorage) GetAccounts() []entities.Account {
 	var AccountsList []entities.Account

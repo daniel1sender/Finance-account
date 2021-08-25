@@ -4,13 +4,13 @@ import (
 	"errors"
 	"testing"
 
-	"exemplo.com/pkg/domain/entities"
-	"exemplo.com/pkg/store/accounts"
+	"github.com/daniel1sender/Desafio-API/pkg/domain/entities"
+	"github.com/daniel1sender/Desafio-API/pkg/store/accounts"
 )
 
 func TestAccountUseCase_GetAccountById(t *testing.T) {
 
-	t.Run("Should return an account when the searched account is found", func(t *testing.T) {
+	t.Run("should return an account when the searched account is found", func(t *testing.T) {
 
 		storage := accounts.NewAccountStorage()
 		AccountUseCase := NewAccountUseCase(storage)
@@ -22,23 +22,23 @@ func TestAccountUseCase_GetAccountById(t *testing.T) {
 
 		account, err := entities.NewAccount(name, cpf, secret, balance)
 		if err != nil {
-			t.Errorf("Expected nil error to create a new account but got '%s'", err)
+			t.Errorf("expected nil error to create a new account but got '%s'", err)
 		}
 
 		storage.UpdateStorage(account.ID, account)
 		GetAccountByID, err := AccountUseCase.GetAccountByID(account.ID)
 
 		if GetAccountByID == (entities.Account{}) {
-			t.Errorf("Expected an account but got %+v", GetAccountByID)
+			t.Errorf("expected an account but got %+v", GetAccountByID)
 		}
 
 		if err != nil {
-			t.Errorf("Expected error equal nil but got '%s'", err)
+			t.Errorf("expected error equal nil but got '%s'", err)
 		}
 
 	})
 
-	t.Run("Should return an empty account and a error message when account don't exist", func(t *testing.T) {
+	t.Run("should return an empty account and a error message when account don't exist", func(t *testing.T) {
 
 		storage := accounts.NewAccountStorage()
 		AccountUseCase := NewAccountUseCase(storage)
@@ -47,11 +47,11 @@ func TestAccountUseCase_GetAccountById(t *testing.T) {
 		GetAccountByID, err := AccountUseCase.GetAccountByID("account.ID")
 
 		if GetAccountByID != (entities.Account{}) {
-			t.Errorf("Expected empty account but got %+v", GetAccountByID)
+			t.Errorf("expected empty account but got %+v", GetAccountByID)
 		}
 
 		if !errors.Is(err, accounts.ErrIDNotFound) {
-			t.Errorf("Expected '%s' but got '%s'", accounts.ErrIDNotFound, err)
+			t.Errorf("expected '%s' but got '%s'", accounts.ErrIDNotFound, err)
 		}
 
 	})
