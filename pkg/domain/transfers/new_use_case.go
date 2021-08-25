@@ -1,7 +1,7 @@
 package transfers
 
 import (
-	"exemplo.com/pkg/store/transfers"
+	"github.com/daniel1sender/Desafio-API/pkg/store/transfers"
 )
 
 type TransferUseCase struct {

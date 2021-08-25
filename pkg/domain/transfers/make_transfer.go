@@ -3,11 +3,11 @@ package transfers
 import (
 	"errors"
 
-	"exemplo.com/pkg/domain/entities"
+	"github.com/daniel1sender/Desafio-API/pkg/domain/entities"
 )
 
 var (
-	ErrToCallNewTransfer = errors.New("error to call function NewTransfer")
+	ErrToCreateNewTransfer = errors.New("error to create a new transfer")
 )
 
 func (tu *TransferUseCase) MakeTransfer(originID, destinationID int, amount int) (entities.Transfer, error) {
@@ -15,7 +15,7 @@ func (tu *TransferUseCase) MakeTransfer(originID, destinationID int, amount int)
 	transfer, err := entities.NewTransfer(originID, destinationID, amount)
 
 	if err != nil {
-		return entities.Transfer{}, ErrToCallNewTransfer
+		return entities.Transfer{}, ErrToCreateNewTransfer
 	}
 
 	tu.storage.UpdateTransferStorage(transfer.ID, transfer)
