@@ -24,7 +24,7 @@ func TestAccountUseCase_UpdateAccountBalance(t *testing.T) {
 			t.Errorf("expected nil error to create a new account but got '%s'", err)
 		}
 
-		storage.UpdateStorage(account.ID, account)
+		storage.UpdateByID(account.ID, account)
 
 		UpdateAccountError := AccountUseCase.UpdateAccountBalance(account.ID, 20.0)
 
@@ -63,7 +63,7 @@ func TestAccountUseCase_UpdateAccountBalance(t *testing.T) {
 			t.Errorf("expected nil error to create a new account but got '%s'", err)
 		}
 
-		storage.UpdateStorage(account.ID, account)
+		storage.UpdateByID(account.ID, account)
 
 		err = AccountUseCase.UpdateAccountBalance(account.ID, -10)
 
