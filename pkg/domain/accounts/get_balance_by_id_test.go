@@ -22,7 +22,7 @@ func TestAccountUseCase_GetBalanceByID(t *testing.T) {
 		if err != nil {
 			t.Errorf("expected nil error to create a new account but got '%s'", err)
 		}
-		storage.UpdateStorage(account.ID, account)
+		storage.UpdateByID(account.ID, account)
 
 		getBalance, err := AccountUseCase.GetBalanceByID(account.ID)
 
