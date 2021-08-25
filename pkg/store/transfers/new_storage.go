@@ -1,6 +1,6 @@
 package transfers
 
-import "exemplo.com/pkg/domain/entities"
+import "github.com/daniel1sender/Desafio-API/pkg/domain/entities"
 
 type TransferStorage struct {
 	storage map[string]entities.Transfer

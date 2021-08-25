@@ -1,7 +1,7 @@
 package accounts
 
 import (
-	"exemplo.com/pkg/domain/entities"
+	"github.com/daniel1sender/Desafio-API/pkg/domain/entities"
 )
 
 func (au AccountUseCase) GetAccountByID(id string) (entities.Account, error) {

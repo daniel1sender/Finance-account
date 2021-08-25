@@ -1,7 +1,7 @@
 package accounts
 
 import (
-	"exemplo.com/pkg/store/accounts"
+	"github.com/daniel1sender/Desafio-API/pkg/store/accounts"
 )
 
 type AccountUseCase struct {

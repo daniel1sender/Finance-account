@@ -3,7 +3,7 @@ package accounts
 import (
 	"errors"
 
-	"exemplo.com/pkg/domain/entities"
+	"github.com/daniel1sender/Desafio-API/pkg/domain/entities"
 )
 
 var (
