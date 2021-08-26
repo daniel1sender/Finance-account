@@ -9,7 +9,7 @@ import (
 
 func TestAccountUseCase_GetBalanceByID(t *testing.T) {
 
-	t.Run("should return an account when id is found", func(t *testing.T) {
+	t.Run("should return an account balance when id is found", func(t *testing.T) {
 
 		storage := accounts.NewAccountStorage()
 		AccountUseCase := NewAccountUseCase(storage)
