@@ -5,7 +5,7 @@ import (
 )
 
 var (
-	ErrBalanceLessOrEqualZero = errors.New("balance account less or equal zero")
+	ErrBalanceLessZero = errors.New("balance account cannot be less than zero")
 )
 
 func (au AccountUseCase) UpdateAccountBalance(id string, balance int) error {
@@ -14,7 +14,7 @@ func (au AccountUseCase) UpdateAccountBalance(id string, balance int) error {
 		return err
 	}
 	if balance < 0 {
-		return ErrBalanceLessOrEqualZero
+		return ErrBalanceLessZero
 	}
 
 	account.Balance = balance
