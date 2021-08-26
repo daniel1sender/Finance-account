@@ -26,7 +26,7 @@ func TestAccountUseCase_UpdateAccountBalance(t *testing.T) {
 
 		storage.Upsert(account.ID, account)
 
-		UpdateAccountError := AccountUseCase.UpdateAccountBalance(account.ID, 20.0)
+		UpdateAccountError := AccountUseCase.UpdateBalance(account.ID, 20.0)
 
 		if UpdateAccountError != nil {
 			t.Errorf("expected no error but got '%s'", UpdateAccountError)
@@ -40,7 +40,7 @@ func TestAccountUseCase_UpdateAccountBalance(t *testing.T) {
 		AccountUseCase := NewAccountUseCase(storage)
 
 		//passando qualquer id, sem criar a conta
-		err := AccountUseCase.UpdateAccountBalance("1", 20.0)
+		err := AccountUseCase.UpdateBalance("1", 20.0)
 
 		if err != accounts.ErrIDNotFound {
 			t.Errorf("expected '%s' but got '%s'", accounts.ErrIDNotFound, err)
@@ -65,7 +65,7 @@ func TestAccountUseCase_UpdateAccountBalance(t *testing.T) {
 
 		storage.Upsert(account.ID, account)
 
-		err = AccountUseCase.UpdateAccountBalance(account.ID, -10)
+		err = AccountUseCase.UpdateBalance(account.ID, -10)
 
 		if !errors.Is(err, ErrBalanceLessZero) {
 			t.Errorf("expected '%s' but got '%s'", ErrBalanceLessZero, err)

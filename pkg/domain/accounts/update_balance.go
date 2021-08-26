@@ -8,7 +8,7 @@ var (
 	ErrBalanceLessZero = errors.New("balance account cannot be less than zero")
 )
 
-func (au AccountUseCase) UpdateAccountBalance(id string, balance int) error {
+func (au AccountUseCase) UpdateBalance(id string, balance int) error {
 	account, err := au.GetAccountByID(id)
 	if err != nil {
 		return err
