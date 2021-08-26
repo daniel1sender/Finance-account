@@ -15,7 +15,7 @@ func TestNewAccount(t *testing.T) {
 		balance := 10
 		account, err := NewAccount(name, cpf, secret, balance)
 		if err != nil {
-			t.Errorf("expected nil but got '%s'", err)
+			t.Errorf("expected no error but got '%s'", err)
 		}
 
 		if account.Name != name {
