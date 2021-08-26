@@ -23,7 +23,7 @@ func TestAccountUseCase_GetAccounts(t *testing.T) {
 			t.Errorf("expected nil error to create a new account but got '%s'", err)
 		}
 
-		storage.UpdateByID(account.ID, account)
+		storage.Upsert(account.ID, account)
 
 		getAccounts := AccountUseCase.GetAccounts()
 

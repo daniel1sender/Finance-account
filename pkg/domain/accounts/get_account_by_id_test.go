@@ -25,7 +25,7 @@ func TestAccountUseCase_GetAccountById(t *testing.T) {
 			t.Errorf("expected nil error to create a new account but got '%s'", err)
 		}
 
-		storage.UpdateByID(account.ID, account)
+		storage.Upsert(account.ID, account)
 		GetAccountByID, err := AccountUseCase.GetAccountByID(account.ID)
 
 		if GetAccountByID == (entities.Account{}) {
