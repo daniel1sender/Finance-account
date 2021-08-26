@@ -21,7 +21,7 @@ func TestAccountUseCase_CreateAccount(t *testing.T) {
 		createdAccount, err := accountUsecase.CreateAccount(name, cpf, secret, balance)
 
 		if err != nil {
-			t.Errorf("expected nil error but got '%s'", err)
+			t.Errorf("expected no error but got '%s'", err)
 		}
 
 		if createdAccount == (entities.Account{}) {
@@ -43,7 +43,7 @@ func TestAccountUseCase_CreateAccount(t *testing.T) {
 		createdAccount, err := accountUsecase.CreateAccount(name, cpf, secret, balance)
 
 		if err != nil {
-			t.Errorf("expected nil error but got '%s'", err)
+			t.Errorf("expected no error but got '%s'", err)
 		}
 
 		if createdAccount == (entities.Account{}) {

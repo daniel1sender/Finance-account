@@ -22,7 +22,7 @@ func TestAccountUseCase_GetAccountById(t *testing.T) {
 
 		account, err := entities.NewAccount(name, cpf, secret, balance)
 		if err != nil {
-			t.Errorf("expected nil error to create a new account but got '%s'", err)
+			t.Errorf("expected no error to create a new account but got '%s'", err)
 		}
 
 		storage.Upsert(account.ID, account)
