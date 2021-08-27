@@ -7,12 +7,12 @@ import (
 	"github.com/daniel1sender/Desafio-API/pkg/store/accounts"
 )
 
-func TestAccountUseCase_GetAccounts(t *testing.T) {
+func TestAccountUseCase_Get(t *testing.T) {
 
 	t.Run("should return a full list of accounts", func(t *testing.T) {
 
-		storage := accounts.NewAccountStorage()
-		AccountUseCase := NewAccountUseCase(storage)
+		storage := accounts.NewStorage()
+		AccountUseCase := NewUseCase(storage)
 		name := "John Doe"
 		cpf := "11111111030"
 		secret := "123"
@@ -25,7 +25,7 @@ func TestAccountUseCase_GetAccounts(t *testing.T) {
 
 		storage.Upsert(account.ID, account)
 
-		getAccounts := AccountUseCase.GetAccounts()
+		getAccounts := AccountUseCase.Get()
 
 		if len(getAccounts) == 0 {
 			t.Error("expected a full list of accounts")
@@ -35,10 +35,10 @@ func TestAccountUseCase_GetAccounts(t *testing.T) {
 
 	t.Run("should return an empty list", func(t *testing.T) {
 
-		storage := accounts.NewAccountStorage()
-		AccountUseCase := NewAccountUseCase(storage)
+		storage := accounts.NewStorage()
+		AccountUseCase := NewUseCase(storage)
 
-		getAccounts := AccountUseCase.GetAccounts()
+		getAccounts := AccountUseCase.Get()
 
 		if len(getAccounts) != 0 {
 			t.Error("expected an empty list")

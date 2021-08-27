@@ -11,7 +11,7 @@ var (
 	ErrExistingCPF        = errors.New("cpf informed is invalid")
 )
 
-func (au AccountUseCase) CreateAccount(name, cpf, secret string, balance int) (entities.Account, error) {
+func (au AccountUseCase) Create(name, cpf, secret string, balance int) (entities.Account, error) {
 
 	if err := au.storage.CheckCPF(cpf); err != nil {
 		return entities.Account{}, ErrExistingCPF

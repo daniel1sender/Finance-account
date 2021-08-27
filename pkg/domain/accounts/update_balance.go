@@ -9,7 +9,7 @@ var (
 )
 
 func (au AccountUseCase) UpdateBalance(id string, balance int) error {
-	account, err := au.GetAccountByID(id)
+	account, err := au.GetByID(id)
 	if err != nil {
 		return err
 	}
