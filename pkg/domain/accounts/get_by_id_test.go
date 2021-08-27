@@ -8,12 +8,12 @@ import (
 	"github.com/daniel1sender/Desafio-API/pkg/store/accounts"
 )
 
-func TestAccountUseCase_GetAccountById(t *testing.T) {
+func TestAccountUseCase_GetById(t *testing.T) {
 
 	t.Run("should return an account when the searched account is found", func(t *testing.T) {
 
-		storage := accounts.NewAccountStorage()
-		AccountUseCase := NewAccountUseCase(storage)
+		storage := accounts.NewStorage()
+		AccountUseCase := NewUseCase(storage)
 
 		name := "John Doe"
 		cpf := "11111111030"
@@ -26,7 +26,7 @@ func TestAccountUseCase_GetAccountById(t *testing.T) {
 		}
 
 		storage.Upsert(account.ID, account)
-		GetAccountByID, err := AccountUseCase.GetAccountByID(account.ID)
+		GetAccountByID, err := AccountUseCase.GetByID(account.ID)
 
 		if GetAccountByID == (entities.Account{}) {
 			t.Errorf("expected an account but got %+v", GetAccountByID)
@@ -40,11 +40,11 @@ func TestAccountUseCase_GetAccountById(t *testing.T) {
 
 	t.Run("should return an empty account and a error message when account don't exist", func(t *testing.T) {
 
-		storage := accounts.NewAccountStorage()
-		AccountUseCase := NewAccountUseCase(storage)
+		storage := accounts.NewStorage()
+		AccountUseCase := NewUseCase(storage)
 
 		//passando qualquer id
-		GetAccountByID, err := AccountUseCase.GetAccountByID("account.ID")
+		GetAccountByID, err := AccountUseCase.GetByID("account.ID")
 
 		if GetAccountByID != (entities.Account{}) {
 			t.Errorf("expected empty account but got %+v", GetAccountByID)

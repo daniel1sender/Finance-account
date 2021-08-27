@@ -6,7 +6,7 @@ type TransferStorage struct {
 	storage map[string]entities.Transfer
 }
 
-func NewTransferStorage() TransferStorage {
+func NewStorage() TransferStorage {
 	sto := make(map[string]entities.Transfer)
 	return TransferStorage{
 		storage: sto,

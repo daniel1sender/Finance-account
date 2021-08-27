@@ -15,7 +15,7 @@ type AccountStorage struct {
 	storage map[string]entities.Account
 }
 
-func NewAccountStorage() AccountStorage {
+func NewStorage() AccountStorage {
 	sto := make(map[string]entities.Account)
 	return AccountStorage{
 		storage: sto,

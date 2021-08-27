@@ -8,7 +8,7 @@ type AccountUseCase struct {
 	storage accounts.AccountStorage
 }
 
-func NewAccountUseCase(storage accounts.AccountStorage) AccountUseCase {
+func NewUseCase(storage accounts.AccountStorage) AccountUseCase {
 	return AccountUseCase{
 		storage: storage,
 	}
