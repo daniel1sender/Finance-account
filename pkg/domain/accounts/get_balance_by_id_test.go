@@ -12,7 +12,7 @@ func TestAccountUseCase_GetBalanceByID(t *testing.T) {
 	t.Run("should return an account balance when id is found", func(t *testing.T) {
 
 		storage := accounts.NewStorage()
-		AccountUseCase := NewUseCase(storage)
+		accountUseCase := NewUseCase(storage)
 		name := "John Doe"
 		cpf := "11111111030"
 		secret := "123"
@@ -24,7 +24,7 @@ func TestAccountUseCase_GetBalanceByID(t *testing.T) {
 		}
 		storage.Upsert(account.ID, account)
 
-		getBalance, err := AccountUseCase.GetBalanceByID(account.ID)
+		getBalance, err := accountUseCase.GetBalanceByID(account.ID)
 
 		if getBalance == 0 {
 			t.Error("expected balance account different from 0")
@@ -39,7 +39,7 @@ func TestAccountUseCase_GetBalanceByID(t *testing.T) {
 	t.Run("should return a null account balance when id isn't found", func(t *testing.T) {
 
 		storage := accounts.NewStorage()
-		AccountUseCase := NewUseCase(storage)
+		accountUseCase := NewUseCase(storage)
 		name := "John Doe"
 		cpf := "11111111030"
 		secret := "123"
@@ -50,7 +50,7 @@ func TestAccountUseCase_GetBalanceByID(t *testing.T) {
 			t.Errorf("expected no error to create a new account but got '%s'", err)
 		}
 
-		getBalance, err := AccountUseCase.GetBalanceByID(account.ID)
+		getBalance, err := accountUseCase.GetBalanceByID(account.ID)
 
 		if getBalance != 0 {
 			t.Error("expected account balance equal zero")

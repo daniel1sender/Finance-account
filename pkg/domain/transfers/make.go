@@ -7,7 +7,7 @@ import (
 )
 
 var (
-	ErrToCreateNewTransfer = errors.New("error to create a new transfer")
+	ErrCreatingNewTransfer = errors.New("error when creating a transfer")
 )
 
 func (tu *TransferUseCase) Make(originID, destinationID int, amount int) (entities.Transfer, error) {
@@ -15,7 +15,7 @@ func (tu *TransferUseCase) Make(originID, destinationID int, amount int) (entiti
 	transfer, err := entities.NewTransfer(originID, destinationID, amount)
 
 	if err != nil {
-		return entities.Transfer{}, ErrToCreateNewTransfer
+		return entities.Transfer{}, ErrCreatingNewTransfer
 	}
 
 	tu.storage.UpdateByID(transfer.ID, transfer)

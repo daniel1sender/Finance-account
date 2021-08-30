@@ -12,7 +12,7 @@ func TestAccountUseCase_Get(t *testing.T) {
 	t.Run("should return a full list of accounts", func(t *testing.T) {
 
 		storage := accounts.NewStorage()
-		AccountUseCase := NewUseCase(storage)
+		accountUseCase := NewUseCase(storage)
 		name := "John Doe"
 		cpf := "11111111030"
 		secret := "123"
@@ -25,7 +25,7 @@ func TestAccountUseCase_Get(t *testing.T) {
 
 		storage.Upsert(account.ID, account)
 
-		getAccounts := AccountUseCase.Get()
+		getAccounts := accountUseCase.Get()
 
 		if len(getAccounts) == 0 {
 			t.Error("expected a full list of accounts")
@@ -36,9 +36,9 @@ func TestAccountUseCase_Get(t *testing.T) {
 	t.Run("should return an empty list", func(t *testing.T) {
 
 		storage := accounts.NewStorage()
-		AccountUseCase := NewUseCase(storage)
+		accountUseCase := NewUseCase(storage)
 
-		getAccounts := AccountUseCase.Get()
+		getAccounts := accountUseCase.Get()
 
 		if len(getAccounts) != 0 {
 			t.Error("expected an empty list")

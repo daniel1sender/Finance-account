@@ -13,15 +13,15 @@ func TestAccountUseCase_Make(t *testing.T) {
 	t.Run("should return a transfer", func(t *testing.T) {
 
 		storage := transfers.NewStorage()
-		TransferUsecase := NewTransferUseCase(storage)
+		transferUsecase := NewTransferUseCase(storage)
 		amount := 10
 		originID := 1
 		destinationID := 2
 
-		MakeTransfer, err := TransferUsecase.Make(originID, destinationID, amount)
+		makeTransfer, err := transferUsecase.Make(originID, destinationID, amount)
 
-		if MakeTransfer == (entities.Transfer{}) {
-			t.Errorf("expected a transfer but got '%+v'", MakeTransfer)
+		if makeTransfer == (entities.Transfer{}) {
+			t.Errorf("expected a transfer but got '%+v'", makeTransfer)
 		}
 
 		if err != nil {
@@ -38,14 +38,14 @@ func TestAccountUseCase_Make(t *testing.T) {
 		originID := 1
 		destinationID := 2
 
-		MakeTransfer, err := transferUseCase.Make(originID, destinationID, amount)
+		makeTransfer, err := transferUseCase.Make(originID, destinationID, amount)
 
-		if MakeTransfer != (entities.Transfer{}) {
-			t.Errorf("expected a blank transfer but got '%+v'", MakeTransfer)
+		if makeTransfer != (entities.Transfer{}) {
+			t.Errorf("expected a blank transfer but got '%+v'", makeTransfer)
 		}
 
-		if !errors.Is(err, ErrToCreateNewTransfer) {
-			t.Errorf("expected '%s' but got '%s'", ErrToCreateNewTransfer, err)
+		if !errors.Is(err, ErrCreatingNewTransfer) {
+			t.Errorf("expected '%s' but got '%s'", ErrCreatingNewTransfer, err)
 		}
 
 	})
