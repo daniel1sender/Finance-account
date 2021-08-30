@@ -10,7 +10,7 @@ import (
 
 var (
 	ErrInvalidCPF      = errors.New("cpf informed is invalid")
-	ErrToGenerateHash  = errors.New("could not generate the hash")
+	ErrToGenerateHash  = errors.New("failed to process secret")
 	ErrInvalidName     = errors.New("name informed is empty")
 	ErrBalanceLessZero = errors.New("balance account is less than zero")
 	ErrBlankSecret     = errors.New("secret informed is blank")
@@ -40,8 +40,8 @@ func NewAccount(name, cpf, secret string, balance int) (Account, error) {
 	}
 
 	hash, err := HashGenerator(secret)
-	if err == ErrToGenerateHash {
-		return Account{}, ErrToGenerateHash
+	if err != nil {
+		return Account{}, err
 	}
 
 	if balance < 0 {
