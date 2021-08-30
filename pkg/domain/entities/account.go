@@ -40,7 +40,7 @@ func NewAccount(name, cpf, secret string, balance int) (Account, error) {
 	}
 
 	hash, err := HashGenerator(secret)
-	if err != nil {
+	if err == ErrToGenerateHash {
 		return Account{}, ErrToGenerateHash
 	}
 
@@ -66,7 +66,7 @@ func HashGenerator(secret string) (string, error) {
 	hash, err := bcrypt.GenerateFromPassword([]byte(secret), 4)
 
 	if err != nil {
-		return "", err
+		return "", ErrToGenerateHash
 	}
 
 	return string(hash), nil

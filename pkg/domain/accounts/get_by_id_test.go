@@ -13,7 +13,7 @@ func TestAccountUseCase_GetById(t *testing.T) {
 	t.Run("should return an account when the searched account is found", func(t *testing.T) {
 
 		storage := accounts.NewStorage()
-		AccountUseCase := NewUseCase(storage)
+		accountUseCase := NewUseCase(storage)
 
 		name := "John Doe"
 		cpf := "11111111030"
@@ -26,10 +26,10 @@ func TestAccountUseCase_GetById(t *testing.T) {
 		}
 
 		storage.Upsert(account.ID, account)
-		GetAccountByID, err := AccountUseCase.GetByID(account.ID)
+		getAccountByID, err := accountUseCase.GetByID(account.ID)
 
-		if GetAccountByID == (entities.Account{}) {
-			t.Errorf("expected an account but got %+v", GetAccountByID)
+		if getAccountByID == (entities.Account{}) {
+			t.Errorf("expected an account but got %+v", getAccountByID)
 		}
 
 		if err != nil {
@@ -41,13 +41,13 @@ func TestAccountUseCase_GetById(t *testing.T) {
 	t.Run("should return an empty account and a error message when account don't exist", func(t *testing.T) {
 
 		storage := accounts.NewStorage()
-		AccountUseCase := NewUseCase(storage)
+		accountUseCase := NewUseCase(storage)
 
 		//passando qualquer id
-		GetAccountByID, err := AccountUseCase.GetByID("account.ID")
+		getAccountByID, err := accountUseCase.GetByID("account.ID")
 
-		if GetAccountByID != (entities.Account{}) {
-			t.Errorf("expected empty account but got %+v", GetAccountByID)
+		if getAccountByID != (entities.Account{}) {
+			t.Errorf("expected empty account but got %+v", getAccountByID)
 		}
 
 		if !errors.Is(err, accounts.ErrIDNotFound) {
