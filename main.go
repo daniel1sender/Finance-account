@@ -1,28 +1,25 @@
 package main
 
+import (
+	"log"
+	"net/http"
+
+	accounts_usecase "github.com/daniel1sender/Desafio-API/pkg/domain/accounts"
+	accounts_handler "github.com/daniel1sender/Desafio-API/pkg/gateways/http/accounts"
+	accounts_storage "github.com/daniel1sender/Desafio-API/pkg/gateways/store/accounts"
+	"github.com/gorilla/mux"
+)
+
 func main() {
 
-	//criando duas contas
-	//fmt.Println(entities.NewAccount("John Doe", "11111111030", "123", 0))
-	//account2 := entities.Account{1, "joão", "12345678910", 0}
+	accountStorage := accounts_storage.NewStorage()
+	accountUseCase := accounts_usecase.NewUseCase(accountStorage)
+	accountHandler := accounts_handler.NewHandler(accountUseCase)
 
-	// Criando a transferência
+	r := mux.NewRouter()
+	r.HandleFunc("/accounts", accountHandler.Create) // accountHandler.Create()
 
-	//transfer := entities.Transfer{1, 0, 1, 2}
-	//amount := 2.0
-
-	//Checando a existência das contas:
-
-	//fmt.Println(accounts.CheckAccounts(transfer.Account_origin_id, transfer.Account_destinantion_id))
-
-	//Criando a transferência
-
-	//fmt.Println(transfers.MakeTransfer(transfer))
-
-	//Atualizando o saldo
-
-	//accounts.UpdateAccountBalance(transfer.Account_origin_id, account1.Balance-amount)
-
-	//accounts.UpdateAccountBalance(transfer.Account_destinantion_id, account2.Balance-amount)
-
+	if err := http.ListenAndServe(":3000", r); err != nil {
+		log.Fatalf("failed to listen and serve: %s", err)
+	}
 }
