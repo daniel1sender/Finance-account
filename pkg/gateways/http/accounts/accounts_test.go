@@ -86,7 +86,7 @@ func TestCreate(t *testing.T) {
 
 	})
 
-	t.Run("Should return 400 and a message error when an empty name is informed", func(t *testing.T) {
+	t.Run("should return 400 and a message error when an empty name is informed", func(t *testing.T) {
 
 		request := createRequest{"", "12345678910", "123", 0}
 		requestBody, _ := json.Marshal(request)
@@ -109,6 +109,65 @@ func TestCreate(t *testing.T) {
 		expected := "error while creating an account"
 		if responseReason.Reason != expected {
 			t.Errorf("expected '%s' but got '%s'", expected, responseReason.Reason)
+		}
+
+	})
+
+	t.Run("should return 400 and a message error when the cpf informed doesn't have eleven digits", func(t *testing.T) {
+
+		request := createRequest{"Jonh Doe", "1234567891", "123", 0}
+		requestBody, _ := json.Marshal(request)
+		newRequest, _ := http.NewRequest("POST", "/anyroute", bytes.NewReader(requestBody))
+		newResponse := httptest.NewRecorder()
+
+		storage := accounts_storage.NewStorage()
+		useCase := accounts.NewUseCase(storage)
+		h := NewHandler(useCase)
+
+		h.Create(newResponse, newRequest)
+
+		if newResponse.Code != http.StatusBadRequest {
+			t.Errorf("expected '%d' but got '%d'", http.StatusBadRequest, newResponse.Code)
+		}
+
+		var responseReason Error
+		_ = json.Unmarshal(newResponse.Body.Bytes(), &responseReason)
+
+		expected := "error while creating an account"
+		if responseReason.Reason != expected {
+			t.Errorf("expected '%s' but got '%s'", expected, responseReason.Reason)
+		}
+	})
+
+	t.Run("should return a 400 and a message error when cpf informed already exist", func(t *testing.T) {
+
+		request := createRequest{"Jonh Doe", "12345678910", "123", 0}
+		requestBody, _ := json.Marshal(request)
+		newRequest, _ := http.NewRequest("POST", "anyroute", bytes.NewReader(requestBody))
+		newResponse := httptest.NewRecorder()
+
+		storage := accounts_storage.NewStorage()
+		useCase := accounts.NewUseCase(storage)
+		h := NewHandler(useCase)
+
+		h.Create(newResponse, newRequest)
+
+		request = createRequest{"Jonh Doe", "12345678910", "123", 0}
+		requestBody, _ = json.Marshal(request)
+		newRequest, _ = http.NewRequest("POST", "anyroute", bytes.NewReader(requestBody))
+		newResponse = httptest.NewRecorder()
+
+		h.Create(newResponse, newRequest)
+
+		var responseReason Error
+		_ = json.Unmarshal(newResponse.Body.Bytes(), &responseReason)
+
+		if newResponse.Code != http.StatusBadRequest {
+			t.Errorf("expected '%d' but got '%d'", http.StatusBadRequest, newResponse.Code)
+		}
+
+		if responseReason.Reason != accounts.ErrExistingCPF.Error() {
+			t.Errorf("expected '%s' but got '%s'", accounts.ErrExistingCPF.Error(), responseReason.Reason)
 		}
 
 	})
