@@ -13,48 +13,25 @@ import (
 
 func TestCreate(t *testing.T) {
 
-	t.Run("should return 400 and a error message when the type informed it is not a json", func(t *testing.T) {
-
-		storage := accounts_storage.NewStorage()
-		useCase := accounts.NewUseCase(storage)
-		h := NewHandler(useCase)
-		b := []byte{}
-
-		newRequest, _ := http.NewRequest("POST", "/anyroute", bytes.NewReader(b))
-		newResponse := httptest.NewRecorder()
-
-		h.Create(newResponse, newRequest)
-
-		if newResponse.Code != http.StatusBadRequest {
-			t.Errorf("expected status '%d' but got '%d'", http.StatusBadRequest, newResponse.Code)
-		}
-
-		expected := "invalid request body"
-		if newResponse.Body.String() == expected {
-			t.Errorf("expected %s but got %s", expected, newResponse.Body.String())
-		}
-
-	})
+	type createRequest struct {
+		Name    string
+		CPF     string
+		Secret  string
+		Balance int
+	}
 
 	t.Run("should return 200 and null error when the type informed is json", func(t *testing.T) {
 
-		storage := accounts_storage.NewStorage()
-		useCase := accounts.NewUseCase(storage)
-		h := NewHandler(useCase)
-
-		type CreateRequest struct {
-			Name    string
-			CPF     string
-			Secret  string
-			Balance int
-		}
-
-		request := CreateRequest{"Jonh Doe", "12345678910", "123", 0}
+		request := createRequest{"Jonh Doe", "12345678910", "123", 0}
 
 		requestBody, _ := json.Marshal(request)
 
 		newRequest, _ := http.NewRequest("POST", "/anyroute", bytes.NewReader(requestBody))
 		newResponse := httptest.NewRecorder()
+
+		storage := accounts_storage.NewStorage()
+		useCase := accounts.NewUseCase(storage)
+		h := NewHandler(useCase)
 
 		h.Create(newResponse, newRequest)
 
@@ -82,4 +59,58 @@ func TestCreate(t *testing.T) {
 		}
 
 	})
+
+	t.Run("should return 400 and a error message when the type informed it is not a json", func(t *testing.T) {
+
+		b := []byte{}
+		newRequest, _ := http.NewRequest("POST", "/anyroute", bytes.NewReader(b))
+		newResponse := httptest.NewRecorder()
+
+		storage := accounts_storage.NewStorage()
+		useCase := accounts.NewUseCase(storage)
+		h := NewHandler(useCase)
+
+		h.Create(newResponse, newRequest)
+
+		if newResponse.Code != http.StatusBadRequest {
+			t.Errorf("expected status '%d' but got '%d'", http.StatusBadRequest, newResponse.Code)
+		}
+
+		var responseReason Error
+		_ = json.Unmarshal(newResponse.Body.Bytes(), &responseReason)
+
+		expected := "invalid request body"
+		if responseReason.Reason != expected {
+			t.Errorf("expected '%s' but got '%s'", expected, responseReason.Reason)
+		}
+
+	})
+
+	t.Run("Should return 400 and a message error when an empty name is informed", func(t *testing.T) {
+
+		request := createRequest{"", "12345678910", "123", 0}
+		requestBody, _ := json.Marshal(request)
+		newRequest, _ := http.NewRequest("POST", "/anyroute", bytes.NewReader(requestBody))
+		newResponse := httptest.NewRecorder()
+
+		storage := accounts_storage.NewStorage()
+		useCase := accounts.NewUseCase(storage)
+		h := NewHandler(useCase)
+
+		h.Create(newResponse, newRequest)
+
+		if newResponse.Code != http.StatusBadRequest {
+			t.Errorf("expected status '%d' but got '%d'", http.StatusBadRequest, newResponse.Code)
+		}
+
+		var responseReason Error
+		_ = json.Unmarshal(newResponse.Body.Bytes(), &responseReason)
+
+		expected := "error while creating an account"
+		if responseReason.Reason != expected {
+			t.Errorf("expected '%s' but got '%s'", expected, responseReason.Reason)
+		}
+
+	})
+
 }
