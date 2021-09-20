@@ -2,6 +2,7 @@ package entities
 
 import (
 	"errors"
+	"fmt"
 	"time"
 
 	"github.com/google/uuid"
@@ -12,8 +13,8 @@ var (
 	ErrInvalidCPF      = errors.New("cpf informed is invalid")
 	ErrToGenerateHash  = errors.New("failed to process secret")
 	ErrInvalidName     = errors.New("name informed is empty")
-	ErrBalanceLessZero = errors.New("balance account is less than zero")
-	ErrBlankSecret     = errors.New("secret informed is blank")
+	ErrBalanceLessZero = errors.New("balance of the account created cannot be less than zero")
+	ErrBlankSecret     = errors.New("secret informed is blanc")
 )
 
 type Account struct {
@@ -41,7 +42,7 @@ func NewAccount(name, cpf, secret string, balance int) (Account, error) {
 
 	hash, err := HashGenerator(secret)
 	if err != nil {
-		return Account{}, err
+		return Account{}, fmt.Errorf("%s: %w", ErrToGenerateHash, err)
 	}
 
 	if balance < 0 {
@@ -66,7 +67,7 @@ func HashGenerator(secret string) (string, error) {
 	hash, err := bcrypt.GenerateFromPassword([]byte(secret), 4)
 
 	if err != nil {
-		return "", ErrToGenerateHash
+		return "", err
 	}
 
 	return string(hash), nil
