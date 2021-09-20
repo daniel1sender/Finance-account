@@ -2,6 +2,7 @@ package accounts
 
 import (
 	"errors"
+	"fmt"
 
 	"github.com/daniel1sender/Desafio-API/pkg/domain/entities"
 )
@@ -19,7 +20,7 @@ func (au AccountUseCase) Create(name, cpf, secret string, balance int) (entities
 
 	account, err := entities.NewAccount(name, cpf, secret, balance)
 	if err != nil {
-		return entities.Account{}, ErrCreatingNewAccount
+		return entities.Account{}, fmt.Errorf("%s: %w", ErrCreatingNewAccount, err)
 	}
 
 	au.storage.Upsert(account.ID, account)
