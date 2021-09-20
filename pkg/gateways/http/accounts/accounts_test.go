@@ -8,6 +8,7 @@ import (
 	"testing"
 
 	"github.com/daniel1sender/Desafio-API/pkg/domain/accounts"
+	"github.com/daniel1sender/Desafio-API/pkg/domain/entities"
 	accounts_storage "github.com/daniel1sender/Desafio-API/pkg/gateways/store/accounts"
 )
 
@@ -106,11 +107,9 @@ func TestCreate(t *testing.T) {
 		var responseReason Error
 		_ = json.Unmarshal(newResponse.Body.Bytes(), &responseReason)
 
-		expected := "error while creating an account"
-		if responseReason.Reason != expected {
-			t.Errorf("expected '%s' but got '%s'", expected, responseReason.Reason)
+		if responseReason.Reason != entities.ErrInvalidName.Error() {
+			t.Errorf("expected '%s' but got '%s'", entities.ErrInvalidName, responseReason.Reason)
 		}
-
 	})
 
 	t.Run("should return 400 and a message error when the cpf informed doesn't have eleven digits", func(t *testing.T) {
@@ -133,10 +132,10 @@ func TestCreate(t *testing.T) {
 		var responseReason Error
 		_ = json.Unmarshal(newResponse.Body.Bytes(), &responseReason)
 
-		expected := "error while creating an account"
-		if responseReason.Reason != expected {
-			t.Errorf("expected '%s' but got '%s'", expected, responseReason.Reason)
+		if responseReason.Reason != entities.ErrInvalidCPF.Error() {
+			t.Errorf("expected '%s' but got '%s'", entities.ErrInvalidCPF.Error(), responseReason.Reason)
 		}
+
 	})
 
 	t.Run("should return a 400 and a message error when cpf informed already exist", func(t *testing.T) {
@@ -192,14 +191,13 @@ func TestCreate(t *testing.T) {
 			t.Errorf("expected '%d' but got '%d'", http.StatusBadRequest, newResponse.Code)
 		}
 
-		expected := "error while creating an account"
-		if responseReason.Reason != expected {
-			t.Errorf("expected '%s' but got '%s'", expected, responseReason.Reason)
+		if responseReason.Reason != entities.ErrBlankSecret.Error() {
+			t.Errorf("expected '%s' but got '%s'", entities.ErrBlankSecret.Error(), responseReason.Reason)
 		}
 
 	})
 
-	t.Run("should return 400 and a message error when balance informed is less than zero", func(t *testing.T){
+	t.Run("should return 400 and a message error when balance informed is less than zero", func(t *testing.T) {
 
 		request := createRequest{"Jonh Doe", "12345678910", "123", -10}
 		requestBody, _ := json.Marshal(request)
@@ -219,9 +217,8 @@ func TestCreate(t *testing.T) {
 			t.Errorf("expected '%d' but got '%d'", http.StatusBadRequest, newResponse.Code)
 		}
 
-		expected := "error while creating an account"
-		if responseReason.Reason != expected {
-			t.Errorf("expected '%s' but got '%s'", expected, responseReason.Reason)
+		if responseReason.Reason != entities.ErrBalanceLessZero.Error() {
+			t.Errorf("expected '%s' but got '%s'", entities.ErrBalanceLessZero.Error(), responseReason.Reason)
 		}
 
 	})
