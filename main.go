@@ -17,7 +17,8 @@ func main() {
 	accountHandler := accounts_handler.NewHandler(accountUseCase)
 
 	r := mux.NewRouter()
-	r.HandleFunc("/accounts", accountHandler.Create) // accountHandler.Create()
+	r.HandleFunc("/accounts", accountHandler.Create).Methods(http.MethodPost) // accountHandler.Create()
+	r.HandleFunc("/accounts", accountHandler.Get).Methods(http.MethodGet)
 
 	if err := http.ListenAndServe(":3000", r); err != nil {
 		log.Fatalf("failed to listen and serve: %s", err)
