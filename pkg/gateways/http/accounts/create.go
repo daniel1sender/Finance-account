@@ -103,7 +103,12 @@ func (h Handler) Create(w http.ResponseWriter, r *http.Request) {
 
 	createResponse := CreateResponse{account.ID, account.Name, account.CPF, account.Balance, account.CreatedAt}
 
-	responseBody, _ := json.Marshal(createResponse)
+	responseBody, err := json.Marshal(createResponse)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		log.Print("error while enconding the response")
+	}
+
 	w.WriteHeader(http.StatusCreated)
 	_, err = w.Write(responseBody)
 	if err != nil {

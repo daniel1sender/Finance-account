@@ -21,3 +21,4 @@ func NewStorage() AccountStorage {
 		storage: sto,
 	}
 }
+
