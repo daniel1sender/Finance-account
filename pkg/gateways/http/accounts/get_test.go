@@ -47,4 +47,6 @@ func TestGet(t *testing.T) {
 
 	})
 
+	/* t.Run("should return 400 and an error message when no account was created") */
+
 }
