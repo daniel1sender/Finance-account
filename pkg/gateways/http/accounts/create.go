@@ -9,7 +9,7 @@ import (
 
 	"github.com/daniel1sender/Desafio-API/pkg/domain/accounts"
 	"github.com/daniel1sender/Desafio-API/pkg/domain/entities"
-	"github.com/daniel1sender/Desafio-API/pkg/gateways/http"
+	server_http "github.com/daniel1sender/Desafio-API/pkg/domain/gateways/http"
 )
 
 type CreateRequest struct {
@@ -44,7 +44,7 @@ func (h Handler) Create(w http.ResponseWriter, r *http.Request) {
 	}
 
 	account, err := h.useCase.Create(createRequest.Name, createRequest.CPF, createRequest.Secret, createRequest.Balance)
-	w.Header().Add("Content-Type", ContentType)
+	w.Header().Add("Content-Type", server_http.ContentType)
 	if err != nil {
 		log.Printf("request failed: %s\n", err.Error())
 		switch {

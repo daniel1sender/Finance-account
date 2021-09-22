@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 
+	server_http "github.com/daniel1sender/Desafio-API/pkg/domain/gateways/http"
 	"github.com/daniel1sender/Desafio-API/pkg/gateways/store/accounts"
 )
 
@@ -13,7 +14,7 @@ type RequestByID struct {
 	Id string `json:"id"`
 }
 
-type ResponseByID struct{
+type ResponseByID struct {
 	Balance int `json:"balance"`
 }
 
@@ -30,7 +31,7 @@ func (h Handler) GetBalanceByID(w http.ResponseWriter, r *http.Request) {
 	}
 
 	balance, err := h.useCase.GetBalanceByID(request.Id)
-	w.Header().Add("Content-Type", contentType)
+	w.Header().Add("Content-Type", server_http.ContentType)
 	if err != nil {
 		log.Printf("request failed: %s", err)
 		switch {

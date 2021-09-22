@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	"github.com/daniel1sender/Desafio-API/pkg/domain/entities"
+	server_http "github.com/daniel1sender/Desafio-API/pkg/domain/gateways/http"
 )
 
 type Response struct {
@@ -16,7 +17,7 @@ func (h Handler) Get(w http.ResponseWriter, r *http.Request) {
 
 	accountsList := h.useCase.Get()
 
-	w.Header().Add("Content-Type", contentType)
+	w.Header().Add("Content-Type", server_http.ContentType)
 
 	response := Response{accountsList}
 
