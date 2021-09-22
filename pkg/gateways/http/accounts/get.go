@@ -9,7 +9,7 @@ import (
 	server_http "github.com/daniel1sender/Desafio-API/pkg/gateways/http"
 )
 
-type Response struct {
+type ResponseGet struct {
 	List []entities.Account
 }
 
@@ -22,15 +22,15 @@ func (h Handler) Get(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Add("Content-Type", server_http.ContentType)
 
-	response := Response{accountsList}
+	responseGet := ResponseGet{accountsList}
 
-	responseBody, err := json.Marshal(response)
+	response, err := json.Marshal(responseGet)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
-		log.Print("error while enconding the response")
+		log.Printf("JSON marshaling failed: %s", err)
 	}
 
-	_, err = w.Write(responseBody)
+	_, err = w.Write(response)
 	if err != nil {
 		log.Printf("error while getting the list of accounts")
 	}

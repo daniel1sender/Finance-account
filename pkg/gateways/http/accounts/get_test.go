@@ -25,12 +25,12 @@ func TestGet(t *testing.T) {
 
 		_, _ = useCase.Create(name, cpf, secret, balance)
 
-		newRequest, _ := http.NewRequest(http.MethodGet, "/anyroute", nil)
+		newRequest, _ := http.NewRequest(http.MethodGet, "/accounts", nil)
 		newResponse := httptest.NewRecorder()
 		h := NewHandler(useCase)
 		h.Get(newResponse, newRequest)
 
-		var accountsList Response
+		var accountsList ResponseGet
 		_ = json.Unmarshal(newResponse.Body.Bytes(), &accountsList)
 
 		for _, value := range accountsList.List {
@@ -52,12 +52,12 @@ func TestGet(t *testing.T) {
 		storage := accounts_storage.NewStorage()
 		useCase := accounts.NewUseCase(storage)
 
-		newRequest, _ := http.NewRequest(http.MethodGet, "/accounts/", nil)
+		newRequest, _ := http.NewRequest(http.MethodGet, "/accounts", nil)
 		newResponse := httptest.NewRecorder()
 		h := NewHandler(useCase)
 		h.Get(newResponse, newRequest)
 
-		var accountsList Response
+		var accountsList ResponseGet
 		_ = json.Unmarshal(newResponse.Body.Bytes(), &accountsList)
 
 		if newResponse.Code != http.StatusNotFound {

@@ -14,62 +14,55 @@ import (
 
 func TestCreate(t *testing.T) {
 
-	type createRequest struct {
-		Name    string
-		CPF     string
-		Secret  string
-		Balance int
-	}
-
 	t.Run("should return 200 and null error when the type informed is json", func(t *testing.T) {
-
-		request := createRequest{"Jonh Doe", "12345678910", "123", 0}
-
-		requestBody, _ := json.Marshal(request)
-
-		newRequest, _ := http.NewRequest("POST", "/anyroute", bytes.NewReader(requestBody))
-		newResponse := httptest.NewRecorder()
 
 		storage := accounts_storage.NewStorage()
 		useCase := accounts.NewUseCase(storage)
 		h := NewHandler(useCase)
 
+		requestCreate := RequestCreate{"Jonh Doe", "12345678910", "123", 0}
+
+		request, _ := json.Marshal(requestCreate)
+
+		newRequest, _ := http.NewRequest("POST", "/anyroute", bytes.NewReader(request))
+		newResponse := httptest.NewRecorder()
+
 		h.Create(newResponse, newRequest)
 
-		var responseValidation CreateResponse
-		_ = json.Unmarshal(newResponse.Body.Bytes(), &responseValidation)
+		var response ResponseCreate
+		_ = json.Unmarshal(newResponse.Body.Bytes(), &response)
 
 		if newResponse.Code != http.StatusCreated {
 			t.Errorf("expected '%d' but got '%d'", http.StatusCreated, newResponse.Code)
 		}
 
-		if responseValidation.Name != request.Name {
-			t.Errorf("expected '%s' but got '%s'", request.Name, responseValidation.Name)
+		if response.Name != requestCreate.Name {
+			t.Errorf("expected '%s' but got '%s'", requestCreate.Name, response.Name)
 		}
 
-		if responseValidation.CPF != request.CPF {
-			t.Errorf("expected '%s' but got '%s'", request.CPF, responseValidation.CPF)
+		if response.CPF != requestCreate.CPF {
+			t.Errorf("expected '%s' but got '%s'", requestCreate.CPF, response.CPF)
 		}
 
-		if responseValidation.Balance != request.Balance {
-			t.Errorf("expected '%d' but got '%d'", 0, responseValidation.Balance)
+		if response.Balance != requestCreate.Balance {
+			t.Errorf("expected '%d' but got '%d'", 0, response.Balance)
 		}
 
-		if responseValidation.CreatedAt.IsZero() {
-			t.Errorf("expected nonzero time but got '%s'", responseValidation.CreatedAt)
+		if response.CreatedAt.IsZero() {
+			t.Errorf("expected nonzero time but got '%s'", response.CreatedAt)
 		}
 
 	})
 
 	t.Run("should return 400 and a error message when the type informed it is not a json", func(t *testing.T) {
 
-		b := []byte{}
-		newRequest, _ := http.NewRequest("POST", "/anyroute", bytes.NewReader(b))
-		newResponse := httptest.NewRecorder()
-
 		storage := accounts_storage.NewStorage()
 		useCase := accounts.NewUseCase(storage)
 		h := NewHandler(useCase)
+
+		b := []byte{}
+		newRequest, _ := http.NewRequest("POST", "/anyroute", bytes.NewReader(b))
+		newResponse := httptest.NewRecorder()
 
 		h.Create(newResponse, newRequest)
 
@@ -89,14 +82,14 @@ func TestCreate(t *testing.T) {
 
 	t.Run("should return 400 and a message error when an empty name is informed", func(t *testing.T) {
 
-		request := createRequest{"", "12345678910", "123", 0}
-		requestBody, _ := json.Marshal(request)
-		newRequest, _ := http.NewRequest("POST", "/anyroute", bytes.NewReader(requestBody))
-		newResponse := httptest.NewRecorder()
-
 		storage := accounts_storage.NewStorage()
 		useCase := accounts.NewUseCase(storage)
 		h := NewHandler(useCase)
+
+		requestCreate := RequestCreate{"", "12345678910", "123", 0}
+		request, _ := json.Marshal(requestCreate)
+		newRequest, _ := http.NewRequest("POST", "/anyroute", bytes.NewReader(request))
+		newResponse := httptest.NewRecorder()
 
 		h.Create(newResponse, newRequest)
 
@@ -114,14 +107,14 @@ func TestCreate(t *testing.T) {
 
 	t.Run("should return 400 and a message error when the cpf informed doesn't have eleven digits", func(t *testing.T) {
 
-		request := createRequest{"Jonh Doe", "1234567891", "123", 0}
-		requestBody, _ := json.Marshal(request)
-		newRequest, _ := http.NewRequest("POST", "/anyroute", bytes.NewReader(requestBody))
-		newResponse := httptest.NewRecorder()
-
 		storage := accounts_storage.NewStorage()
 		useCase := accounts.NewUseCase(storage)
 		h := NewHandler(useCase)
+
+		requestCreate := RequestCreate{"Jonh Doe", "1234567891", "123", 0}
+		requestBody, _ := json.Marshal(requestCreate)
+		newRequest, _ := http.NewRequest("POST", "/anyroute", bytes.NewReader(requestBody))
+		newResponse := httptest.NewRecorder()
 
 		h.Create(newResponse, newRequest)
 
@@ -140,19 +133,19 @@ func TestCreate(t *testing.T) {
 
 	t.Run("should return a 400 and a message error when cpf informed already exist", func(t *testing.T) {
 
-		request := createRequest{"Jonh Doe", "12345678910", "123", 0}
-		requestBody, _ := json.Marshal(request)
-		newRequest, _ := http.NewRequest("POST", "anyroute", bytes.NewReader(requestBody))
-		newResponse := httptest.NewRecorder()
-
 		storage := accounts_storage.NewStorage()
 		useCase := accounts.NewUseCase(storage)
 		h := NewHandler(useCase)
 
+		requestCreate := RequestCreate{"Jonh Doe", "12345678910", "123", 0}
+		requestBody, _ := json.Marshal(requestCreate)
+		newRequest, _ := http.NewRequest("POST", "anyroute", bytes.NewReader(requestBody))
+		newResponse := httptest.NewRecorder()
+
 		h.Create(newResponse, newRequest)
 
-		request = createRequest{"Jonh Doe", "12345678910", "123", 0}
-		requestBody, _ = json.Marshal(request)
+		requestCreate = RequestCreate{"Jonh Doe", "12345678910", "123", 0}
+		requestBody, _ = json.Marshal(requestCreate)
 		newRequest, _ = http.NewRequest("POST", "anyroute", bytes.NewReader(requestBody))
 		newResponse = httptest.NewRecorder()
 
@@ -173,14 +166,14 @@ func TestCreate(t *testing.T) {
 
 	t.Run("should return 400 and a message error when a blanc secret is informed", func(t *testing.T) {
 
-		request := createRequest{"Jonh Doe", "12345678910", "", 0}
-		requestBody, _ := json.Marshal(request)
-		newRequest, _ := http.NewRequest("POST", "anyroute", bytes.NewReader(requestBody))
-		newResponse := httptest.NewRecorder()
-
 		storage := accounts_storage.NewStorage()
 		useCase := accounts.NewUseCase(storage)
 		h := NewHandler(useCase)
+
+		requestCreate := RequestCreate{"Jonh Doe", "12345678910", "", 0}
+		requestBody, _ := json.Marshal(requestCreate)
+		newRequest, _ := http.NewRequest("POST", "anyroute", bytes.NewReader(requestBody))
+		newResponse := httptest.NewRecorder()
 
 		h.Create(newResponse, newRequest)
 
@@ -199,14 +192,14 @@ func TestCreate(t *testing.T) {
 
 	t.Run("should return 400 and a message error when balance informed is less than zero", func(t *testing.T) {
 
-		request := createRequest{"Jonh Doe", "12345678910", "123", -10}
-		requestBody, _ := json.Marshal(request)
-		newRequest, _ := http.NewRequest("POST", "anyroute", bytes.NewReader(requestBody))
-		newResponse := httptest.NewRecorder()
-
 		storage := accounts_storage.NewStorage()
 		useCase := accounts.NewUseCase(storage)
 		h := NewHandler(useCase)
+
+		requestCreate := RequestCreate{"Jonh Doe", "12345678910", "123", -10}
+		requestBody, _ := json.Marshal(requestCreate)
+		newRequest, _ := http.NewRequest("POST", "anyroute", bytes.NewReader(requestBody))
+		newResponse := httptest.NewRecorder()
 
 		h.Create(newResponse, newRequest)
 
