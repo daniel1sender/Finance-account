@@ -12,14 +12,14 @@ import (
 	server_http "github.com/daniel1sender/Desafio-API/pkg/gateways/http"
 )
 
-type CreateRequest struct {
+type RequestCreate struct {
 	Name    string `json:"name"`
 	CPF     string `json:"cpf"`
 	Secret  string `json:"secret"`
 	Balance int    `json:"balance"`
 }
 
-type CreateResponse struct {
+type ResponseCreate struct {
 	ID        string    `json:"id"`
 	Name      string    `json:"name"`
 	CPF       string    `json:"cpf"`
@@ -27,17 +27,13 @@ type CreateResponse struct {
 	CreatedAt time.Time `json:"created_at"`
 }
 
-type Error struct {
-	Reason string `json:"reason"`
-}
-
 func (h Handler) Create(w http.ResponseWriter, r *http.Request) {
 
-	var createRequest CreateRequest
+	var createRequest RequestCreate
 	err := json.NewDecoder(r.Body).Decode(&createRequest)
 	if err != nil {
 		response := Error{Reason: "invalid request body"}
-		log.Printf("error decoding body: %s\n", err.Error())
+		log.Printf("error decoding body: %s\n", err)
 		w.WriteHeader(http.StatusBadRequest)
 		json.NewEncoder(w).Encode(response)
 		return
@@ -71,7 +67,7 @@ func (h Handler) Create(w http.ResponseWriter, r *http.Request) {
 
 		case errors.Is(err, entities.ErrToGenerateHash):
 			response := Error{Reason: entities.ErrToGenerateHash.Error()}
-			w.WriteHeader(http.StatusBadRequest)
+			w.WriteHeader(http.StatusInternalServerError)
 			json.NewEncoder(w).Encode(response)
 
 		case errors.Is(err, entities.ErrBalanceLessZero):
@@ -81,24 +77,24 @@ func (h Handler) Create(w http.ResponseWriter, r *http.Request) {
 
 		default:
 			response := Error{Reason: "internal server error"}
-			w.WriteHeader(http.StatusBadRequest)
+			w.WriteHeader(http.StatusInternalServerError)
 			json.NewEncoder(w).Encode(response)
 		}
 
 		return
 	}
 
-	createResponse := CreateResponse{account.ID, account.Name, account.CPF, account.Balance, account.CreatedAt}
+	responseCreate := ResponseCreate{account.ID, account.Name, account.CPF, account.Balance, account.CreatedAt}
 
-	responseBody, err := json.Marshal(createResponse)
+	response, err := json.Marshal(responseCreate)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
-		log.Print("error while enconding the response")
+		log.Printf("JSON marshaling failed: %s", err)
 		return
 	}
 
 	w.WriteHeader(http.StatusCreated)
-	_, err = w.Write(responseBody)
+	_, err = w.Write(response)
 	if err != nil {
 		log.Printf("error while informing the new account")
 		return
