@@ -6,7 +6,7 @@ import (
 	"log"
 	"net/http"
 
-	server_http "github.com/daniel1sender/Desafio-API/pkg/domain/gateways/http"
+	server_http "github.com/daniel1sender/Desafio-API/pkg/gateways/http"
 	"github.com/daniel1sender/Desafio-API/pkg/gateways/store/accounts"
 )
 
@@ -37,12 +37,12 @@ func (h Handler) GetBalanceByID(w http.ResponseWriter, r *http.Request) {
 		switch {
 		case errors.Is(err, accounts.ErrIDNotFound):
 			response := Error{Reason: accounts.ErrIDNotFound.Error()}
-			w.WriteHeader(http.StatusBadRequest)
+			w.WriteHeader(http.StatusNotFound)
 			json.NewEncoder(w).Encode(response)
 
 		default:
 			response := Error{Reason: "internal error server"}
-			w.WriteHeader(http.StatusBadRequest)
+			w.WriteHeader(http.StatusInternalServerError)
 			json.NewEncoder(w).Encode(response)
 		}
 		return
@@ -53,14 +53,14 @@ func (h Handler) GetBalanceByID(w http.ResponseWriter, r *http.Request) {
 	response, err := json.Marshal(balanceResponse)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
-		log.Println("error while enconding the response")
+		log.Printf("JSON marshaling failed: %s", err)
 		return
 	}
 
 	w.WriteHeader(http.StatusCreated)
 	_, err = w.Write(response)
 	if err != nil {
-		log.Printf("error while informing the new account")
+		log.Printf("error while informing the new account: %s", err)
 		return
 	}
 

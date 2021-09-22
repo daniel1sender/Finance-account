@@ -2,8 +2,6 @@ package accounts
 
 import "github.com/daniel1sender/Desafio-API/pkg/domain/accounts"
 
-
-
 type Handler struct {
 	useCase accounts.AccountUseCase
 }
