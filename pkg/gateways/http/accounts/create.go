@@ -9,21 +9,8 @@ import (
 
 	"github.com/daniel1sender/Desafio-API/pkg/domain/accounts"
 	"github.com/daniel1sender/Desafio-API/pkg/domain/entities"
+	"github.com/daniel1sender/Desafio-API/pkg/gateways/http"
 )
-
-const (
-	contentType = "application/json"
-)
-
-type Handler struct {
-	useCase accounts.AccountUseCase
-}
-
-func NewHandler(useCase accounts.AccountUseCase) Handler {
-	return Handler{
-		useCase: useCase,
-	}
-}
 
 type CreateRequest struct {
 	Name    string `json:"name"`
@@ -57,7 +44,7 @@ func (h Handler) Create(w http.ResponseWriter, r *http.Request) {
 	}
 
 	account, err := h.useCase.Create(createRequest.Name, createRequest.CPF, createRequest.Secret, createRequest.Balance)
-	w.Header().Add("Content-Type", contentType)
+	w.Header().Add("Content-Type", ContentType)
 	if err != nil {
 		log.Printf("request failed: %s\n", err.Error())
 		switch {
@@ -107,11 +94,13 @@ func (h Handler) Create(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		log.Print("error while enconding the response")
+		return
 	}
 
 	w.WriteHeader(http.StatusCreated)
 	_, err = w.Write(responseBody)
 	if err != nil {
 		log.Printf("error while informing the new account")
+		return
 	}
 }
