@@ -6,7 +6,7 @@ import (
 	"net/http"
 
 	"github.com/daniel1sender/Desafio-API/pkg/domain/entities"
-	server_http "github.com/daniel1sender/Desafio-API/pkg/domain/gateways/http"
+	server_http "github.com/daniel1sender/Desafio-API/pkg/gateways/http"
 )
 
 type Response struct {
@@ -16,6 +16,9 @@ type Response struct {
 func (h Handler) Get(w http.ResponseWriter, r *http.Request) {
 
 	accountsList := h.useCase.Get()
+	if len(accountsList) == 0 {
+		w.WriteHeader(http.StatusNotFound)
+	}
 
 	w.Header().Add("Content-Type", server_http.ContentType)
 

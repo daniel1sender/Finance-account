@@ -9,7 +9,7 @@ import (
 
 	"github.com/daniel1sender/Desafio-API/pkg/domain/accounts"
 	"github.com/daniel1sender/Desafio-API/pkg/domain/entities"
-	server_http "github.com/daniel1sender/Desafio-API/pkg/domain/gateways/http"
+	server_http "github.com/daniel1sender/Desafio-API/pkg/gateways/http"
 )
 
 type CreateRequest struct {

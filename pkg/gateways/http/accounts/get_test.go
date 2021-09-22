@@ -47,6 +47,27 @@ func TestGet(t *testing.T) {
 
 	})
 
-	/* t.Run("should return 400 and an error message when no account was created") */
+	t.Run("should return 404 and an empty list of accounts when no account was created", func(t *testing.T) {
+
+		storage := accounts_storage.NewStorage()
+		useCase := accounts.NewUseCase(storage)
+
+		newRequest, _ := http.NewRequest(http.MethodGet, "/accounts/", nil)
+		newResponse := httptest.NewRecorder()
+		h := NewHandler(useCase)
+		h.Get(newResponse, newRequest)
+
+		var accountsList Response
+		_ = json.Unmarshal(newResponse.Body.Bytes(), &accountsList)
+
+		if newResponse.Code != http.StatusNotFound {
+			t.Errorf("expected '%d' but got '%d'", http.StatusBadRequest, newResponse.Code)
+		}
+
+		if len(accountsList.List) != 0 {
+			t.Errorf("expected empty list of accounts but got '%v'", accountsList.List)
+		}
+
+	})
 
 }
