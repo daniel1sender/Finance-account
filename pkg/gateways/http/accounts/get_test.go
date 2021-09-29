@@ -8,6 +8,7 @@ import (
 
 	"github.com/daniel1sender/Desafio-API/pkg/domain/accounts"
 
+	server_http "github.com/daniel1sender/Desafio-API/pkg/gateways/http"
 	accounts_storage "github.com/daniel1sender/Desafio-API/pkg/gateways/store/accounts"
 )
 
@@ -45,6 +46,14 @@ func TestGet(t *testing.T) {
 			}
 		}
 
+		if newResponse.Header().Get("content-type") != server_http.ContentType {
+			t.Errorf("expected '%s' but got '%s'", server_http.ContentType, newResponse.Header().Get("content-type"))
+		}
+
+		if newResponse.Code != http.StatusOK {
+			t.Errorf("expected '%d' but got '%d'", http.StatusOK, newResponse.Code)
+		}
+
 	})
 
 	t.Run("should return 404 and an empty list of accounts when no account was created", func(t *testing.T) {
@@ -66,6 +75,10 @@ func TestGet(t *testing.T) {
 
 		if len(accountsList.List) != 0 {
 			t.Errorf("expected empty list of accounts but got '%v'", accountsList.List)
+		}
+
+		if newResponse.Header().Get("content-type") != server_http.ContentType {
+			t.Errorf("expected '%s' but got '%s'", server_http.ContentType, newResponse.Header().Get("content-type"))
 		}
 
 	})

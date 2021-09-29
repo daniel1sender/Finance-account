@@ -42,7 +42,7 @@ func NewAccount(name, cpf, secret string, balance int) (Account, error) {
 
 	hash, err := HashGenerator(secret)
 	if err != nil {
-		return Account{}, fmt.Errorf("%s: %w", ErrToGenerateHash, err)
+		return Account{}, fmt.Errorf("%w: %s", ErrToGenerateHash, err)
 	}
 
 	if balance < 0 {
