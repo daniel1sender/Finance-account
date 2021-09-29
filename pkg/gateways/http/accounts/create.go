@@ -32,6 +32,7 @@ func (h Handler) Create(w http.ResponseWriter, r *http.Request) {
 	var createRequest RequestCreate
 	err := json.NewDecoder(r.Body).Decode(&createRequest)
 	if err != nil {
+		w.Header().Add("Content-Type", server_http.ContentType)
 		response := Error{Reason: "invalid request body"}
 		log.Printf("error decoding body: %s\n", err)
 		w.WriteHeader(http.StatusBadRequest)
@@ -86,17 +87,7 @@ func (h Handler) Create(w http.ResponseWriter, r *http.Request) {
 
 	responseCreate := ResponseCreate{account.ID, account.Name, account.CPF, account.Balance, account.CreatedAt}
 
-	response, err := json.Marshal(responseCreate)
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		log.Printf("JSON marshaling failed: %s", err)
-		return
-	}
-
 	w.WriteHeader(http.StatusCreated)
-	_, err = w.Write(response)
-	if err != nil {
-		log.Printf("error while informing the new account")
-		return
-	}
+	_ = json.NewEncoder(w).Encode(responseCreate)
+
 }

@@ -9,6 +9,7 @@ import (
 
 	"github.com/daniel1sender/Desafio-API/pkg/domain/accounts"
 	"github.com/daniel1sender/Desafio-API/pkg/domain/entities"
+	server_http "github.com/daniel1sender/Desafio-API/pkg/gateways/http"
 	accounts_storage "github.com/daniel1sender/Desafio-API/pkg/gateways/store/accounts"
 )
 
@@ -34,6 +35,10 @@ func TestCreate(t *testing.T) {
 
 		if newResponse.Code != http.StatusCreated {
 			t.Errorf("expected '%d' but got '%d'", http.StatusCreated, newResponse.Code)
+		}
+
+		if newResponse.Header().Get("content-type") != server_http.ContentType {
+			t.Errorf("expected '%s' but got '%s'", server_http.ContentType, newResponse.Header().Get("content-type"))
 		}
 
 		if response.Name != requestCreate.Name {
@@ -66,12 +71,16 @@ func TestCreate(t *testing.T) {
 
 		h.Create(newResponse, newRequest)
 
+		var responseReason Error
+		_ = json.Unmarshal(newResponse.Body.Bytes(), &responseReason)
+
 		if newResponse.Code != http.StatusBadRequest {
 			t.Errorf("expected status '%d' but got '%d'", http.StatusBadRequest, newResponse.Code)
 		}
 
-		var responseReason Error
-		_ = json.Unmarshal(newResponse.Body.Bytes(), &responseReason)
+		if newResponse.Header().Get("content-type") != server_http.ContentType {
+			t.Errorf("expected '%s' but got '%s'", server_http.ContentType, newResponse.Header().Get("content-type"))
+		}
 
 		expected := "invalid request body"
 		if responseReason.Reason != expected {
@@ -93,12 +102,16 @@ func TestCreate(t *testing.T) {
 
 		h.Create(newResponse, newRequest)
 
+		var responseReason Error
+		_ = json.Unmarshal(newResponse.Body.Bytes(), &responseReason)
+
 		if newResponse.Code != http.StatusBadRequest {
 			t.Errorf("expected status '%d' but got '%d'", http.StatusBadRequest, newResponse.Code)
 		}
 
-		var responseReason Error
-		_ = json.Unmarshal(newResponse.Body.Bytes(), &responseReason)
+		if newResponse.Header().Get("content-type") != server_http.ContentType {
+			t.Errorf("expected '%s' but got '%s'", server_http.ContentType, newResponse.Header().Get("content-type"))
+		}
 
 		if responseReason.Reason != entities.ErrInvalidName.Error() {
 			t.Errorf("expected '%s' but got '%s'", entities.ErrInvalidName, responseReason.Reason)
@@ -118,12 +131,16 @@ func TestCreate(t *testing.T) {
 
 		h.Create(newResponse, newRequest)
 
+		var responseReason Error
+		_ = json.Unmarshal(newResponse.Body.Bytes(), &responseReason)
+
 		if newResponse.Code != http.StatusBadRequest {
 			t.Errorf("expected '%d' but got '%d'", http.StatusBadRequest, newResponse.Code)
 		}
 
-		var responseReason Error
-		_ = json.Unmarshal(newResponse.Body.Bytes(), &responseReason)
+		if newResponse.Header().Get("content-type") != server_http.ContentType {
+			t.Errorf("expected '%s' but got '%s'", server_http.ContentType, newResponse.Header().Get("content-type"))
+		}
 
 		if responseReason.Reason != entities.ErrInvalidCPF.Error() {
 			t.Errorf("expected '%s' but got '%s'", entities.ErrInvalidCPF.Error(), responseReason.Reason)
@@ -158,6 +175,10 @@ func TestCreate(t *testing.T) {
 			t.Errorf("expected '%d' but got '%d'", http.StatusBadRequest, newResponse.Code)
 		}
 
+		if newResponse.Header().Get("content-type") != server_http.ContentType {
+			t.Errorf("expected '%s' but got '%s'", server_http.ContentType, newResponse.Header().Get("content-type"))
+		}
+
 		if responseReason.Reason != accounts.ErrExistingCPF.Error() {
 			t.Errorf("expected '%s' but got '%s'", accounts.ErrExistingCPF.Error(), responseReason.Reason)
 		}
@@ -184,6 +205,10 @@ func TestCreate(t *testing.T) {
 			t.Errorf("expected '%d' but got '%d'", http.StatusBadRequest, newResponse.Code)
 		}
 
+		if newResponse.Header().Get("content-type") != server_http.ContentType {
+			t.Errorf("expected '%s' but got '%s'", server_http.ContentType, newResponse.Header().Get("content-type"))
+		}
+
 		if responseReason.Reason != entities.ErrBlankSecret.Error() {
 			t.Errorf("expected '%s' but got '%s'", entities.ErrBlankSecret.Error(), responseReason.Reason)
 		}
@@ -208,6 +233,10 @@ func TestCreate(t *testing.T) {
 
 		if newResponse.Code != http.StatusBadRequest {
 			t.Errorf("expected '%d' but got '%d'", http.StatusBadRequest, newResponse.Code)
+		}
+
+		if newResponse.Header().Get("content-type") != server_http.ContentType {
+			t.Errorf("expected '%s' but got '%s'", server_http.ContentType, newResponse.Header().Get("content-type"))
 		}
 
 		if responseReason.Reason != entities.ErrBalanceLessZero.Error() {

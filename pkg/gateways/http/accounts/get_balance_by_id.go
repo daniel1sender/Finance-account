@@ -8,11 +8,8 @@ import (
 
 	server_http "github.com/daniel1sender/Desafio-API/pkg/gateways/http"
 	"github.com/daniel1sender/Desafio-API/pkg/gateways/store/accounts"
+	"github.com/gorilla/mux"
 )
-
-type RequestByID struct {
-	Id string `json:"id"`
-}
 
 type ResponseByID struct {
 	Balance int `json:"balance"`
@@ -20,17 +17,10 @@ type ResponseByID struct {
 
 func (h Handler) GetBalanceByID(w http.ResponseWriter, r *http.Request) {
 
-	var request RequestByID
-	err := json.NewDecoder(r.Body).Decode(&request)
-	if err != nil {
-		response := Error{Reason: "invalid request body"}
-		log.Printf("error decoding body: %s\n", err.Error())
-		w.WriteHeader(http.StatusBadRequest)
-		json.NewEncoder(w).Encode(response)
-		return
-	}
+	accountID := mux.Vars(r)["id"]
 
-	balance, err := h.useCase.GetBalanceByID(request.Id)
+	balance, err := h.useCase.GetBalanceByID(accountID)
+
 	w.Header().Add("Content-Type", server_http.ContentType)
 	if err != nil {
 		log.Printf("request failed: %s", err)
@@ -44,24 +34,15 @@ func (h Handler) GetBalanceByID(w http.ResponseWriter, r *http.Request) {
 			response := Error{Reason: "internal error server"}
 			w.WriteHeader(http.StatusInternalServerError)
 			json.NewEncoder(w).Encode(response)
+
 		}
 		return
 	}
 
 	balanceResponse := ResponseByID{balance}
 
-	response, err := json.Marshal(balanceResponse)
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		log.Printf("JSON marshaling failed: %s", err)
-		return
-	}
+	w.WriteHeader(http.StatusOK)
 
-	w.WriteHeader(http.StatusCreated)
-	_, err = w.Write(response)
-	if err != nil {
-		log.Printf("error while informing the new account: %s", err)
-		return
-	}
+	_ = json.NewEncoder(w).Encode(balanceResponse)
 
 }
