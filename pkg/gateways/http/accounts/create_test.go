@@ -10,18 +10,18 @@ import (
 	"github.com/daniel1sender/Desafio-API/pkg/domain/accounts"
 	"github.com/daniel1sender/Desafio-API/pkg/domain/entities"
 	server_http "github.com/daniel1sender/Desafio-API/pkg/gateways/http"
-	accounts_storage "github.com/daniel1sender/Desafio-API/pkg/gateways/store/accounts"
 )
 
 func TestCreate(t *testing.T) {
 
 	t.Run("should return 200 and null error when the type informed is json", func(t *testing.T) {
 
-		storage := accounts_storage.NewStorage()
-		useCase := accounts.NewUseCase(storage)
-		h := NewHandler(useCase)
+		account := entities.Account{Name: "Jonh Doe", CPF: "12345678910", Secret: "123", Balance: 0}
 
-		requestCreate := RequestCreate{"Jonh Doe", "12345678910", "123", 0}
+		useCase := accounts.UseCaseMock{Balance: 0, Error: nil, Account: account}
+		h := NewHandler(&useCase)
+
+		requestCreate := RequestCreate{account.Name, account.CPF, account.Secret, account.Balance}
 
 		request, _ := json.Marshal(requestCreate)
 
@@ -61,9 +61,11 @@ func TestCreate(t *testing.T) {
 
 	t.Run("should return 400 and a error message when the type informed it is not a json", func(t *testing.T) {
 
-		storage := accounts_storage.NewStorage()
-		useCase := accounts.NewUseCase(storage)
-		h := NewHandler(useCase)
+		account := entities.Account{Name: "Jonh Doe", CPF: "12345678910", Secret: "123", Balance: 0}
+
+		useCase := accounts.UseCaseMock{Account: account}
+
+		h := NewHandler(&useCase)
 
 		b := []byte{}
 		newRequest, _ := http.NewRequest("POST", "/anyroute", bytes.NewReader(b))
@@ -91,11 +93,11 @@ func TestCreate(t *testing.T) {
 
 	t.Run("should return 400 and a message error when an empty name is informed", func(t *testing.T) {
 
-		storage := accounts_storage.NewStorage()
-		useCase := accounts.NewUseCase(storage)
-		h := NewHandler(useCase)
+		account := entities.Account{Name: "", CPF: "12345678910", Secret: "123", Balance: 0}
+		useCase := accounts.UseCaseMock{Account: account}
+		h := NewHandler(&useCase)
 
-		requestCreate := RequestCreate{"", "12345678910", "123", 0}
+		requestCreate := RequestCreate{account.Name, account.CPF, account.Secret, account.Balance}
 		request, _ := json.Marshal(requestCreate)
 		newRequest, _ := http.NewRequest("POST", "/anyroute", bytes.NewReader(request))
 		newResponse := httptest.NewRecorder()
@@ -120,11 +122,11 @@ func TestCreate(t *testing.T) {
 
 	t.Run("should return 400 and a message error when the cpf informed doesn't have eleven digits", func(t *testing.T) {
 
-		storage := accounts_storage.NewStorage()
-		useCase := accounts.NewUseCase(storage)
-		h := NewHandler(useCase)
+		account := entities.Account{Name: "Jonh Doe", CPF: "1234567891", Secret: "123", Balance: 0}
+		useCase := accounts.UseCaseMock{Account: account}
+		h := NewHandler(&useCase)
 
-		requestCreate := RequestCreate{"Jonh Doe", "1234567891", "123", 0}
+		requestCreate := RequestCreate{account.Name, account.CPF, account.Secret, account.Balance}
 		requestBody, _ := json.Marshal(requestCreate)
 		newRequest, _ := http.NewRequest("POST", "/anyroute", bytes.NewReader(requestBody))
 		newResponse := httptest.NewRecorder()
@@ -150,18 +152,18 @@ func TestCreate(t *testing.T) {
 
 	t.Run("should return a 400 and a message error when cpf informed already exist", func(t *testing.T) {
 
-		storage := accounts_storage.NewStorage()
-		useCase := accounts.NewUseCase(storage)
-		h := NewHandler(useCase)
+		account := entities.Account{Name: "Jonh Doe", CPF: "1234567891", Secret: "123", Balance: 0}
+		useCase := accounts.UseCaseMock{Account: account}
+		h := NewHandler(&useCase)
 
-		requestCreate := RequestCreate{"Jonh Doe", "12345678910", "123", 0}
+		requestCreate := RequestCreate{account.Name, account.CPF, account.Secret, account.Balance}
 		requestBody, _ := json.Marshal(requestCreate)
 		newRequest, _ := http.NewRequest("POST", "anyroute", bytes.NewReader(requestBody))
 		newResponse := httptest.NewRecorder()
 
 		h.Create(newResponse, newRequest)
 
-		requestCreate = RequestCreate{"Jonh Doe", "12345678910", "123", 0}
+		requestCreate = RequestCreate{account.Name, account.CPF, account.Secret, account.Balance}
 		requestBody, _ = json.Marshal(requestCreate)
 		newRequest, _ = http.NewRequest("POST", "anyroute", bytes.NewReader(requestBody))
 		newResponse = httptest.NewRecorder()
@@ -187,11 +189,11 @@ func TestCreate(t *testing.T) {
 
 	t.Run("should return 400 and a message error when a blanc secret is informed", func(t *testing.T) {
 
-		storage := accounts_storage.NewStorage()
-		useCase := accounts.NewUseCase(storage)
-		h := NewHandler(useCase)
+		account := entities.Account{Name: "Jonh Doe", CPF: "12345678910", Secret: "", Balance: 0}
+		useCase := accounts.UseCaseMock{Account: account}
+		h := NewHandler(&useCase)
 
-		requestCreate := RequestCreate{"Jonh Doe", "12345678910", "", 0}
+		requestCreate := RequestCreate{account.Name, account.CPF, account.Secret, account.Balance}
 		requestBody, _ := json.Marshal(requestCreate)
 		newRequest, _ := http.NewRequest("POST", "anyroute", bytes.NewReader(requestBody))
 		newResponse := httptest.NewRecorder()
@@ -217,11 +219,11 @@ func TestCreate(t *testing.T) {
 
 	t.Run("should return 400 and a message error when balance informed is less than zero", func(t *testing.T) {
 
-		storage := accounts_storage.NewStorage()
-		useCase := accounts.NewUseCase(storage)
-		h := NewHandler(useCase)
+		account := entities.Account{Name: "Jonh Doe", CPF: "12345678910", Secret: "123", Balance: -10}
+		useCase := accounts.UseCaseMock{Account: account}
+		h := NewHandler(&useCase)
 
-		requestCreate := RequestCreate{"Jonh Doe", "12345678910", "123", -10}
+		requestCreate := RequestCreate{account.Name, account.CPF, account.Secret, account.Balance}
 		requestBody, _ := json.Marshal(requestCreate)
 		newRequest, _ := http.NewRequest("POST", "anyroute", bytes.NewReader(requestBody))
 		newResponse := httptest.NewRecorder()
