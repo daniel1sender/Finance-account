@@ -8,7 +8,7 @@ import (
 	server_http "github.com/daniel1sender/Desafio-API/pkg/gateways/http"
 )
 
-type ResponseGet struct {
+type GetResponse struct {
 	List []entities.Account `json:"list"`
 }
 
@@ -22,7 +22,7 @@ func (h Handler) Get(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Add("Content-Type", server_http.ContentType)
 
-	responseGet := ResponseGet{accountsList}
+	responseGet := GetResponse{accountsList}
 
 	w.WriteHeader(http.StatusOK)
 

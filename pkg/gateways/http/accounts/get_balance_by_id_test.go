@@ -26,7 +26,7 @@ func TestGetBalanceByID(t *testing.T) {
 
 		h.GetBalanceByID(newResponse, newRequest)
 
-		var response ResponseByID
+		var response ByIDresponse
 
 		json.Unmarshal(newResponse.Body.Bytes(), &response)
 
@@ -59,7 +59,7 @@ func TestGetBalanceByID(t *testing.T) {
 
 		h.GetBalanceByID(newResponse, newRequest)
 
-		var response ResponseByID
+		var response ByIDresponse
 
 		_ = json.Unmarshal(newResponse.Body.Bytes(), &response)
 

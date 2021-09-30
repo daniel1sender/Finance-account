@@ -12,14 +12,14 @@ import (
 	server_http "github.com/daniel1sender/Desafio-API/pkg/gateways/http"
 )
 
-type RequestCreate struct {
+type CreateRequest struct {
 	Name    string `json:"name"`
 	CPF     string `json:"cpf"`
 	Secret  string `json:"secret"`
 	Balance int    `json:"balance"`
 }
 
-type ResponseCreate struct {
+type CreateResponse struct {
 	ID        string    `json:"id"`
 	Name      string    `json:"name"`
 	CPF       string    `json:"cpf"`
@@ -29,7 +29,7 @@ type ResponseCreate struct {
 
 func (h Handler) Create(w http.ResponseWriter, r *http.Request) {
 
-	var createRequest RequestCreate
+	var createRequest CreateRequest
 	err := json.NewDecoder(r.Body).Decode(&createRequest)
 	if err != nil {
 		w.Header().Add("Content-Type", server_http.ContentType)
@@ -85,9 +85,9 @@ func (h Handler) Create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	responseCreate := ResponseCreate{account.ID, account.Name, account.CPF, account.Balance, account.CreatedAt}
+	CreateResponse := CreateResponse{account.ID, account.Name, account.CPF, account.Balance, account.CreatedAt}
 
 	w.WriteHeader(http.StatusCreated)
-	_ = json.NewEncoder(w).Encode(responseCreate)
+	_ = json.NewEncoder(w).Encode(CreateResponse)
 
 }
