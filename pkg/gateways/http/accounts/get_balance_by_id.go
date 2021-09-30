@@ -11,7 +11,7 @@ import (
 	"github.com/gorilla/mux"
 )
 
-type ResponseByID struct {
+type ByIDresponse struct {
 	Balance int `json:"balance"`
 }
 
@@ -39,7 +39,7 @@ func (h Handler) GetBalanceByID(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	balanceResponse := ResponseByID{balance}
+	balanceResponse := ByIDresponse{balance}
 
 	w.WriteHeader(http.StatusOK)
 

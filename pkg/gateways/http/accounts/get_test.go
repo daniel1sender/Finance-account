@@ -28,7 +28,7 @@ func TestGet(t *testing.T) {
 		newResponse := httptest.NewRecorder()
 		h.Get(newResponse, newRequest)
 
-		var accountsList ResponseGet
+		var accountsList GetResponse
 		_ = json.Unmarshal(newResponse.Body.Bytes(), &accountsList)
 
 		for _, value := range accountsList.List {
@@ -63,7 +63,7 @@ func TestGet(t *testing.T) {
 
 		h.Get(newResponse, newRequest)
 
-		var accountsList ResponseGet
+		var accountsList GetResponse
 		_ = json.Unmarshal(newResponse.Body.Bytes(), &accountsList)
 
 		if newResponse.Code != http.StatusNotFound {

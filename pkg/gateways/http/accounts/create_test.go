@@ -21,16 +21,16 @@ func TestCreate(t *testing.T) {
 		useCase := accounts.UseCaseMock{Balance: 0, Error: nil, Account: account}
 		h := NewHandler(&useCase)
 
-		requestCreate := RequestCreate{account.Name, account.CPF, account.Secret, account.Balance}
+		createRequest := CreateRequest{account.Name, account.CPF, account.Secret, account.Balance}
 
-		request, _ := json.Marshal(requestCreate)
+		request, _ := json.Marshal(createRequest)
 
 		newRequest, _ := http.NewRequest("POST", "/anyroute", bytes.NewReader(request))
 		newResponse := httptest.NewRecorder()
 
 		h.Create(newResponse, newRequest)
 
-		var response ResponseCreate
+		var response CreateResponse
 		_ = json.Unmarshal(newResponse.Body.Bytes(), &response)
 
 		if newResponse.Code != http.StatusCreated {
@@ -41,15 +41,15 @@ func TestCreate(t *testing.T) {
 			t.Errorf("expected '%s' but got '%s'", server_http.ContentType, newResponse.Header().Get("content-type"))
 		}
 
-		if response.Name != requestCreate.Name {
-			t.Errorf("expected '%s' but got '%s'", requestCreate.Name, response.Name)
+		if response.Name != createRequest.Name {
+			t.Errorf("expected '%s' but got '%s'", createRequest.Name, response.Name)
 		}
 
-		if response.CPF != requestCreate.CPF {
-			t.Errorf("expected '%s' but got '%s'", requestCreate.CPF, response.CPF)
+		if response.CPF != createRequest.CPF {
+			t.Errorf("expected '%s' but got '%s'", createRequest.CPF, response.CPF)
 		}
 
-		if response.Balance != requestCreate.Balance {
+		if response.Balance != createRequest.Balance {
 			t.Errorf("expected '%d' but got '%d'", 0, response.Balance)
 		}
 
@@ -97,8 +97,8 @@ func TestCreate(t *testing.T) {
 		useCase := accounts.UseCaseMock{Account: account}
 		h := NewHandler(&useCase)
 
-		requestCreate := RequestCreate{account.Name, account.CPF, account.Secret, account.Balance}
-		request, _ := json.Marshal(requestCreate)
+		createRequest := CreateRequest{account.Name, account.CPF, account.Secret, account.Balance}
+		request, _ := json.Marshal(createRequest)
 		newRequest, _ := http.NewRequest("POST", "/anyroute", bytes.NewReader(request))
 		newResponse := httptest.NewRecorder()
 
@@ -126,8 +126,8 @@ func TestCreate(t *testing.T) {
 		useCase := accounts.UseCaseMock{Account: account}
 		h := NewHandler(&useCase)
 
-		requestCreate := RequestCreate{account.Name, account.CPF, account.Secret, account.Balance}
-		requestBody, _ := json.Marshal(requestCreate)
+		createRequest := CreateRequest{account.Name, account.CPF, account.Secret, account.Balance}
+		requestBody, _ := json.Marshal(createRequest)
 		newRequest, _ := http.NewRequest("POST", "/anyroute", bytes.NewReader(requestBody))
 		newResponse := httptest.NewRecorder()
 
@@ -156,15 +156,15 @@ func TestCreate(t *testing.T) {
 		useCase := accounts.UseCaseMock{Account: account}
 		h := NewHandler(&useCase)
 
-		requestCreate := RequestCreate{account.Name, account.CPF, account.Secret, account.Balance}
-		requestBody, _ := json.Marshal(requestCreate)
+		createRequest := CreateRequest{account.Name, account.CPF, account.Secret, account.Balance}
+		requestBody, _ := json.Marshal(createRequest)
 		newRequest, _ := http.NewRequest("POST", "anyroute", bytes.NewReader(requestBody))
 		newResponse := httptest.NewRecorder()
 
 		h.Create(newResponse, newRequest)
 
-		requestCreate = RequestCreate{account.Name, account.CPF, account.Secret, account.Balance}
-		requestBody, _ = json.Marshal(requestCreate)
+		createRequest = CreateRequest{account.Name, account.CPF, account.Secret, account.Balance}
+		requestBody, _ = json.Marshal(createRequest)
 		newRequest, _ = http.NewRequest("POST", "anyroute", bytes.NewReader(requestBody))
 		newResponse = httptest.NewRecorder()
 
@@ -193,8 +193,8 @@ func TestCreate(t *testing.T) {
 		useCase := accounts.UseCaseMock{Account: account}
 		h := NewHandler(&useCase)
 
-		requestCreate := RequestCreate{account.Name, account.CPF, account.Secret, account.Balance}
-		requestBody, _ := json.Marshal(requestCreate)
+		createRequest := CreateRequest{account.Name, account.CPF, account.Secret, account.Balance}
+		requestBody, _ := json.Marshal(createRequest)
 		newRequest, _ := http.NewRequest("POST", "anyroute", bytes.NewReader(requestBody))
 		newResponse := httptest.NewRecorder()
 
@@ -223,8 +223,8 @@ func TestCreate(t *testing.T) {
 		useCase := accounts.UseCaseMock{Account: account}
 		h := NewHandler(&useCase)
 
-		requestCreate := RequestCreate{account.Name, account.CPF, account.Secret, account.Balance}
-		requestBody, _ := json.Marshal(requestCreate)
+		createRequest := CreateRequest{account.Name, account.CPF, account.Secret, account.Balance}
+		requestBody, _ := json.Marshal(createRequest)
 		newRequest, _ := http.NewRequest("POST", "anyroute", bytes.NewReader(requestBody))
 		newResponse := httptest.NewRecorder()
 
