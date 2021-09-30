@@ -7,42 +7,39 @@ import (
 	"testing"
 
 	"github.com/daniel1sender/Desafio-API/pkg/domain/accounts"
+	"github.com/daniel1sender/Desafio-API/pkg/domain/entities"
 
 	server_http "github.com/daniel1sender/Desafio-API/pkg/gateways/http"
-	accounts_storage "github.com/daniel1sender/Desafio-API/pkg/gateways/store/accounts"
 )
 
 func TestGet(t *testing.T) {
 
 	t.Run("should return 200 and the list of accounts", func(t *testing.T) {
 
-		storage := accounts_storage.NewStorage()
-		useCase := accounts.NewUseCase(storage)
+		account := entities.Account{Name: "Jonh Doe", CPF: "12345678910", Secret: "123", Balance: 0}
 
-		name := "John Doe"
-		cpf := "11111111030"
-		secret := "123"
-		balance := 10
+		useCase := accounts.UseCaseMock{Balance: 0, Error: nil, Account: account}
 
-		_, _ = useCase.Create(name, cpf, secret, balance)
+		h := NewHandler(&useCase)
+
+		useCase.Create(account.Name, account.CPF, account.Secret, account.Balance)
 
 		newRequest, _ := http.NewRequest(http.MethodGet, "/accounts", nil)
 		newResponse := httptest.NewRecorder()
-		h := NewHandler(useCase)
 		h.Get(newResponse, newRequest)
 
 		var accountsList ResponseGet
 		_ = json.Unmarshal(newResponse.Body.Bytes(), &accountsList)
 
 		for _, value := range accountsList.List {
-			if value.Name != name {
-				t.Errorf("expected '%s' but got '%s'", name, value.Name)
+			if value.Name != account.Name {
+				t.Errorf("expected '%s' but got '%s'", account.Name, value.Name)
 			}
-			if value.CPF != cpf {
-				t.Errorf("expected '%s' but got '%s'", cpf, value.CPF)
+			if value.CPF != account.CPF {
+				t.Errorf("expected '%s' but got '%s'", account.CPF, value.CPF)
 			}
-			if value.Balance != balance {
-				t.Errorf("expected '%d' but got '%d'", balance, value.Balance)
+			if value.Balance != account.Balance {
+				t.Errorf("expected '%d' but got '%d'", account.Balance, value.Balance)
 			}
 		}
 
@@ -58,19 +55,19 @@ func TestGet(t *testing.T) {
 
 	t.Run("should return 404 and an empty list of accounts when no account was created", func(t *testing.T) {
 
-		storage := accounts_storage.NewStorage()
-		useCase := accounts.NewUseCase(storage)
+		useCase := accounts.UseCaseMock{Balance: 0, Error: nil}
 
 		newRequest, _ := http.NewRequest(http.MethodGet, "/accounts", nil)
 		newResponse := httptest.NewRecorder()
-		h := NewHandler(useCase)
+		h := NewHandler(&useCase)
+
 		h.Get(newResponse, newRequest)
 
 		var accountsList ResponseGet
 		_ = json.Unmarshal(newResponse.Body.Bytes(), &accountsList)
 
 		if newResponse.Code != http.StatusNotFound {
-			t.Errorf("expected '%d' but got '%d'", http.StatusBadRequest, newResponse.Code)
+			t.Errorf("expected '%d' but got '%d'", http.StatusNotFound, newResponse.Code)
 		}
 
 		if len(accountsList.List) != 0 {
