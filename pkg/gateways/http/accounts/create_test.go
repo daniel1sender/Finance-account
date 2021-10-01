@@ -18,7 +18,7 @@ func TestCreate(t *testing.T) {
 
 		account := entities.Account{Name: "Jonh Doe", CPF: "12345678910", Secret: "123", Balance: 0}
 
-		useCase := accounts.UseCaseMock{}
+		useCase := accounts.UseCaseMock{Account: account, Error: nil}
 		h := NewHandler(&useCase)
 
 		createRequest := CreateRequest{account.Name, account.CPF, account.Secret, account.Balance}
@@ -91,11 +91,10 @@ func TestCreate(t *testing.T) {
 
 	t.Run("should return 400 and a message error when an empty name is informed", func(t *testing.T) {
 
-		account := entities.Account{Name: "", CPF: "12345678910", Secret: "123", Balance: 0}
-		useCase := accounts.UseCaseMock{}
+		useCase := accounts.UseCaseMock{Error: entities.ErrInvalidName}
 		h := NewHandler(&useCase)
 
-		createRequest := CreateRequest{account.Name, account.CPF, account.Secret, account.Balance}
+		createRequest := CreateRequest{}
 		request, _ := json.Marshal(createRequest)
 		newRequest, _ := http.NewRequest("POST", "/anyroute", bytes.NewReader(request))
 		newResponse := httptest.NewRecorder()
@@ -120,11 +119,10 @@ func TestCreate(t *testing.T) {
 
 	t.Run("should return 400 and a message error when the cpf informed doesn't have eleven digits", func(t *testing.T) {
 
-		account := entities.Account{Name: "Jonh Doe", CPF: "1234567891", Secret: "123", Balance: 0}
-		useCase := accounts.UseCaseMock{}
+		useCase := accounts.UseCaseMock{Error: entities.ErrInvalidCPF}
 		h := NewHandler(&useCase)
 
-		createRequest := CreateRequest{account.Name, account.CPF, account.Secret, account.Balance}
+		createRequest := CreateRequest{}
 		requestBody, _ := json.Marshal(createRequest)
 		newRequest, _ := http.NewRequest("POST", "/anyroute", bytes.NewReader(requestBody))
 		newResponse := httptest.NewRecorder()
@@ -150,21 +148,13 @@ func TestCreate(t *testing.T) {
 
 	t.Run("should return a 400 and a message error when cpf informed already exist", func(t *testing.T) {
 
-		account := entities.Account{Name: "Jonh Doe", CPF: "1234567891", Secret: "123", Balance: 0}
-		useCase := accounts.UseCaseMock{}
+		useCase := accounts.UseCaseMock{Error: accounts.ErrExistingCPF}
 		h := NewHandler(&useCase)
 
-		createRequest := CreateRequest{account.Name, account.CPF, account.Secret, account.Balance}
+		createRequest := CreateRequest{}
 		requestBody, _ := json.Marshal(createRequest)
 		newRequest, _ := http.NewRequest("POST", "anyroute", bytes.NewReader(requestBody))
 		newResponse := httptest.NewRecorder()
-
-		h.Create(newResponse, newRequest)
-
-		createRequest = CreateRequest{account.Name, account.CPF, account.Secret, account.Balance}
-		requestBody, _ = json.Marshal(createRequest)
-		newRequest, _ = http.NewRequest("POST", "anyroute", bytes.NewReader(requestBody))
-		newResponse = httptest.NewRecorder()
 
 		h.Create(newResponse, newRequest)
 
@@ -187,11 +177,10 @@ func TestCreate(t *testing.T) {
 
 	t.Run("should return 400 and a message error when a blanc secret is informed", func(t *testing.T) {
 
-		account := entities.Account{Name: "Jonh Doe", CPF: "12345678910", Secret: "", Balance: 0}
-		useCase := accounts.UseCaseMock{}
+		useCase := accounts.UseCaseMock{Error: entities.ErrBlancSecret}
 		h := NewHandler(&useCase)
 
-		createRequest := CreateRequest{account.Name, account.CPF, account.Secret, account.Balance}
+		createRequest := CreateRequest{}
 		requestBody, _ := json.Marshal(createRequest)
 		newRequest, _ := http.NewRequest("POST", "anyroute", bytes.NewReader(requestBody))
 		newResponse := httptest.NewRecorder()
@@ -209,19 +198,18 @@ func TestCreate(t *testing.T) {
 			t.Errorf("expected '%s' but got '%s'", server_http.ContentType, newResponse.Header().Get("content-type"))
 		}
 
-		if responseReason.Reason != entities.ErrBlankSecret.Error() {
-			t.Errorf("expected '%s' but got '%s'", entities.ErrBlankSecret.Error(), responseReason.Reason)
+		if responseReason.Reason != entities.ErrBlancSecret.Error() {
+			t.Errorf("expected '%s' but got '%s'", entities.ErrBlancSecret.Error(), responseReason.Reason)
 		}
 
 	})
 
 	t.Run("should return 400 and a message error when balance informed is less than zero", func(t *testing.T) {
 
-		account := entities.Account{Name: "Jonh Doe", CPF: "12345678910", Secret: "123", Balance: -10}
-		useCase := accounts.UseCaseMock{}
+		useCase := accounts.UseCaseMock{Error: entities.ErrBalanceLessZero}
 		h := NewHandler(&useCase)
 
-		createRequest := CreateRequest{account.Name, account.CPF, account.Secret, account.Balance}
+		createRequest := CreateRequest{}
 		requestBody, _ := json.Marshal(createRequest)
 		newRequest, _ := http.NewRequest("POST", "anyroute", bytes.NewReader(requestBody))
 		newResponse := httptest.NewRecorder()

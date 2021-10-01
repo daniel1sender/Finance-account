@@ -9,6 +9,7 @@ import (
 type UseCaseMock struct {
 	Balance int
 	Error   error
+	Account entities.Account
 	List    []entities.Account
 }
 
@@ -18,25 +19,9 @@ func (m *UseCaseMock) GetBalanceByID(id string) (int, error) {
 
 func (m *UseCaseMock) Create(name, cpf, secret string, balance int) (entities.Account, error) {
 
-	if name == "" {
-		return entities.Account{}, entities.ErrInvalidName
-	}
+	account := entities.Account{Name: m.Account.Name, CPF: m.Account.CPF, Secret: m.Account.Secret, Balance: m.Account.Balance, CreatedAt: time.Now()}
 
-	if len(cpf) != 11 {
-		return entities.Account{}, entities.ErrInvalidCPF
-	}
-
-	if secret == "" {
-		return entities.Account{}, entities.ErrBlankSecret
-	}
-
-	if balance < 0 {
-		return entities.Account{}, entities.ErrBalanceLessZero
-	}
-
-	account := entities.Account{Name: name, CPF: cpf, Secret: secret, Balance: balance, CreatedAt: time.Now()}
-
-	return account, nil
+	return account, m.Error
 }
 
 func (m *UseCaseMock) GetByID(id string) (entities.Account, error) {

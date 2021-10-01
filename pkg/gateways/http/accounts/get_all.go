@@ -12,7 +12,7 @@ type GetResponse struct {
 	List []entities.Account `json:"list"`
 }
 
-func (h Handler) Get(w http.ResponseWriter, r *http.Request) {
+func (h Handler) GetAll(w http.ResponseWriter, r *http.Request) {
 
 	accountsList := h.useCase.Get()
 	if len(accountsList) == 0 {

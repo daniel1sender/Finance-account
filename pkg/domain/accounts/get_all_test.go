@@ -25,7 +25,7 @@ func TestAccountUseCase_Get(t *testing.T) {
 
 		storage.Upsert(account.ID, account)
 
-		getAccounts := accountUseCase.Get()
+		getAccounts := accountUseCase.GetAll()
 
 		if len(getAccounts) == 0 {
 			t.Error("expected a full list of accounts")
@@ -38,7 +38,7 @@ func TestAccountUseCase_Get(t *testing.T) {
 		storage := accounts.NewStorage()
 		accountUseCase := NewUseCase(storage)
 
-		getAccounts := accountUseCase.Get()
+		getAccounts := accountUseCase.GetAll()
 
 		if len(getAccounts) != 0 {
 			t.Error("expected an empty list")

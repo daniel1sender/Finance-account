@@ -24,7 +24,7 @@ func TestGet(t *testing.T) {
 
 		newRequest, _ := http.NewRequest(http.MethodGet, "/accounts", nil)
 		newResponse := httptest.NewRecorder()
-		h.Get(newResponse, newRequest)
+		h.GetAll(newResponse, newRequest)
 
 		var accountsList GetResponse
 		_ = json.Unmarshal(newResponse.Body.Bytes(), &accountsList)
@@ -59,7 +59,7 @@ func TestGet(t *testing.T) {
 		newResponse := httptest.NewRecorder()
 		h := NewHandler(&useCase)
 
-		h.Get(newResponse, newRequest)
+		h.GetAll(newResponse, newRequest)
 
 		var accountsList GetResponse
 		_ = json.Unmarshal(newResponse.Body.Bytes(), &accountsList)
