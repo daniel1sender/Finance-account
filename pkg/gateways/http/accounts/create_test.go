@@ -18,7 +18,7 @@ func TestCreate(t *testing.T) {
 
 		account := entities.Account{Name: "Jonh Doe", CPF: "12345678910", Secret: "123", Balance: 0}
 
-		useCase := accounts.UseCaseMock{Balance: 0, Error: nil, Account: account}
+		useCase := accounts.UseCaseMock{}
 		h := NewHandler(&useCase)
 
 		createRequest := CreateRequest{account.Name, account.CPF, account.Secret, account.Balance}
@@ -61,9 +61,7 @@ func TestCreate(t *testing.T) {
 
 	t.Run("should return 400 and a error message when the type informed it is not a json", func(t *testing.T) {
 
-		account := entities.Account{Name: "Jonh Doe", CPF: "12345678910", Secret: "123", Balance: 0}
-
-		useCase := accounts.UseCaseMock{Account: account}
+		useCase := accounts.UseCaseMock{}
 
 		h := NewHandler(&useCase)
 
@@ -94,7 +92,7 @@ func TestCreate(t *testing.T) {
 	t.Run("should return 400 and a message error when an empty name is informed", func(t *testing.T) {
 
 		account := entities.Account{Name: "", CPF: "12345678910", Secret: "123", Balance: 0}
-		useCase := accounts.UseCaseMock{Account: account}
+		useCase := accounts.UseCaseMock{}
 		h := NewHandler(&useCase)
 
 		createRequest := CreateRequest{account.Name, account.CPF, account.Secret, account.Balance}
@@ -123,7 +121,7 @@ func TestCreate(t *testing.T) {
 	t.Run("should return 400 and a message error when the cpf informed doesn't have eleven digits", func(t *testing.T) {
 
 		account := entities.Account{Name: "Jonh Doe", CPF: "1234567891", Secret: "123", Balance: 0}
-		useCase := accounts.UseCaseMock{Account: account}
+		useCase := accounts.UseCaseMock{}
 		h := NewHandler(&useCase)
 
 		createRequest := CreateRequest{account.Name, account.CPF, account.Secret, account.Balance}
@@ -153,7 +151,7 @@ func TestCreate(t *testing.T) {
 	t.Run("should return a 400 and a message error when cpf informed already exist", func(t *testing.T) {
 
 		account := entities.Account{Name: "Jonh Doe", CPF: "1234567891", Secret: "123", Balance: 0}
-		useCase := accounts.UseCaseMock{Account: account}
+		useCase := accounts.UseCaseMock{}
 		h := NewHandler(&useCase)
 
 		createRequest := CreateRequest{account.Name, account.CPF, account.Secret, account.Balance}
@@ -190,7 +188,7 @@ func TestCreate(t *testing.T) {
 	t.Run("should return 400 and a message error when a blanc secret is informed", func(t *testing.T) {
 
 		account := entities.Account{Name: "Jonh Doe", CPF: "12345678910", Secret: "", Balance: 0}
-		useCase := accounts.UseCaseMock{Account: account}
+		useCase := accounts.UseCaseMock{}
 		h := NewHandler(&useCase)
 
 		createRequest := CreateRequest{account.Name, account.CPF, account.Secret, account.Balance}
@@ -220,7 +218,7 @@ func TestCreate(t *testing.T) {
 	t.Run("should return 400 and a message error when balance informed is less than zero", func(t *testing.T) {
 
 		account := entities.Account{Name: "Jonh Doe", CPF: "12345678910", Secret: "123", Balance: -10}
-		useCase := accounts.UseCaseMock{Account: account}
+		useCase := accounts.UseCaseMock{}
 		h := NewHandler(&useCase)
 
 		createRequest := CreateRequest{account.Name, account.CPF, account.Secret, account.Balance}

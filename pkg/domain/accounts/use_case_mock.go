@@ -1,7 +1,7 @@
 package accounts
 
 import (
-	"fmt"
+	"time"
 
 	"github.com/daniel1sender/Desafio-API/pkg/domain/entities"
 )
@@ -9,7 +9,6 @@ import (
 type UseCaseMock struct {
 	Balance int
 	Error   error
-	Account entities.Account
 	List    []entities.Account
 }
 
@@ -19,12 +18,23 @@ func (m *UseCaseMock) GetBalanceByID(id string) (int, error) {
 
 func (m *UseCaseMock) Create(name, cpf, secret string, balance int) (entities.Account, error) {
 
-	account, err := entities.NewAccount(name, cpf, secret, balance)
-	if err != nil {
-		return entities.Account{}, fmt.Errorf("%s: %w", ErrCreatingNewAccount, err)
+	if name == "" {
+		return entities.Account{}, entities.ErrInvalidName
 	}
 
-	m.List = append(m.List, account)
+	if len(cpf) != 11 {
+		return entities.Account{}, entities.ErrInvalidCPF
+	}
+
+	if secret == "" {
+		return entities.Account{}, entities.ErrBlankSecret
+	}
+
+	if balance < 0 {
+		return entities.Account{}, entities.ErrBalanceLessZero
+	}
+
+	account := entities.Account{Name: name, CPF: cpf, Secret: secret, Balance: balance, CreatedAt: time.Now()}
 
 	return account, nil
 }
