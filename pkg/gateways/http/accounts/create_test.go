@@ -37,8 +37,8 @@ func TestCreate(t *testing.T) {
 			t.Errorf("expected '%d' but got '%d'", http.StatusCreated, newResponse.Code)
 		}
 
-		if newResponse.Header().Get("content-type") != server_http.ContentType {
-			t.Errorf("expected '%s' but got '%s'", server_http.ContentType, newResponse.Header().Get("content-type"))
+		if newResponse.Header().Get("content-type") != server_http.JSONContentType {
+			t.Errorf("expected '%s' but got '%s'", server_http.JSONContentType, newResponse.Header().Get("content-type"))
 		}
 
 		if response.Name != createRequest.Name {
@@ -78,8 +78,8 @@ func TestCreate(t *testing.T) {
 			t.Errorf("expected status '%d' but got '%d'", http.StatusBadRequest, newResponse.Code)
 		}
 
-		if newResponse.Header().Get("content-type") != server_http.ContentType {
-			t.Errorf("expected '%s' but got '%s'", server_http.ContentType, newResponse.Header().Get("content-type"))
+		if newResponse.Header().Get("content-type") != server_http.JSONContentType {
+			t.Errorf("expected '%s' but got '%s'", server_http.JSONContentType, newResponse.Header().Get("content-type"))
 		}
 
 		expected := "invalid request body"
@@ -108,8 +108,8 @@ func TestCreate(t *testing.T) {
 			t.Errorf("expected status '%d' but got '%d'", http.StatusBadRequest, newResponse.Code)
 		}
 
-		if newResponse.Header().Get("content-type") != server_http.ContentType {
-			t.Errorf("expected '%s' but got '%s'", server_http.ContentType, newResponse.Header().Get("content-type"))
+		if newResponse.Header().Get("content-type") != server_http.JSONContentType {
+			t.Errorf("expected '%s' but got '%s'", server_http.JSONContentType, newResponse.Header().Get("content-type"))
 		}
 
 		if responseReason.Reason != entities.ErrInvalidName.Error() {
@@ -136,8 +136,8 @@ func TestCreate(t *testing.T) {
 			t.Errorf("expected '%d' but got '%d'", http.StatusBadRequest, newResponse.Code)
 		}
 
-		if newResponse.Header().Get("content-type") != server_http.ContentType {
-			t.Errorf("expected '%s' but got '%s'", server_http.ContentType, newResponse.Header().Get("content-type"))
+		if newResponse.Header().Get("content-type") != server_http.JSONContentType {
+			t.Errorf("expected '%s' but got '%s'", server_http.JSONContentType, newResponse.Header().Get("content-type"))
 		}
 
 		if responseReason.Reason != entities.ErrInvalidCPF.Error() {
@@ -165,8 +165,8 @@ func TestCreate(t *testing.T) {
 			t.Errorf("expected '%d' but got '%d'", http.StatusBadRequest, newResponse.Code)
 		}
 
-		if newResponse.Header().Get("content-type") != server_http.ContentType {
-			t.Errorf("expected '%s' but got '%s'", server_http.ContentType, newResponse.Header().Get("content-type"))
+		if newResponse.Header().Get("content-type") != server_http.JSONContentType {
+			t.Errorf("expected '%s' but got '%s'", server_http.JSONContentType, newResponse.Header().Get("content-type"))
 		}
 
 		if responseReason.Reason != accounts.ErrExistingCPF.Error() {
@@ -194,8 +194,8 @@ func TestCreate(t *testing.T) {
 			t.Errorf("expected '%d' but got '%d'", http.StatusBadRequest, newResponse.Code)
 		}
 
-		if newResponse.Header().Get("content-type") != server_http.ContentType {
-			t.Errorf("expected '%s' but got '%s'", server_http.ContentType, newResponse.Header().Get("content-type"))
+		if newResponse.Header().Get("content-type") != server_http.JSONContentType {
+			t.Errorf("expected '%s' but got '%s'", server_http.JSONContentType, newResponse.Header().Get("content-type"))
 		}
 
 		if responseReason.Reason != entities.ErrBlancSecret.Error() {
@@ -223,8 +223,8 @@ func TestCreate(t *testing.T) {
 			t.Errorf("expected '%d' but got '%d'", http.StatusBadRequest, newResponse.Code)
 		}
 
-		if newResponse.Header().Get("content-type") != server_http.ContentType {
-			t.Errorf("expected '%s' but got '%s'", server_http.ContentType, newResponse.Header().Get("content-type"))
+		if newResponse.Header().Get("content-type") != server_http.JSONContentType {
+			t.Errorf("expected '%s' but got '%s'", server_http.JSONContentType, newResponse.Header().Get("content-type"))
 		}
 
 		if responseReason.Reason != entities.ErrBalanceLessZero.Error() {

@@ -14,13 +14,13 @@ type GetResponse struct {
 
 func (h Handler) GetAll(w http.ResponseWriter, r *http.Request) {
 
-	accountsList := h.useCase.Get()
+	accountsList := h.useCase.GetAll()
 	if len(accountsList) == 0 {
-		w.Header().Add("Content-Type", server_http.ContentType)
+		w.Header().Add("Content-Type", server_http.JSONContentType)
 		w.WriteHeader(http.StatusNotFound)
 	}
 
-	w.Header().Add("Content-Type", server_http.ContentType)
+	w.Header().Add("Content-Type", server_http.JSONContentType)
 
 	responseGet := GetResponse{accountsList}
 

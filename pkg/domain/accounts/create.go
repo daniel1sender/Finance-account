@@ -8,8 +8,7 @@ import (
 )
 
 var (
-	ErrCreatingNewAccount = errors.New("error while creating an account")
-	ErrExistingCPF        = errors.New("cpf informed is invalid")
+	ErrExistingCPF = errors.New("cpf informed is invalid")
 )
 
 func (au AccountUseCase) Create(name, cpf, secret string, balance int) (entities.Account, error) {
@@ -20,7 +19,7 @@ func (au AccountUseCase) Create(name, cpf, secret string, balance int) (entities
 
 	account, err := entities.NewAccount(name, cpf, secret, balance)
 	if err != nil {
-		return entities.Account{}, fmt.Errorf("%s: %w", ErrCreatingNewAccount, err)
+		return entities.Account{}, fmt.Errorf("error while creating an account: %w", err)
 	}
 
 	au.storage.Upsert(account.ID, account)

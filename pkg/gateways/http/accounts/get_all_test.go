@@ -41,8 +41,8 @@ func TestGet(t *testing.T) {
 			}
 		}
 
-		if newResponse.Header().Get("content-type") != server_http.ContentType {
-			t.Errorf("expected '%s' but got '%s'", server_http.ContentType, newResponse.Header().Get("content-type"))
+		if newResponse.Header().Get("content-type") != server_http.JSONContentType {
+			t.Errorf("expected '%s' but got '%s'", server_http.JSONContentType, newResponse.Header().Get("content-type"))
 		}
 
 		if newResponse.Code != http.StatusOK {
@@ -72,8 +72,8 @@ func TestGet(t *testing.T) {
 			t.Errorf("expected empty list of accounts but got '%v'", accountsList.List)
 		}
 
-		if newResponse.Header().Get("content-type") != server_http.ContentType {
-			t.Errorf("expected '%s' but got '%s'", server_http.ContentType, newResponse.Header().Get("content-type"))
+		if newResponse.Header().Get("content-type") != server_http.JSONContentType {
+			t.Errorf("expected '%s' but got '%s'", server_http.JSONContentType, newResponse.Header().Get("content-type"))
 		}
 
 	})

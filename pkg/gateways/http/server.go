@@ -1,5 +1,5 @@
 package http
 
 const (
-	ContentType = "application/json"
+	JSONContentType = "application/json"
 )

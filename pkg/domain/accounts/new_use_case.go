@@ -20,5 +20,5 @@ type UseCase interface {
 	Create(name, cpf, secret string, balance int) (entities.Account, error)
  	GetByID(id string) (entities.Account, error)
 	UpdateBalance(id string, balance int) error 
-	Get() []entities.Account
+	GetAll() []entities.Account
 }

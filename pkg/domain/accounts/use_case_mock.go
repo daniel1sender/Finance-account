@@ -28,7 +28,7 @@ func (m *UseCaseMock) GetByID(id string) (entities.Account, error) {
 	panic("not implemented")
 }
 
-func (m *UseCaseMock) Get() []entities.Account {
+func (m *UseCaseMock) GetAll() []entities.Account {
 	return m.List
 }
 
