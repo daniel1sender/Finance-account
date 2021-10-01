@@ -18,11 +18,9 @@ func TestGet(t *testing.T) {
 
 		account := entities.Account{Name: "Jonh Doe", CPF: "12345678910", Secret: "123", Balance: 0}
 
-		useCase := accounts.UseCaseMock{Balance: 0, Error: nil, Account: account}
+		useCase := accounts.UseCaseMock{List: []entities.Account{account}}
 
 		h := NewHandler(&useCase)
-
-		useCase.Create(account.Name, account.CPF, account.Secret, account.Balance)
 
 		newRequest, _ := http.NewRequest(http.MethodGet, "/accounts", nil)
 		newResponse := httptest.NewRecorder()
@@ -55,7 +53,7 @@ func TestGet(t *testing.T) {
 
 	t.Run("should return 404 and an empty list of accounts when no account was created", func(t *testing.T) {
 
-		useCase := accounts.UseCaseMock{Balance: 0, Error: nil}
+		useCase := accounts.UseCaseMock{List: []entities.Account{}}
 
 		newRequest, _ := http.NewRequest(http.MethodGet, "/accounts", nil)
 		newResponse := httptest.NewRecorder()
