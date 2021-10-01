@@ -31,8 +31,8 @@ func TestGetBalanceByID(t *testing.T) {
 			t.Errorf("expected %d but got %d", http.StatusOK, newResponse.Code)
 		}
 
-		if newResponse.Header().Get("content-type") != server_http.ContentType {
-			t.Errorf("expected %s but got %s", server_http.ContentType, newResponse.Header().Get("content-type"))
+		if newResponse.Header().Get("content-type") != server_http.JSONContentType {
+			t.Errorf("expected %s but got %s", server_http.JSONContentType, newResponse.Header().Get("content-type"))
 		}
 
 		if response.Balance != expectedBalance {
@@ -62,8 +62,8 @@ func TestGetBalanceByID(t *testing.T) {
 			t.Errorf("expected '%d' but got '%d'", http.StatusNotFound, newResponse.Code)
 		}
 
-		if newResponse.Header().Get("content-type") != server_http.ContentType {
-			t.Errorf("expected '%s' but got '%s'", server_http.ContentType, newResponse.Header().Get("content-type"))
+		if newResponse.Header().Get("content-type") != server_http.JSONContentType {
+			t.Errorf("expected '%s' but got '%s'", server_http.JSONContentType, newResponse.Header().Get("content-type"))
 		}
 
 		if response.Balance != 0 {

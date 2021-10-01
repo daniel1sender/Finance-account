@@ -21,7 +21,7 @@ func (h Handler) GetBalanceByID(w http.ResponseWriter, r *http.Request) {
 
 	balance, err := h.useCase.GetBalanceByID(accountID)
 
-	w.Header().Add("Content-Type", server_http.ContentType)
+	w.Header().Add("Content-Type", server_http.JSONContentType)
 	if err != nil {
 		log.Printf("request failed: %s", err)
 		switch {

@@ -32,7 +32,7 @@ func (h Handler) Create(w http.ResponseWriter, r *http.Request) {
 	var createRequest CreateRequest
 	err := json.NewDecoder(r.Body).Decode(&createRequest)
 	if err != nil {
-		w.Header().Add("Content-Type", server_http.ContentType)
+		w.Header().Add("Content-Type", server_http.JSONContentType)
 		response := Error{Reason: "invalid request body"}
 		log.Printf("error decoding body: %s\n", err)
 		w.WriteHeader(http.StatusBadRequest)
@@ -41,7 +41,7 @@ func (h Handler) Create(w http.ResponseWriter, r *http.Request) {
 	}
 
 	account, err := h.useCase.Create(createRequest.Name, createRequest.CPF, createRequest.Secret, createRequest.Balance)
-	w.Header().Add("Content-Type", server_http.ContentType)
+	w.Header().Add("Content-Type", server_http.JSONContentType)
 	if err != nil {
 		log.Printf("request failed: %s\n", err.Error())
 		switch {
