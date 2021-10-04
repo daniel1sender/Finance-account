@@ -21,6 +21,7 @@ func main() {
 	r.HandleFunc("/accounts", accountHandler.GetAll).Methods(http.MethodGet)
 	r.HandleFunc("/accounts/{id}/balance", accountHandler.GetBalanceByID).Methods(http.MethodGet)
 
+
 	if err := http.ListenAndServe(":3000", r); err != nil {
 		log.Fatalf("failed to listen and serve: %s", err)
 	}
