@@ -1,17 +1,11 @@
-package transfer
+package transfers
 
 import (
 	"encoding/json"
 	"log"
 	"net/http"
 	"time"
-
-	"github.com/daniel1sender/Desafio-API/pkg/domain/transfers"
 )
-
-type Handler struct {
-	useCase transfers.TransferUseCase
-}
 
 type Request struct {
 	AccountOriginID      int `json:"account_origin_id"`
