@@ -2,10 +2,12 @@ package transfers
 
 import (
 	"encoding/json"
+	"errors"
 	"log"
 	"net/http"
 	"time"
 
+	"github.com/daniel1sender/Desafio-API/pkg/domain/entities"
 	server_http "github.com/daniel1sender/Desafio-API/pkg/gateways/http"
 )
 
@@ -30,13 +32,42 @@ func (h Handler) Make(w http.ResponseWriter, r *http.Request) {
 	err := json.NewDecoder(r.Body).Decode(&createRequest)
 	if err != nil {
 		w.Header().Add("Content-Type", server_http.JSONContentType)
-		log.Println("error != nil")
+		response := server_http.Error{Reason: "invalid request body"}
+		log.Printf("error decoding body: %s\n", err)
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(response)
+		return
 	}
 
-	transfer, _ := h.useCase.Make(createRequest.AccountOriginID, createRequest.AccountDestinationID, createRequest.Amount)
+	transfer, err := h.useCase.Make(createRequest.AccountOriginID, createRequest.AccountDestinationID, createRequest.Amount)
+	w.Header().Add("Content-Type", server_http.JSONContentType)
+	if err != nil {
+		log.Printf("request failed: %s\n", err.Error())
+		switch {
+
+		case errors.Is(err, entities.ErrAmountLessOrEqualZero):
+			response := server_http.Error{Reason: entities.ErrAmountLessOrEqualZero.Error()}
+			w.WriteHeader(http.StatusBadRequest)
+			json.NewEncoder(w).Encode(&response)
+
+		case errors.Is(err, entities.ErrSameAccountTransfer):
+			response := server_http.Error{Reason: entities.ErrSameAccountTransfer.Error()}
+			w.WriteHeader(http.StatusBadRequest)
+			json.NewEncoder(w).Encode(&response)
+
+		default:
+			response := server_http.Error{Reason: "internal server error"}
+			w.WriteHeader(http.StatusBadRequest)
+			json.NewEncoder(w).Encode(&response)
+		}
+
+		return
+
+	}
 
 	response := Response{transfer.ID, transfer.AccountOriginID, transfer.AccountDestinationID, transfer.Amount, transfer.CreatedAt}
 
+	w.WriteHeader(http.StatusCreated)
 	_ = json.NewEncoder(w).Encode(response)
 
 }

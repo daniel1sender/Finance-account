@@ -30,6 +30,7 @@ type CreateResponse struct {
 func (h Handler) Create(w http.ResponseWriter, r *http.Request) {
 
 	var createRequest CreateRequest
+
 	err := json.NewDecoder(r.Body).Decode(&createRequest)
 	if err != nil {
 		w.Header().Add("Content-Type", server_http.JSONContentType)
