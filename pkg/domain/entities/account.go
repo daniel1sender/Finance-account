@@ -13,7 +13,7 @@ var (
 	ErrInvalidCPF      = errors.New("cpf informed is invalid")
 	ErrToGenerateHash  = errors.New("failed to process secret")
 	ErrInvalidName     = errors.New("name informed is empty")
-	ErrBalanceLessZero = errors.New("balance of the account created cannot be less than zero")
+	ErrNegativeBalance = errors.New("balance of the account created cannot be less than zero")
 	ErrBlancSecret     = errors.New("secret informed is blanc")
 )
 
@@ -46,7 +46,7 @@ func NewAccount(name, cpf, secret string, balance int) (Account, error) {
 	}
 
 	if balance < 0 {
-		return Account{}, ErrBalanceLessZero
+		return Account{}, ErrNegativeBalance
 	}
 
 	id := uuid.NewString()

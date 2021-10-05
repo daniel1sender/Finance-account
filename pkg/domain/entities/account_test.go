@@ -110,8 +110,8 @@ func TestNewAccount(t *testing.T) {
 			t.Errorf("expected '%+v' but got '%+v'", account, Account{})
 		}
 
-		if !errors.Is(err, ErrBalanceLessZero) {
-			t.Errorf("expected error '%s' but got '%s'", ErrBalanceLessZero, err)
+		if !errors.Is(err, ErrNegativeBalance) {
+			t.Errorf("expected error '%s' but got '%s'", ErrNegativeBalance, err)
 		}
 
 	})
