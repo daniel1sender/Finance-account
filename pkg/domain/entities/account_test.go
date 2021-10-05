@@ -91,8 +91,8 @@ func TestNewAccount(t *testing.T) {
 			t.Errorf("expected '%+v' but got '%+v'", Account{}, account)
 		}
 
-		if !errors.Is(err, ErrBlancSecret) {
-			t.Errorf("expected '%s' but got '%s'", ErrBlancSecret, err)
+		if !errors.Is(err, ErrEmptySecret) {
+			t.Errorf("expected '%s' but got '%s'", ErrEmptySecret, err)
 		}
 
 	})

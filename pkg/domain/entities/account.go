@@ -14,7 +14,7 @@ var (
 	ErrToGenerateHash  = errors.New("failed to process secret")
 	ErrInvalidName     = errors.New("name informed is empty")
 	ErrNegativeBalance = errors.New("balance of the account created cannot be less than zero")
-	ErrBlancSecret     = errors.New("secret informed is blanc")
+	ErrEmptySecret     = errors.New("secret informed is blanc")
 )
 
 type Account struct {
@@ -37,7 +37,7 @@ func NewAccount(name, cpf, secret string, balance int) (Account, error) {
 	}
 
 	if secret == "" {
-		return Account{}, ErrBlancSecret
+		return Account{}, ErrEmptySecret
 	}
 
 	hash, err := HashGenerator(secret)
