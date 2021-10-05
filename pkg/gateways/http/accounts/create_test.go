@@ -71,7 +71,7 @@ func TestCreate(t *testing.T) {
 
 		h.Create(newResponse, newRequest)
 
-		var responseReason Error
+		var responseReason server_http.Error
 		_ = json.Unmarshal(newResponse.Body.Bytes(), &responseReason)
 
 		if newResponse.Code != http.StatusBadRequest {
@@ -101,7 +101,7 @@ func TestCreate(t *testing.T) {
 
 		h.Create(newResponse, newRequest)
 
-		var responseReason Error
+		var responseReason server_http.Error
 		_ = json.Unmarshal(newResponse.Body.Bytes(), &responseReason)
 
 		if newResponse.Code != http.StatusBadRequest {
@@ -129,7 +129,7 @@ func TestCreate(t *testing.T) {
 
 		h.Create(newResponse, newRequest)
 
-		var responseReason Error
+		var responseReason server_http.Error
 		_ = json.Unmarshal(newResponse.Body.Bytes(), &responseReason)
 
 		if newResponse.Code != http.StatusBadRequest {
@@ -158,7 +158,7 @@ func TestCreate(t *testing.T) {
 
 		h.Create(newResponse, newRequest)
 
-		var responseReason Error
+		var responseReason server_http.Error
 		_ = json.Unmarshal(newResponse.Body.Bytes(), &responseReason)
 
 		if newResponse.Code != http.StatusBadRequest {
@@ -187,7 +187,7 @@ func TestCreate(t *testing.T) {
 
 		h.Create(newResponse, newRequest)
 
-		var responseReason Error
+		var responseReason server_http.Error
 		_ = json.Unmarshal(newResponse.Body.Bytes(), &responseReason)
 
 		if newResponse.Code != http.StatusBadRequest {
@@ -216,7 +216,7 @@ func TestCreate(t *testing.T) {
 
 		h.Create(newResponse, newRequest)
 
-		var responseReason Error
+		var responseReason server_http.Error
 		_ = json.Unmarshal(newResponse.Body.Bytes(), &responseReason)
 
 		if newResponse.Code != http.StatusBadRequest {

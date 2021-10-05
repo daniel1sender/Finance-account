@@ -5,6 +5,8 @@ import (
 	"log"
 	"net/http"
 	"time"
+
+	server_http "github.com/daniel1sender/Desafio-API/pkg/gateways/http"
 )
 
 type Request struct {
@@ -27,6 +29,7 @@ func (h Handler) Make(w http.ResponseWriter, r *http.Request) {
 
 	err := json.NewDecoder(r.Body).Decode(&createRequest)
 	if err != nil {
+		w.Header().Add("Content-Type", server_http.JSONContentType)
 		log.Println("error != nil")
 	}
 
