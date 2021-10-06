@@ -48,7 +48,7 @@ func (h Handler) Create(w http.ResponseWriter, r *http.Request) {
 
 		case errors.Is(err, accounts.ErrExistingCPF):
 			response := Error{Reason: accounts.ErrExistingCPF.Error()}
-			w.WriteHeader(http.StatusBadRequest)
+			w.WriteHeader(http.StatusConflict)
 			json.NewEncoder(w).Encode(response)
 
 		case errors.Is(err, entities.ErrInvalidName):

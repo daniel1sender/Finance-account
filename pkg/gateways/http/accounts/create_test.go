@@ -15,7 +15,7 @@ import (
 
 func TestCreate(t *testing.T) {
 
-	t.Run("should return 200 and null error when the type informed is json", func(t *testing.T) {
+	t.Run("should return 201 and a account when it's been sucessfully created", func(t *testing.T) {
 
 		account := entities.Account{Name: "Jonh Doe", CPF: "12345678910", Secret: "123", Balance: 0, CreatedAt: time.Now()}
 
@@ -60,7 +60,7 @@ func TestCreate(t *testing.T) {
 
 	})
 
-	t.Run("should return 400 and a error message when the type informed it is not a json", func(t *testing.T) {
+	t.Run("should return 400 and a error message when it failed to decode the request successfully", func(t *testing.T) {
 
 		useCase := accounts.UseCaseMock{}
 
@@ -147,7 +147,7 @@ func TestCreate(t *testing.T) {
 
 	})
 
-	t.Run("should return a 400 and a message error when cpf informed already exist", func(t *testing.T) {
+	t.Run("should return a 409 and a message error when cpf informed already exist", func(t *testing.T) {
 
 		useCase := accounts.UseCaseMock{Error: accounts.ErrExistingCPF}
 		h := NewHandler(&useCase)
@@ -162,7 +162,7 @@ func TestCreate(t *testing.T) {
 		var responseReason Error
 		_ = json.Unmarshal(newResponse.Body.Bytes(), &responseReason)
 
-		if newResponse.Code != http.StatusBadRequest {
+		if newResponse.Code != http.StatusConflict {
 			t.Errorf("expected '%d' but got '%d'", http.StatusBadRequest, newResponse.Code)
 		}
 
