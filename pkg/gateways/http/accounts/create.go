@@ -61,8 +61,8 @@ func (h Handler) Create(w http.ResponseWriter, r *http.Request) {
 			w.WriteHeader(http.StatusBadRequest)
 			json.NewEncoder(w).Encode(response)
 
-		case errors.Is(err, entities.ErrBlancSecret):
-			response := Error{Reason: entities.ErrBlancSecret.Error()}
+		case errors.Is(err, entities.ErrEmptySecret):
+			response := Error{Reason: entities.ErrEmptySecret.Error()}
 			w.WriteHeader(http.StatusBadRequest)
 			json.NewEncoder(w).Encode(response)
 
@@ -71,8 +71,8 @@ func (h Handler) Create(w http.ResponseWriter, r *http.Request) {
 			w.WriteHeader(http.StatusInternalServerError)
 			json.NewEncoder(w).Encode(response)
 
-		case errors.Is(err, entities.ErrBalanceLessZero):
-			response := Error{Reason: entities.ErrBalanceLessZero.Error()}
+		case errors.Is(err, entities.ErrNegativeBalance):
+			response := Error{Reason: entities.ErrNegativeBalance.Error()}
 			w.WriteHeader(http.StatusBadRequest)
 			json.NewEncoder(w).Encode(response)
 
