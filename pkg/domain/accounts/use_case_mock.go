@@ -1,8 +1,6 @@
 package accounts
 
 import (
-	"time"
-
 	"github.com/daniel1sender/Desafio-API/pkg/domain/entities"
 )
 
@@ -18,10 +16,7 @@ func (m *UseCaseMock) GetBalanceByID(id string) (int, error) {
 }
 
 func (m *UseCaseMock) Create(name, cpf, secret string, balance int) (entities.Account, error) {
-
-	account := entities.Account{Name: m.Account.Name, CPF: m.Account.CPF, Secret: m.Account.Secret, Balance: m.Account.Balance, CreatedAt: time.Now()}
-
-	return account, m.Error
+	return m.Account, m.Error
 }
 
 func (m *UseCaseMock) GetByID(id string) (entities.Account, error) {
