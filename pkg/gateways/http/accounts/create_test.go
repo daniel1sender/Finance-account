@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
+	"time"
 
 	"github.com/daniel1sender/Desafio-API/pkg/domain/accounts"
 	"github.com/daniel1sender/Desafio-API/pkg/domain/entities"
@@ -16,9 +17,9 @@ func TestCreate(t *testing.T) {
 
 	t.Run("should return 200 and null error when the type informed is json", func(t *testing.T) {
 
-		account := entities.Account{Name: "Jonh Doe", CPF: "12345678910", Secret: "123", Balance: 0}
+		account := entities.Account{Name: "Jonh Doe", CPF: "12345678910", Secret: "123", Balance: 0, CreatedAt: time.Now()}
 
-		useCase := accounts.UseCaseMock{Account: account, Error: nil}
+		useCase := accounts.UseCaseMock{Account: account}
 		h := NewHandler(&useCase)
 
 		createRequest := CreateRequest{account.Name, account.CPF, account.Secret, account.Balance}
