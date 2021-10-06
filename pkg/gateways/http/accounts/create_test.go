@@ -177,7 +177,7 @@ func TestCreate(t *testing.T) {
 
 	t.Run("should return 400 and a message error when a blanc secret is informed", func(t *testing.T) {
 
-		useCase := accounts.UseCaseMock{Error: entities.ErrBlancSecret}
+		useCase := accounts.UseCaseMock{Error: entities.ErrEmptySecret}
 		h := NewHandler(&useCase)
 
 		createRequest := CreateRequest{}
@@ -198,15 +198,15 @@ func TestCreate(t *testing.T) {
 			t.Errorf("expected '%s' but got '%s'", server_http.JSONContentType, newResponse.Header().Get("content-type"))
 		}
 
-		if responseReason.Reason != entities.ErrBlancSecret.Error() {
-			t.Errorf("expected '%s' but got '%s'", entities.ErrBlancSecret.Error(), responseReason.Reason)
+		if responseReason.Reason != entities.ErrEmptySecret.Error() {
+			t.Errorf("expected '%s' but got '%s'", entities.ErrEmptySecret.Error(), responseReason.Reason)
 		}
 
 	})
 
 	t.Run("should return 400 and a message error when balance informed is less than zero", func(t *testing.T) {
 
-		useCase := accounts.UseCaseMock{Error: entities.ErrBalanceLessZero}
+		useCase := accounts.UseCaseMock{Error: entities.ErrNegativeBalance}
 		h := NewHandler(&useCase)
 
 		createRequest := CreateRequest{}
@@ -227,8 +227,8 @@ func TestCreate(t *testing.T) {
 			t.Errorf("expected '%s' but got '%s'", server_http.JSONContentType, newResponse.Header().Get("content-type"))
 		}
 
-		if responseReason.Reason != entities.ErrBalanceLessZero.Error() {
-			t.Errorf("expected '%s' but got '%s'", entities.ErrBalanceLessZero.Error(), responseReason.Reason)
+		if responseReason.Reason != entities.ErrNegativeBalance.Error() {
+			t.Errorf("expected '%s' but got '%s'", entities.ErrNegativeBalance.Error(), responseReason.Reason)
 		}
 
 	})
