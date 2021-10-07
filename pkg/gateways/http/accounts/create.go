@@ -5,7 +5,6 @@ import (
 	"errors"
 	"log"
 	"net/http"
-	"time"
 
 	"github.com/daniel1sender/Desafio-API/pkg/domain/accounts"
 	"github.com/daniel1sender/Desafio-API/pkg/domain/entities"
@@ -20,11 +19,11 @@ type CreateRequest struct {
 }
 
 type CreateResponse struct {
-	ID        string    `json:"id"`
-	Name      string    `json:"name"`
-	CPF       string    `json:"cpf"`
-	Balance   int       `json:"balance"`
-	CreatedAt time.Time `json:"created_at"`
+	ID        string `json:"id"`
+	Name      string `json:"name"`
+	CPF       string `json:"cpf"`
+	Balance   int    `json:"balance"`
+	CreatedAt string `json:"created_at"`
 }
 
 func (h Handler) Create(w http.ResponseWriter, r *http.Request) {
@@ -85,7 +84,10 @@ func (h Handler) Create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	CreateResponse := CreateResponse{account.ID, account.Name, account.CPF, account.Balance, account.CreatedAt}
+	createAt := account.CreatedAt
+	ExpectedCreateAt := createAt.Format(server_http.DateLayout)
+
+	CreateResponse := CreateResponse{account.ID, account.Name, account.CPF, account.Balance, ExpectedCreateAt}
 
 	w.WriteHeader(http.StatusCreated)
 	_ = json.NewEncoder(w).Encode(CreateResponse)
