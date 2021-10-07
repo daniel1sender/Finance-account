@@ -31,7 +31,11 @@ func TestCreate(t *testing.T) {
 
 		h.Create(newResponse, newRequest)
 
+		createAt := account.CreatedAt
+		ExpectedCreateAt := createAt.Format(server_http.DateLayout)
+
 		var response CreateResponse
+
 		_ = json.Unmarshal(newResponse.Body.Bytes(), &response)
 
 		if newResponse.Code != http.StatusCreated {
@@ -54,10 +58,9 @@ func TestCreate(t *testing.T) {
 			t.Errorf("expected '%d' but got '%d'", 0, response.Balance)
 		}
 
-		if response.CreatedAt.IsZero() {
-			t.Errorf("expected nonzero time but got '%s'", response.CreatedAt)
+		if response.CreatedAt != ExpectedCreateAt {
+			t.Errorf("expected '%s' but got '%s'", ExpectedCreateAt, response.CreatedAt)
 		}
-
 	})
 
 	t.Run("should return 400 and a error message when it failed to decode the request successfully", func(t *testing.T) {
