@@ -14,7 +14,7 @@ import (
 
 func TestMake(t *testing.T) {
 
-	t.Run("should return 200 and null error when the type informed is a json", func(t *testing.T) {
+	t.Run("should return 201 and null error when the type informed is a json", func(t *testing.T) {
 
 		createRequest := Request{AccountOriginID: 1, AccountDestinationID: 0, Amount: 10}
 
@@ -59,5 +59,15 @@ func TestMake(t *testing.T) {
 		}
 
 	})
+
+	/* 	t.Run("should return 400 when amount is less or equal zero", func(t 		createRequest := Request{AccountOriginID: 1, *testing.T) {
+
+	AccountDestinationID: 0, Amount: 10}
+
+			storage := transfers_storage.NewStorage()
+			useCase := transfers_usecase.NewTransferUseCase(storage)
+			h := NewHandler(useCase)
+
+		}) */
 
 }
