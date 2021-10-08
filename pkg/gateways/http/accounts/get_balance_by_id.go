@@ -39,7 +39,7 @@ func (h Handler) GetBalanceByID(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	balanceResponse := ByIDresponse{balance}
+	balanceResponse := ByIdResponse{balance}
 
 	w.WriteHeader(http.StatusOK)
 

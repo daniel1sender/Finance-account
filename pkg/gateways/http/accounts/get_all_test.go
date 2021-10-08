@@ -51,7 +51,7 @@ func TestGet(t *testing.T) {
 
 	})
 
-	t.Run("should return 404 and an empty list of accounts when no account was created", func(t *testing.T) {
+	t.Run("should return 200 and an empty list of accounts when no account was created", func(t *testing.T) {
 
 		useCase := accounts.UseCaseMock{List: []entities.Account{}}
 
@@ -62,10 +62,10 @@ func TestGet(t *testing.T) {
 		h.GetAll(newResponse, newRequest)
 
 		var accountsList GetResponse
-		_ = json.Unmarshal(newResponse.Body.Bytes(), &accountsList)
+		json.Unmarshal(newResponse.Body.Bytes(), &accountsList)
 
-		if newResponse.Code != http.StatusNotFound {
-			t.Errorf("expected '%d' but got '%d'", http.StatusNotFound, newResponse.Code)
+		if newResponse.Code != http.StatusOK {
+			t.Errorf("expected '%d' but got '%d'", http.StatusOK, newResponse.Code)
 		}
 
 		if len(accountsList.List) != 0 {
