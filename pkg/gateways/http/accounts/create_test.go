@@ -166,7 +166,7 @@ func TestCreate(t *testing.T) {
 		_ = json.Unmarshal(newResponse.Body.Bytes(), &responseReason)
 
 		if newResponse.Code != http.StatusConflict {
-			t.Errorf("expected '%d' but got '%d'", http.StatusBadRequest, newResponse.Code)
+			t.Errorf("expected '%d' but got '%d'", http.StatusConflict, newResponse.Code)
 		}
 
 		if newResponse.Header().Get("content-type") != server_http.JSONContentType {

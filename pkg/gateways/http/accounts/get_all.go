@@ -17,7 +17,7 @@ func (h Handler) GetAll(w http.ResponseWriter, r *http.Request) {
 	accountsList := h.useCase.GetAll()
 	if len(accountsList) == 0 {
 		w.Header().Add("Content-Type", server_http.JSONContentType)
-		w.WriteHeader(http.StatusNotFound)
+		w.WriteHeader(http.StatusOK)
 	}
 
 	w.Header().Add("Content-Type", server_http.JSONContentType)
