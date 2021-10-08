@@ -21,11 +21,8 @@ func (h Handler) GetAll(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Add("Content-Type", server_http.JSONContentType)
-
 	responseGet := GetResponse{accountsList}
-
 	w.WriteHeader(http.StatusOK)
-
 	_ = json.NewEncoder(w).Encode(responseGet)
 
 }
