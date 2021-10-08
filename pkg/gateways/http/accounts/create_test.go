@@ -36,7 +36,7 @@ func TestCreate(t *testing.T) {
 
 		var response CreateResponse
 
-		_ = json.Unmarshal(newResponse.Body.Bytes(), &response)
+		json.Unmarshal(newResponse.Body.Bytes(), &response)
 
 		if newResponse.Code != http.StatusCreated {
 			t.Errorf("expected '%d' but got '%d'", http.StatusCreated, newResponse.Code)
@@ -76,7 +76,7 @@ func TestCreate(t *testing.T) {
 		h.Create(newResponse, newRequest)
 
 		var responseReason Error
-		_ = json.Unmarshal(newResponse.Body.Bytes(), &responseReason)
+		json.Unmarshal(newResponse.Body.Bytes(), &responseReason)
 
 		if newResponse.Code != http.StatusBadRequest {
 			t.Errorf("expected status '%d' but got '%d'", http.StatusBadRequest, newResponse.Code)
@@ -106,7 +106,7 @@ func TestCreate(t *testing.T) {
 		h.Create(newResponse, newRequest)
 
 		var responseReason Error
-		_ = json.Unmarshal(newResponse.Body.Bytes(), &responseReason)
+		json.Unmarshal(newResponse.Body.Bytes(), &responseReason)
 
 		if newResponse.Code != http.StatusBadRequest {
 			t.Errorf("expected status '%d' but got '%d'", http.StatusBadRequest, newResponse.Code)
@@ -134,7 +134,7 @@ func TestCreate(t *testing.T) {
 		h.Create(newResponse, newRequest)
 
 		var responseReason Error
-		_ = json.Unmarshal(newResponse.Body.Bytes(), &responseReason)
+		json.Unmarshal(newResponse.Body.Bytes(), &responseReason)
 
 		if newResponse.Code != http.StatusBadRequest {
 			t.Errorf("expected '%d' but got '%d'", http.StatusBadRequest, newResponse.Code)
@@ -163,7 +163,7 @@ func TestCreate(t *testing.T) {
 		h.Create(newResponse, newRequest)
 
 		var responseReason Error
-		_ = json.Unmarshal(newResponse.Body.Bytes(), &responseReason)
+		json.Unmarshal(newResponse.Body.Bytes(), &responseReason)
 
 		if newResponse.Code != http.StatusConflict {
 			t.Errorf("expected '%d' but got '%d'", http.StatusConflict, newResponse.Code)
@@ -192,7 +192,7 @@ func TestCreate(t *testing.T) {
 		h.Create(newResponse, newRequest)
 
 		var responseReason Error
-		_ = json.Unmarshal(newResponse.Body.Bytes(), &responseReason)
+		json.Unmarshal(newResponse.Body.Bytes(), &responseReason)
 
 		if newResponse.Code != http.StatusBadRequest {
 			t.Errorf("expected '%d' but got '%d'", http.StatusBadRequest, newResponse.Code)
@@ -221,7 +221,7 @@ func TestCreate(t *testing.T) {
 		h.Create(newResponse, newRequest)
 
 		var responseReason Error
-		_ = json.Unmarshal(newResponse.Body.Bytes(), &responseReason)
+		json.Unmarshal(newResponse.Body.Bytes(), &responseReason)
 
 		if newResponse.Code != http.StatusBadRequest {
 			t.Errorf("expected '%d' but got '%d'", http.StatusBadRequest, newResponse.Code)

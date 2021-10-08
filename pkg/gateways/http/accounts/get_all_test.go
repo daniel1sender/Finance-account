@@ -27,7 +27,7 @@ func TestGet(t *testing.T) {
 		h.GetAll(newResponse, newRequest)
 
 		var accountsList GetResponse
-		_ = json.Unmarshal(newResponse.Body.Bytes(), &accountsList)
+		json.Unmarshal(newResponse.Body.Bytes(), &accountsList)
 
 		for _, value := range accountsList.List {
 			if value.Name != account.Name {
