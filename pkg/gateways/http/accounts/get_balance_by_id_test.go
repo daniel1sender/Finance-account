@@ -54,7 +54,7 @@ func TestGetBalanceByID(t *testing.T) {
 
 		h.GetBalanceByID(newResponse, newRequest)
 
-		var response ByIdResponse
+		var response Error
 
 		json.Unmarshal(newResponse.Body.Bytes(), &response)
 
@@ -66,8 +66,8 @@ func TestGetBalanceByID(t *testing.T) {
 			t.Errorf("expected '%s' but got '%s'", server_http.JSONContentType, newResponse.Header().Get("content-type"))
 		}
 
-		if response.Balance != 0 {
-			t.Errorf("expected null balance but got '%d'", response.Balance)
+		if response.Reason != accounts.ErrIDNotFound.Error() {
+			t.Errorf("expected '%s' but got '%s'", accounts.ErrIDNotFound.Error(), response.Reason)
 		}
 
 	})
