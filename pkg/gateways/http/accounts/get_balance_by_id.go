@@ -23,7 +23,7 @@ func (h Handler) GetBalanceByID(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Add("Content-Type", server_http.JSONContentType)
 	if err != nil {
-		log.Printf("request failed: %s", err)
+		log.Printf("get by id request failed: %s", err)
 		switch {
 		case errors.Is(err, accounts.ErrIDNotFound):
 			response := Error{Reason: accounts.ErrIDNotFound.Error()}
