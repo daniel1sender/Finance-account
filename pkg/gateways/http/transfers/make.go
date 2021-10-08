@@ -45,8 +45,8 @@ func (h Handler) Make(w http.ResponseWriter, r *http.Request) {
 		log.Printf("request failed: %s\n", err.Error())
 		switch {
 
-		case errors.Is(err, entities.ErrAmountLessOrEqualZero):
-			response := server_http.Error{Reason: entities.ErrAmountLessOrEqualZero.Error()}
+		case errors.Is(err, entities.ErrNegativeAmount):
+			response := server_http.Error{Reason: entities.ErrNegativeAmount.Error()}
 			w.WriteHeader(http.StatusBadRequest)
 			json.NewEncoder(w).Encode(&response)
 

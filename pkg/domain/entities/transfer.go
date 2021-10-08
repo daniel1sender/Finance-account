@@ -8,7 +8,7 @@ import (
 )
 
 var (
-	ErrAmountLessOrEqualZero  = errors.New("amount is less or equal zero")
+	ErrNegativeAmount  = errors.New("amount is less or equal zero")
 	ErrSameAccountTransfer = errors.New("transfer attempt to the same account")
 )
 
@@ -23,7 +23,7 @@ type Transfer struct {
 func NewTransfer(originID, destinationID int, amount int) (Transfer, error) {
 
 	if amount <= 0 {
-		return Transfer{}, ErrAmountLessOrEqualZero
+		return Transfer{}, ErrNegativeAmount
 
 	}
 	if originID == destinationID {

@@ -30,7 +30,7 @@ func TestAccountUseCase_Make(t *testing.T) {
 
 	})
 
-	t.Run("should return a blank transfer when the transfer isn't created", func(*testing.T) {
+	t.Run("should return a empty transfer when the amount less or equal zero", func(*testing.T) {
 
 		storage := transfers.NewStorage()
 		transferUseCase := NewTransferUseCase(storage)
@@ -44,8 +44,8 @@ func TestAccountUseCase_Make(t *testing.T) {
 			t.Errorf("expected a blank transfer but got '%+v'", makeTransfer)
 		}
 
-		if !errors.Is(err, ErrCreatingNewTransfer) {
-			t.Errorf("expected '%s' but got '%s'", ErrCreatingNewTransfer, err)
+		if !errors.Is(err, entities.ErrNegativeAmount) {
+			t.Errorf("expected '%s' but got '%s'", entities.ErrNegativeAmount, err)
 		}
 
 	})
