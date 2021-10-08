@@ -11,7 +11,7 @@ import (
 	"github.com/gorilla/mux"
 )
 
-type ByIDresponse struct {
+type ByIdResponse struct {
 	Balance int `json:"balance"`
 }
 
