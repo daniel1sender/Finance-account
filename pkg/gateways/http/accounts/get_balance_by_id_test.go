@@ -23,7 +23,7 @@ func TestGetBalanceByID(t *testing.T) {
 
 		h.GetBalanceByID(newResponse, newRequest)
 
-		var response ByIDresponse
+		var response ByIdResponse
 
 		json.Unmarshal(newResponse.Body.Bytes(), &response)
 
@@ -54,9 +54,9 @@ func TestGetBalanceByID(t *testing.T) {
 
 		h.GetBalanceByID(newResponse, newRequest)
 
-		var response ByIDresponse
+		var response ByIdResponse
 
-		_ = json.Unmarshal(newResponse.Body.Bytes(), &response)
+		json.Unmarshal(newResponse.Body.Bytes(), &response)
 
 		if newResponse.Code != http.StatusNotFound {
 			t.Errorf("expected '%d' but got '%d'", http.StatusNotFound, newResponse.Code)
