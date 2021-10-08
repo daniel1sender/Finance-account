@@ -5,7 +5,6 @@ import (
 	"errors"
 	"log"
 	"net/http"
-	"time"
 
 	"github.com/daniel1sender/Desafio-API/pkg/domain/entities"
 	server_http "github.com/daniel1sender/Desafio-API/pkg/gateways/http"
@@ -18,11 +17,11 @@ type Request struct {
 }
 
 type Response struct {
-	ID                   string    `json:"id"`
-	AccountOriginID      int       `json:"account_origin_id"`
-	AccountDestinationID int       `json:"account_destination_id"`
-	Amount               int       `json:"amount"`
-	CreatedAt            time.Time `json:"create_at"`
+	ID                   string `json:"id"`
+	AccountOriginID      int    `json:"account_origin_id"`
+	AccountDestinationID int    `json:"account_destination_id"`
+	Amount               int    `json:"amount"`
+	CreatedAt            string `json:"create_at"`
 }
 
 func (h Handler) Make(w http.ResponseWriter, r *http.Request) {
@@ -65,7 +64,10 @@ func (h Handler) Make(w http.ResponseWriter, r *http.Request) {
 
 	}
 
-	response := Response{transfer.ID, transfer.AccountOriginID, transfer.AccountDestinationID, transfer.Amount, transfer.CreatedAt}
+	createAt := transfer.CreatedAt
+	ExpectedCreateAt := createAt.Format(server_http.DateLayout)
+
+	response := Response{transfer.ID, transfer.AccountOriginID, transfer.AccountDestinationID, transfer.Amount, ExpectedCreateAt}
 
 	w.WriteHeader(http.StatusCreated)
 	_ = json.NewEncoder(w).Encode(response)

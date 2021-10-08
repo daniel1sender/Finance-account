@@ -7,27 +7,29 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	transfers_usecase "github.com/daniel1sender/Desafio-API/pkg/domain/transfers"
+	"github.com/daniel1sender/Desafio-API/pkg/domain/entities"
+	"github.com/daniel1sender/Desafio-API/pkg/domain/transfers"
 	server_http "github.com/daniel1sender/Desafio-API/pkg/gateways/http"
-	transfers_storage "github.com/daniel1sender/Desafio-API/pkg/gateways/store/transfers"
 )
 
 func TestMake(t *testing.T) {
 
-	t.Run("should return 201 and null error when the type informed is a json", func(t *testing.T) {
+	t.Run("should return 201 and a account when it's been sucessfully created", func(t *testing.T) {
 
-		createRequest := Request{AccountOriginID: 1, AccountDestinationID: 0, Amount: 10}
+		transfer := entities.Transfer{AccountOriginID: 1, AccountDestinationID: 0, Amount: 10}
 
-		storage := transfers_storage.NewStorage()
-		useCase := transfers_usecase.NewTransferUseCase(storage)
-		h := NewHandler(useCase)
+		useCase := transfers.UseCaseMock{Transfer: transfer}
+		h := NewHandler(&useCase)
 
-		request, _ := json.Marshal(createRequest)
+		request, _ := json.Marshal(transfer)
 
 		newRequest, _ := http.NewRequest(http.MethodPost, "/transfers", bytes.NewReader(request))
 		newResponse := httptest.NewRecorder()
 
 		h.Make(newResponse, newRequest)
+
+		createAt := transfer.CreatedAt
+		ExpectedCreateAt := createAt.Format(server_http.DateLayout)
 
 		var response Response
 
@@ -42,32 +44,32 @@ func TestMake(t *testing.T) {
 			t.Errorf("expected '%s' but got '%s'", server_http.JSONContentType, headerType)
 		}
 
-		if response.AccountOriginID != createRequest.AccountOriginID {
-			t.Errorf("expected '%d' but got '%d'", createRequest.AccountOriginID, response.AccountOriginID)
+		if response.AccountOriginID != transfer.AccountOriginID {
+			t.Errorf("expected '%d' but got '%d'", transfer.AccountOriginID, response.AccountOriginID)
 		}
 
-		if response.AccountDestinationID != createRequest.AccountDestinationID {
-			t.Errorf("expected '%d' but got '%d'", createRequest.AccountDestinationID, response.AccountDestinationID)
+		if response.AccountDestinationID != transfer.AccountDestinationID {
+			t.Errorf("expected '%d' but got '%d'", transfer.AccountDestinationID, response.AccountDestinationID)
 		}
 
-		if response.Amount != createRequest.Amount {
-			t.Errorf("expected '%d' but got '%d'", createRequest.Amount, response.Amount)
+		if response.Amount != transfer.Amount {
+			t.Errorf("expected '%d' but got '%d'", transfer.Amount, response.Amount)
 		}
 
-		if response.CreatedAt.IsZero() {
-			t.Errorf("expected nonzero time but got '%s'", response.CreatedAt)
+		if response.CreatedAt != ExpectedCreateAt {
+			t.Errorf("expected '%s' but got '%s'", ExpectedCreateAt, response.CreatedAt)
 		}
 
 	})
 
-	/* 	t.Run("should return 400 when amount is less or equal zero", func(t 		createRequest := Request{AccountOriginID: 1, *testing.T) {
+	/* 	t.Run("should return 400 and a error message when it failed to decode the request successfully", func(t 		createRequest := Request{AccountOriginID: 1, *testing.T) {
 
-	AccountDestinationID: 0, Amount: 10}
+	   	AccountDestinationID: 0, Amount: 10}
 
-			storage := transfers_storage.NewStorage()
-			useCase := transfers_usecase.NewTransferUseCase(storage)
-			h := NewHandler(useCase)
+	   			storage := transfers_storage.NewStorage()
+	   			useCase := transfers_usecase.NewTransferUseCase(storage)
+	   			h := NewHandler(useCase)
 
-		}) */
+	   		})  */
 
 }

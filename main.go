@@ -17,7 +17,7 @@ import (
 func main() {
 
 	transferStorage := transfers_storage.NewStorage()
-	transferUseCase := transfers_usecase.NewTransferUseCase(transferStorage)
+	transferUseCase := transfers_usecase.NewUseCase(transferStorage)
 	transferHandler := transfers_handler.NewHandler(transferUseCase)
 
 	accountStorage := accounts_storage.NewStorage()
