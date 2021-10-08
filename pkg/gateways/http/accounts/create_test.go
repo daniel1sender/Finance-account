@@ -14,7 +14,7 @@ import (
 
 func TestCreate(t *testing.T) {
 
-	t.Run("should return 200 and null error when the type informed is json", func(t *testing.T) {
+	t.Run("should return 201 and null error when the type informed is json", func(t *testing.T) {
 
 		account := entities.Account{Name: "Jonh Doe", CPF: "12345678910", Secret: "123", Balance: 0}
 
