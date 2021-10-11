@@ -27,7 +27,6 @@ type Response struct {
 func (h Handler) Make(w http.ResponseWriter, r *http.Request) {
 
 	var createRequest Request
-
 	err := json.NewDecoder(r.Body).Decode(&createRequest)
 	if err != nil {
 		w.Header().Add("Content-Type", server_http.JSONContentType)
@@ -66,9 +65,7 @@ func (h Handler) Make(w http.ResponseWriter, r *http.Request) {
 
 	createAt := transfer.CreatedAt
 	ExpectedCreateAt := createAt.Format(server_http.DateLayout)
-
 	response := Response{transfer.ID, transfer.AccountOriginID, transfer.AccountDestinationID, transfer.Amount, ExpectedCreateAt}
-
 	w.WriteHeader(http.StatusCreated)
 	_ = json.NewEncoder(w).Encode(response)
 

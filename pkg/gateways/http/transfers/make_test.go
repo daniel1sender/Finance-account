@@ -17,8 +17,8 @@ func TestMake(t *testing.T) {
 	t.Run("should return 201 and a transfer when it's been sucessfully created", func(t *testing.T) {
 
 		transfer := entities.Transfer{AccountOriginID: 1, AccountDestinationID: 0, Amount: 10}
-
 		useCase := transfers.UseCaseMock{Transfer: transfer}
+		
 		h := NewHandler(&useCase)
 
 		request, _ := json.Marshal(transfer)
