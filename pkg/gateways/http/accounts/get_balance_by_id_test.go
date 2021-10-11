@@ -54,7 +54,7 @@ func TestGetBalanceByID(t *testing.T) {
 
 		h.GetBalanceByID(newResponse, newRequest)
 
-		var response Error
+		var response server_http.Error
 
 		json.Unmarshal(newResponse.Body.Bytes(), &response)
 

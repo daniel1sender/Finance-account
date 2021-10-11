@@ -32,7 +32,7 @@ func (h Handler) Create(w http.ResponseWriter, r *http.Request) {
 	err := json.NewDecoder(r.Body).Decode(&createRequest)
 	if err != nil {
 		w.Header().Add("Content-Type", server_http.JSONContentType)
-		response := Error{Reason: "invalid request body"}
+		response := server_http.Error{Reason: "invalid request body"}
 		log.Printf("error decoding body: %s\n", err)
 		w.WriteHeader(http.StatusBadRequest)
 		json.NewEncoder(w).Encode(response)
@@ -46,37 +46,37 @@ func (h Handler) Create(w http.ResponseWriter, r *http.Request) {
 		switch {
 
 		case errors.Is(err, accounts.ErrExistingCPF):
-			response := Error{Reason: accounts.ErrExistingCPF.Error()}
+			response := server_http.Error{Reason: accounts.ErrExistingCPF.Error()}
 			w.WriteHeader(http.StatusConflict)
 			json.NewEncoder(w).Encode(response)
 
 		case errors.Is(err, entities.ErrInvalidName):
-			response := Error{Reason: entities.ErrInvalidName.Error()}
+			response := server_http.Error{Reason: entities.ErrInvalidName.Error()}
 			w.WriteHeader(http.StatusBadRequest)
 			json.NewEncoder(w).Encode(response)
 
 		case errors.Is(err, entities.ErrInvalidCPF):
-			response := Error{Reason: entities.ErrInvalidCPF.Error()}
+			response := server_http.Error{Reason: entities.ErrInvalidCPF.Error()}
 			w.WriteHeader(http.StatusBadRequest)
 			json.NewEncoder(w).Encode(response)
 
 		case errors.Is(err, entities.ErrEmptySecret):
-			response := Error{Reason: entities.ErrEmptySecret.Error()}
+			response := server_http.Error{Reason: entities.ErrEmptySecret.Error()}
 			w.WriteHeader(http.StatusBadRequest)
 			json.NewEncoder(w).Encode(response)
 
 		case errors.Is(err, entities.ErrToGenerateHash):
-			response := Error{Reason: entities.ErrToGenerateHash.Error()}
+			response := server_http.Error{Reason: entities.ErrToGenerateHash.Error()}
 			w.WriteHeader(http.StatusInternalServerError)
 			json.NewEncoder(w).Encode(response)
 
 		case errors.Is(err, entities.ErrNegativeBalance):
-			response := Error{Reason: entities.ErrNegativeBalance.Error()}
+			response := server_http.Error{Reason: entities.ErrNegativeBalance.Error()}
 			w.WriteHeader(http.StatusBadRequest)
 			json.NewEncoder(w).Encode(response)
 
 		default:
-			response := Error{Reason: "internal server error"}
+			response := server_http.Error{Reason: "internal server error"}
 			w.WriteHeader(http.StatusInternalServerError)
 			json.NewEncoder(w).Encode(response)
 		}
