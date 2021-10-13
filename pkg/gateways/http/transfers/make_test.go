@@ -18,10 +18,12 @@ func TestMake(t *testing.T) {
 
 		transfer := entities.Transfer{AccountOriginID: 1, AccountDestinationID: 0, Amount: 10}
 		useCase := transfers.UseCaseMock{Transfer: transfer}
-		
+
 		h := NewHandler(&useCase)
 
-		request, _ := json.Marshal(transfer)
+		createRequest := Request{transfer.AccountOriginID, transfer.AccountDestinationID, transfer.Amount}
+
+		request, _ := json.Marshal(createRequest)
 
 		newRequest, _ := http.NewRequest(http.MethodPost, "/transfers", bytes.NewReader(request))
 		newResponse := httptest.NewRecorder()
@@ -98,7 +100,9 @@ func TestMake(t *testing.T) {
 
 		h := NewHandler(&useCase)
 
-		request, _ := json.Marshal(transfer)
+		createRequest := Request{transfer.AccountOriginID, transfer.AccountDestinationID, transfer.Amount}
+
+		request, _ := json.Marshal(createRequest)
 
 		newRequest, _ := http.NewRequest(http.MethodPost, "/transfers", bytes.NewBuffer(request))
 		newResponse := httptest.NewRecorder()
@@ -130,7 +134,9 @@ func TestMake(t *testing.T) {
 
 		h := NewHandler(&useCase)
 
-		request, _ := json.Marshal(transfer)
+		createRequest := Request{transfer.AccountOriginID, transfer.AccountDestinationID, transfer.Amount}
+
+		request, _ := json.Marshal(createRequest)
 		newRequest, _ := http.NewRequest(http.MethodPost, "/transfers", bytes.NewBuffer(request))
 		newResponse := httptest.NewRecorder()
 
