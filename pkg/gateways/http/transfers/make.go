@@ -11,15 +11,15 @@ import (
 )
 
 type Request struct {
-	AccountOriginID      int `json:"account_origin_id"`
-	AccountDestinationID int `json:"account_destination_id"`
-	Amount               int `json:"amount"`
+	AccountOriginID      string `json:"account_origin_id"`
+	AccountDestinationID string `json:"account_destination_id"`
+	Amount               int    `json:"amount"`
 }
 
 type Response struct {
 	ID                   string `json:"id"`
-	AccountOriginID      int    `json:"account_origin_id"`
-	AccountDestinationID int    `json:"account_destination_id"`
+	AccountOriginID      string `json:"account_origin_id"`
+	AccountDestinationID string `json:"account_destination_id"`
 	Amount               int    `json:"amount"`
 	CreatedAt            string `json:"create_at"`
 }

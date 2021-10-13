@@ -16,7 +16,7 @@ func TestMake(t *testing.T) {
 
 	t.Run("should return 201 and a transfer when it's been sucessfully created", func(t *testing.T) {
 
-		transfer := entities.Transfer{AccountOriginID: 1, AccountDestinationID: 0, Amount: 10}
+		transfer := entities.Transfer{AccountOriginID: "1", AccountDestinationID: "0", Amount: 10}
 		useCase := transfers.UseCaseMock{Transfer: transfer}
 
 		h := NewHandler(&useCase)
@@ -47,11 +47,11 @@ func TestMake(t *testing.T) {
 		}
 
 		if response.AccountOriginID != transfer.AccountOriginID {
-			t.Errorf("expected '%d' but got '%d'", transfer.AccountOriginID, response.AccountOriginID)
+			t.Errorf("expected '%s' but got '%s'", transfer.AccountOriginID, response.AccountOriginID)
 		}
 
 		if response.AccountDestinationID != transfer.AccountDestinationID {
-			t.Errorf("expected '%d' but got '%d'", transfer.AccountDestinationID, response.AccountDestinationID)
+			t.Errorf("expected '%s' but got '%s'", transfer.AccountDestinationID, response.AccountDestinationID)
 		}
 
 		if response.Amount != transfer.Amount {
@@ -95,7 +95,7 @@ func TestMake(t *testing.T) {
 
 	t.Run("should return 400 and a empty transfer when amount is less or equal zero", func(t *testing.T) {
 
-		transfer := entities.Transfer{AccountOriginID: 1, AccountDestinationID: 0, Amount: -10}
+		transfer := entities.Transfer{AccountOriginID: "1", AccountDestinationID: "0", Amount: -10}
 		useCase := transfers.UseCaseMock{Transfer: transfer, Error: entities.ErrAmountLessOrEqualZero}
 
 		h := NewHandler(&useCase)
@@ -128,7 +128,7 @@ func TestMake(t *testing.T) {
 
 	t.Run("should return 400 and a empty transfer when the transfer is to the same account", func(t *testing.T) {
 
-		transfer := entities.Transfer{AccountOriginID: 0, AccountDestinationID: 0, Amount: 10}
+		transfer := entities.Transfer{AccountOriginID: "0", AccountDestinationID: "0", Amount: 10}
 
 		useCase := transfers.UseCaseMock{Transfer: transfer, Error: entities.ErrSameAccountTransfer}
 

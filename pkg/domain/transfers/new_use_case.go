@@ -16,5 +16,5 @@ func NewUseCase(storage transfers.TransferStorage) TransferUseCase {
 }
 
 type UseCase interface {
-	Make(originID, destinationID int, amount int) (entities.Transfer, error)
+	Make(originID, destinationID string, amount int) (entities.Transfer, error)
 }

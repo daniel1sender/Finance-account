@@ -10,7 +10,7 @@ var (
 	ErrCreatingNewTransfer = errors.New("error when creating a transfer")
 )
 
-func (tu TransferUseCase) Make(originID, destinationID int, amount int) (entities.Transfer, error) {
+func (tu TransferUseCase) Make(originID, destinationID string, amount int) (entities.Transfer, error) {
 
 	transfer, err := entities.NewTransfer(originID, destinationID, amount)
 

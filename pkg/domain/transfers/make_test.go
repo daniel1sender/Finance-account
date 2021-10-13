@@ -15,8 +15,8 @@ func TestAccountUseCase_Make(t *testing.T) {
 		storage := transfers.NewStorage()
 		transferUsecase := NewUseCase(storage)
 		amount := 10
-		originID := 1
-		destinationID := 2
+		originID := "1"
+		destinationID := "2"
 
 		makeTransfer, err := transferUsecase.Make(originID, destinationID, amount)
 
@@ -35,8 +35,8 @@ func TestAccountUseCase_Make(t *testing.T) {
 		storage := transfers.NewStorage()
 		transferUseCase := NewUseCase(storage)
 		amount := 0
-		originID := 1
-		destinationID := 2
+		originID := "1"
+		destinationID := "2"
 
 		makeTransfer, err := transferUseCase.Make(originID, destinationID, amount)
 

@@ -7,6 +7,6 @@ type UseCaseMock struct {
 	Error    error
 }
 
-func (m *UseCaseMock) Make(originID, destinationID int, amount int) (entities.Transfer, error) {
+func (m *UseCaseMock) Make(originID, destinationID string, amount int) (entities.Transfer, error) {
 	return m.Transfer, m.Error
 }
