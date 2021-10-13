@@ -91,7 +91,7 @@ func TestMake(t *testing.T) {
 
 	})
 
-	t.Run("should return 400 and a empty transfer when amount is less or equal zero", func(t *testing.T) {
+	t.Run("should return 400 and a error message when amount is less or equal zero", func(t *testing.T) {
 
 		transfer := entities.Transfer{AccountOriginID: "1", AccountDestinationID: "0", Amount: -10}
 		useCase := transfers.UseCaseMock{Transfer: transfer, Error: entities.ErrAmountLessOrEqualZero}
@@ -124,7 +124,7 @@ func TestMake(t *testing.T) {
 
 	})
 
-	t.Run("should return 400 and a empty transfer when the transfer is to the same account", func(t *testing.T) {
+	t.Run("should return 400 and a error message when the transfer is to the same account", func(t *testing.T) {
 
 		transfer := entities.Transfer{AccountOriginID: "0", AccountDestinationID: "0", Amount: 10}
 		useCase := transfers.UseCaseMock{Transfer: transfer, Error: entities.ErrSameAccountTransfer}
