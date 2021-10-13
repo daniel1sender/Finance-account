@@ -41,5 +41,4 @@ func (h Handler) GetBalanceByID(w http.ResponseWriter, r *http.Request) {
 	balanceResponse := ByIdResponse{balance}
 	w.WriteHeader(http.StatusOK)
 	_ = json.NewEncoder(w).Encode(balanceResponse)
-
 }

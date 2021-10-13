@@ -58,9 +58,7 @@ func (h Handler) Make(w http.ResponseWriter, r *http.Request) {
 			w.WriteHeader(http.StatusBadRequest)
 			json.NewEncoder(w).Encode(&response)
 		}
-
 		return
-
 	}
 
 	createAt := transfer.CreatedAt
