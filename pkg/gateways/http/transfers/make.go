@@ -40,7 +40,7 @@ func (h Handler) Make(w http.ResponseWriter, r *http.Request) {
 	transfer, err := h.useCase.Make(createRequest.AccountOriginID, createRequest.AccountDestinationID, createRequest.Amount)
 	w.Header().Add("Content-Type", server_http.JSONContentType)
 	if err != nil {
-		log.Printf("request failed: %s\n", err.Error())
+		log.Printf("create transfer request failed: %s\n", err.Error())
 		switch {
 
 		case errors.Is(err, entities.ErrAmountLessOrEqualZero):
