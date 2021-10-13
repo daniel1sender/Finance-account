@@ -80,12 +80,10 @@ func (h Handler) Create(w http.ResponseWriter, r *http.Request) {
 			w.WriteHeader(http.StatusInternalServerError)
 			json.NewEncoder(w).Encode(response)
 		}
-
 		return
 	}
 
-	createAt := account.CreatedAt
-	ExpectedCreateAt := createAt.Format(server_http.DateLayout)
+	ExpectedCreateAt := account.CreatedAt.Format(server_http.DateLayout)
 	CreateResponse := CreateResponse{account.ID, account.Name, account.CPF, account.Balance, ExpectedCreateAt}
 	w.WriteHeader(http.StatusCreated)
 	_ = json.NewEncoder(w).Encode(CreateResponse)

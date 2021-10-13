@@ -61,8 +61,7 @@ func (h Handler) Make(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	createAt := transfer.CreatedAt
-	ExpectedCreateAt := createAt.Format(server_http.DateLayout)
+	ExpectedCreateAt := transfer.CreatedAt.Format(server_http.DateLayout)
 	response := Response{transfer.ID, transfer.AccountOriginID, transfer.AccountDestinationID, transfer.Amount, ExpectedCreateAt}
 	w.WriteHeader(http.StatusCreated)
 	_ = json.NewEncoder(w).Encode(response)

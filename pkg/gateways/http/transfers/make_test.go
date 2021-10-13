@@ -30,8 +30,7 @@ func TestMake(t *testing.T) {
 
 		h.Make(newResponse, newRequest)
 
-		createAt := transfer.CreatedAt
-		ExpectedCreateAt := createAt.Format(server_http.DateLayout)
+		ExpectedCreateAt := transfer.CreatedAt.Format(server_http.DateLayout)
 
 		var response Response
 		_ = json.Unmarshal(newResponse.Body.Bytes(), &response)
@@ -63,7 +62,7 @@ func TestMake(t *testing.T) {
 
 	})
 
-	t.Run("should return 400 and a error message when it failed to decode the request successfully", func(t *testing.T) {
+	t.Run("should return 400 and a error message when it failed to decode the request", func(t *testing.T) {
 
 		useCase := transfers.UseCaseMock{}
 		h := NewHandler(&useCase)
