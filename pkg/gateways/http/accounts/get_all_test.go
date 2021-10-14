@@ -25,8 +25,7 @@ func TestGet(t *testing.T) {
 		newResponse := httptest.NewRecorder()
 		h.GetAll(newResponse, newRequest)
 
-		createAt := account.CreatedAt
-		ExpectedCreateAt := createAt.Format(server_http.DateLayout)
+		ExpectedCreateAt := account.CreatedAt.Format(server_http.DateLayout)
 
 		var accountsList GetResponse
 		json.Unmarshal(newResponse.Body.Bytes(), &accountsList)

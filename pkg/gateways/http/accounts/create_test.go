@@ -28,8 +28,7 @@ func TestCreate(t *testing.T) {
 
 		h.Create(newResponse, newRequest)
 
-		createAt := account.CreatedAt
-		ExpectedCreateAt := createAt.Format(server_http.DateLayout)
+		ExpectedCreateAt := account.CreatedAt.Format(server_http.DateLayout)
 
 		var response CreateResponse
 		json.Unmarshal(newResponse.Body.Bytes(), &response)
