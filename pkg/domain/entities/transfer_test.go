@@ -22,11 +22,11 @@ func TestNewTransfer(t *testing.T) {
 		}
 
 		if transfer.AccountOriginID != originID {
-			t.Errorf("expected originId '%d' but got '%d'", originID, transfer.AccountOriginID)
+			t.Errorf("expected originId '%s' but got '%s'", originID, transfer.AccountOriginID)
 		}
 
 		if transfer.AccountDestinationID != destinationID {
-			t.Errorf("expected originId '%d' but got '%d'", destinationID, transfer.AccountDestinationID)
+			t.Errorf("expected originId '%s' but got '%s'", destinationID, transfer.AccountDestinationID)
 		}
 
 		if transfer.CreatedAt.IsZero() == true {
