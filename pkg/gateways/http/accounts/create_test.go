@@ -32,7 +32,6 @@ func TestCreate(t *testing.T) {
 		ExpectedCreateAt := createAt.Format(server_http.DateLayout)
 
 		var response CreateResponse
-
 		json.Unmarshal(newResponse.Body.Bytes(), &response)
 
 		if newResponse.Code != http.StatusCreated {
