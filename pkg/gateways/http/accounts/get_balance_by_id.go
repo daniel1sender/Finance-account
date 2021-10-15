@@ -25,12 +25,12 @@ func (h Handler) GetBalanceByID(w http.ResponseWriter, r *http.Request) {
 		log.Printf("get by id request failed: %s", err)
 		switch {
 		case errors.Is(err, accounts.ErrIDNotFound):
-			response := Error{Reason: accounts.ErrIDNotFound.Error()}
+			response := server_http.Error{Reason: accounts.ErrIDNotFound.Error()}
 			w.WriteHeader(http.StatusNotFound)
 			json.NewEncoder(w).Encode(response)
 
 		default:
-			response := Error{Reason: "internal error server"}
+			response := server_http.Error{Reason: "internal error server"}
 			w.WriteHeader(http.StatusInternalServerError)
 			json.NewEncoder(w).Encode(response)
 
@@ -41,5 +41,4 @@ func (h Handler) GetBalanceByID(w http.ResponseWriter, r *http.Request) {
 	balanceResponse := ByIdResponse{balance}
 	w.WriteHeader(http.StatusOK)
 	_ = json.NewEncoder(w).Encode(balanceResponse)
-
 }

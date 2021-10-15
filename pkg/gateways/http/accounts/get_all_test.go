@@ -17,7 +17,6 @@ func TestGet(t *testing.T) {
 	t.Run("should return 200 and the list of accounts", func(t *testing.T) {
 
 		account := entities.Account{Name: "Jonh Doe", CPF: "12345678910", Secret: "123", Balance: 0}
-
 		useCase := accounts.UseCaseMock{List: []entities.Account{account}}
 
 		h := NewHandler(&useCase)
@@ -26,6 +25,8 @@ func TestGet(t *testing.T) {
 		newResponse := httptest.NewRecorder()
 		h.GetAll(newResponse, newRequest)
 
+		ExpectedCreateAt := account.CreatedAt.Format(server_http.DateLayout)
+
 		var accountsList GetResponse
 		json.Unmarshal(newResponse.Body.Bytes(), &accountsList)
 
@@ -33,8 +34,11 @@ func TestGet(t *testing.T) {
 			if value.Name != account.Name {
 				t.Errorf("expected '%s' but got '%s'", account.Name, value.Name)
 			}
-			if value.CPF != account.CPF {
-				t.Errorf("expected '%s' but got '%s'", account.CPF, value.CPF)
+			if value.ID != account.ID {
+				t.Errorf("expected '%s' but got '%s'", account.ID, value.ID)
+			}
+			if value.CreatedAt != ExpectedCreateAt {
+				t.Errorf("expected '%s' but got '%s'", value.CreatedAt, account.CreatedAt)
 			}
 			if value.Balance != account.Balance {
 				t.Errorf("expected '%d' but got '%d'", account.Balance, value.Balance)
@@ -54,9 +58,9 @@ func TestGet(t *testing.T) {
 	t.Run("should return 200 and an empty list of accounts when no account was created", func(t *testing.T) {
 
 		useCase := accounts.UseCaseMock{List: []entities.Account{}}
-
 		newRequest, _ := http.NewRequest(http.MethodGet, "/accounts", nil)
 		newResponse := httptest.NewRecorder()
+
 		h := NewHandler(&useCase)
 
 		h.GetAll(newResponse, newRequest)

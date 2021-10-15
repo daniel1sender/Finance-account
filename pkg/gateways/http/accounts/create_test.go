@@ -18,24 +18,19 @@ func TestCreate(t *testing.T) {
 	t.Run("should return 201 and a account when it's been sucessfully created", func(t *testing.T) {
 
 		account := entities.Account{Name: "Jonh Doe", CPF: "12345678910", Secret: "123", Balance: 0, CreatedAt: time.Now()}
-
 		useCase := accounts.UseCaseMock{Account: account}
 		h := NewHandler(&useCase)
 
 		createRequest := CreateRequest{account.Name, account.CPF, account.Secret, account.Balance}
-
 		request, _ := json.Marshal(createRequest)
-
 		newRequest, _ := http.NewRequest("POST", "/anyroute", bytes.NewReader(request))
 		newResponse := httptest.NewRecorder()
 
 		h.Create(newResponse, newRequest)
 
-		createAt := account.CreatedAt
-		ExpectedCreateAt := createAt.Format(server_http.DateLayout)
+		ExpectedCreateAt := account.CreatedAt.Format(server_http.DateLayout)
 
 		var response CreateResponse
-
 		json.Unmarshal(newResponse.Body.Bytes(), &response)
 
 		if newResponse.Code != http.StatusCreated {
@@ -66,7 +61,6 @@ func TestCreate(t *testing.T) {
 	t.Run("should return 400 and a error message when it failed to decode the request successfully", func(t *testing.T) {
 
 		useCase := accounts.UseCaseMock{}
-
 		h := NewHandler(&useCase)
 
 		b := []byte{}
@@ -75,7 +69,7 @@ func TestCreate(t *testing.T) {
 
 		h.Create(newResponse, newRequest)
 
-		var responseReason Error
+		var responseReason server_http.Error
 		json.Unmarshal(newResponse.Body.Bytes(), &responseReason)
 
 		if newResponse.Code != http.StatusBadRequest {
@@ -105,7 +99,7 @@ func TestCreate(t *testing.T) {
 
 		h.Create(newResponse, newRequest)
 
-		var responseReason Error
+		var responseReason server_http.Error
 		json.Unmarshal(newResponse.Body.Bytes(), &responseReason)
 
 		if newResponse.Code != http.StatusBadRequest {
@@ -133,7 +127,7 @@ func TestCreate(t *testing.T) {
 
 		h.Create(newResponse, newRequest)
 
-		var responseReason Error
+		var responseReason server_http.Error
 		json.Unmarshal(newResponse.Body.Bytes(), &responseReason)
 
 		if newResponse.Code != http.StatusBadRequest {
@@ -162,7 +156,7 @@ func TestCreate(t *testing.T) {
 
 		h.Create(newResponse, newRequest)
 
-		var responseReason Error
+		var responseReason server_http.Error
 		json.Unmarshal(newResponse.Body.Bytes(), &responseReason)
 
 		if newResponse.Code != http.StatusConflict {
@@ -191,7 +185,7 @@ func TestCreate(t *testing.T) {
 
 		h.Create(newResponse, newRequest)
 
-		var responseReason Error
+		var responseReason server_http.Error
 		json.Unmarshal(newResponse.Body.Bytes(), &responseReason)
 
 		if newResponse.Code != http.StatusBadRequest {
@@ -220,7 +214,7 @@ func TestCreate(t *testing.T) {
 
 		h.Create(newResponse, newRequest)
 
-		var responseReason Error
+		var responseReason server_http.Error
 		json.Unmarshal(newResponse.Body.Bytes(), &responseReason)
 
 		if newResponse.Code != http.StatusBadRequest {

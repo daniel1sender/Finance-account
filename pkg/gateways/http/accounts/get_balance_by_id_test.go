@@ -24,7 +24,6 @@ func TestGetBalanceByID(t *testing.T) {
 		h.GetBalanceByID(newResponse, newRequest)
 
 		var response ByIdResponse
-
 		json.Unmarshal(newResponse.Body.Bytes(), &response)
 
 		if newResponse.Code != http.StatusOK {
@@ -46,7 +45,6 @@ func TestGetBalanceByID(t *testing.T) {
 		expectedBalance := 0
 		useCase := accounts_usecase.UseCaseMock{Balance: expectedBalance,
 			Error: accounts.ErrIDNotFound}
-
 		h := NewHandler(&useCase)
 
 		newRequest, _ := http.NewRequest(http.MethodGet, "accounts/{id}/balance", nil)
@@ -54,8 +52,7 @@ func TestGetBalanceByID(t *testing.T) {
 
 		h.GetBalanceByID(newResponse, newRequest)
 
-		var response Error
-
+		var response server_http.Error
 		json.Unmarshal(newResponse.Body.Bytes(), &response)
 
 		if newResponse.Code != http.StatusNotFound {
