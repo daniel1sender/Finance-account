@@ -40,6 +40,9 @@ func TestGet(t *testing.T) {
 			if value.CreatedAt != ExpectedCreateAt {
 				t.Errorf("expected '%s' but got '%s'", value.CreatedAt, account.CreatedAt)
 			}
+			if value.Balance != account.Balance {
+				t.Errorf("expected '%d' but got '%d'", account.Balance, value.Balance)
+			}
 		}
 
 		if newResponse.Header().Get("content-type") != server_http.JSONContentType {

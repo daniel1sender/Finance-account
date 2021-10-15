@@ -11,6 +11,7 @@ type Account struct {
 	ID        string `json:"id"`
 	Name      string `json:"name"`
 	CreatedAt string `json:"created_at"`
+	Balance   int    `json:"balance"`
 }
 
 type GetResponse struct {
@@ -27,7 +28,7 @@ func (h Handler) GetAll(w http.ResponseWriter, r *http.Request) {
 
 	getResponse := GetResponse{}
 	for _, value := range accountsList {
-		account := Account{value.ID, value.Name, value.CreatedAt.Format(server_http.DateLayout)}
+		account := Account{value.ID, value.Name, value.CreatedAt.Format(server_http.DateLayout), value.Balance}
 		getResponse.List = append(getResponse.List, account)
 	}
 
