@@ -2,16 +2,19 @@ package transfers
 
 import (
 	"github.com/daniel1sender/Desafio-API/pkg/domain/entities"
+	"github.com/daniel1sender/Desafio-API/pkg/gateways/store/accounts"
 	"github.com/daniel1sender/Desafio-API/pkg/gateways/store/transfers"
 )
 
 type TransferUseCase struct {
-	storage transfers.TransferStorage
+	storage        transfers.TransferStorage
+	accountStorage accounts.AccountStorage
 }
 
-func NewUseCase(storage transfers.TransferStorage) TransferUseCase {
+func NewUseCase(storage transfers.TransferStorage, accountStorage accounts.AccountStorage) TransferUseCase {
 	return TransferUseCase{
-		storage: storage,
+		storage:        storage,
+		accountStorage: accountStorage,
 	}
 }
 
