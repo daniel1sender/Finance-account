@@ -9,19 +9,17 @@ import (
 
 var (
 	ErrCreatingNewTransfer = errors.New("error when creating a transfer")
-	ErrNoOriginID          = errors.New("origin ID not found")
-	ErrNoDestinationID     = errors.New("destination ID not found")
 )
 
 func (tu TransferUseCase) Make(originID, destinationID string, amount int) (entities.Transfer, error) {
 
 	_, err := tu.accountStorage.GetByID(originID)
 	if err != nil {
-		return entities.Transfer{}, fmt.Errorf("origin ID %s not found", originID)
+		return entities.Transfer{}, fmt.Errorf("origin ID not found: %w", err)
 	}
 	_, err = tu.accountStorage.GetByID(destinationID)
 	if err != nil {
-		return entities.Transfer{}, fmt.Errorf("destination ID %s not found", destinationID)
+		return entities.Transfer{}, fmt.Errorf("destination ID not found: %w", err)
 	}
 
 	transfer, err := entities.NewTransfer(originID, destinationID, amount)
