@@ -30,7 +30,7 @@ func (tu TransferUseCase) Make(originID, destinationID string, amount int) (enti
 		return entities.Transfer{}, ErrCreatingNewTransfer
 	}
 
-	tu.storage.UpdateByID(transfer.ID, transfer)
+	tu.transferStorage.UpdateByID(transfer.ID, transfer)
 
 	return transfer, nil
 }

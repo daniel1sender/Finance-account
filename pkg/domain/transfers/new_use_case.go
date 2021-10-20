@@ -7,14 +7,14 @@ import (
 )
 
 type TransferUseCase struct {
-	storage        transfers.TransferStorage
-	accountStorage accounts.AccountStorage
+	transferStorage transfers.TransferStorage
+	accountStorage  accounts.AccountStorage
 }
 
-func NewUseCase(storage transfers.TransferStorage, accountStorage accounts.AccountStorage) TransferUseCase {
+func NewUseCase(transferStorage transfers.TransferStorage, accountStorage accounts.AccountStorage) TransferUseCase {
 	return TransferUseCase{
-		storage:        storage,
-		accountStorage: accountStorage,
+		transferStorage: transferStorage,
+		accountStorage:  accountStorage,
 	}
 }
 
