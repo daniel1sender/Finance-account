@@ -29,7 +29,7 @@ func (tu TransferUseCase) Make(originID, destinationID string, amount int) (enti
 
 	transfer, err := entities.NewTransfer(originID, destinationID, amount)
 	if err != nil {
-		return entities.Transfer{}, ErrCreatingNewTransfer
+		return entities.Transfer{}, fmt.Errorf("error when creating a transfer: %w", err)
 	}
 
 	tu.transferStorage.UpdateByID(transfer.ID, transfer)

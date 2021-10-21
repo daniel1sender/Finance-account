@@ -55,7 +55,7 @@ func TestAccountUseCase_Make(t *testing.T) {
 			t.Errorf("expected a empty transfer but got '%+v'", makeTransfer)
 		}
 
-		if !errors.Is(err, ErrCreatingNewTransfer) {
+		if !errors.Is(err, entities.ErrAmountLessOrEqualZero) {
 			t.Errorf("expected '%s' but got '%s'", ErrCreatingNewTransfer, err)
 		}
 
@@ -75,7 +75,7 @@ func TestAccountUseCase_Make(t *testing.T) {
 		makeTransfer, err := transferUseCase.Make(originID, destinationID, amount)
 
 		if makeTransfer != (entities.Transfer{}) {
-			t.Errorf("expected a empo transfer but got '%+v'", makeTransfer)
+			t.Errorf("expected a empty transfer but got '%+v'", makeTransfer)
 		}
 
 		if !errors.Is(err, ErrInsufficientFunds) {
@@ -84,7 +84,7 @@ func TestAccountUseCase_Make(t *testing.T) {
 
 	})
 
-	t.Run("should return a empo transfer and a error message when the origin ID is not found", func(t *testing.T) {
+	t.Run("should return a empty transfer and a error message when the account id is not found", func(t *testing.T) {
 
 		transferStorage := transfers_storage.NewStorage()
 		accountStorage := accounts_storage.NewStorage()
@@ -96,7 +96,7 @@ func TestAccountUseCase_Make(t *testing.T) {
 		makeTransfer, err := transferUsecase.Make(originID, destinationID, amount)
 
 		if makeTransfer != (entities.Transfer{}) {
-			t.Errorf("expected a empo transfer but got '%+v'", makeTransfer)
+			t.Errorf("expected a empty transfer but got '%+v'", makeTransfer)
 		}
 
 		if !errors.Is(err, accounts_storage.ErrIDNotFound) {
@@ -113,6 +113,27 @@ func TestAccountUseCase_Make(t *testing.T) {
 
 		if !errors.Is(err, accounts_storage.ErrIDNotFound) {
 			t.Errorf("expected '%s' but got '%s'", accounts_storage.ErrIDNotFound, err)
+		}
+
+	})
+
+	t.Run("should return an empty transfer and an error message when the origin account doesn't have sufficient funds", func(t *testing.T) {
+
+		transferStorage := transfers_storage.NewStorage()
+		accountStorage := accounts_storage.NewStorage()
+		transferUsecase := NewUseCase(transferStorage, accountStorage)
+		amount := 0
+		originID := "1"
+		destinationID := "2"
+
+		makeTransfer, err := transferUsecase.Make(originID, destinationID, amount)
+
+		if makeTransfer != (entities.Transfer{}) {
+			t.Errorf("expected a empty transfer but got '%+v'", makeTransfer)
+		}
+
+		if errors.Is(err, ErrInsufficientFunds) {
+			t.Errorf("expected '%s' but got '%s'", err, ErrInsufficientFunds)
 		}
 
 	})

@@ -7,7 +7,9 @@ import (
 	"net/http"
 
 	"github.com/daniel1sender/Desafio-API/pkg/domain/entities"
+	"github.com/daniel1sender/Desafio-API/pkg/domain/transfers"
 	server_http "github.com/daniel1sender/Desafio-API/pkg/gateways/http"
+	"github.com/daniel1sender/Desafio-API/pkg/gateways/store/accounts"
 )
 
 type Request struct {
@@ -43,6 +45,11 @@ func (h Handler) Make(w http.ResponseWriter, r *http.Request) {
 		log.Printf("create transfer request failed: %s\n", err.Error())
 		switch {
 
+		case errors.Is(err, accounts.ErrIDNotFound):
+			response := server_http.Error{Reason: accounts.ErrIDNotFound.Error()}
+			w.WriteHeader(http.StatusBadRequest)
+			json.NewEncoder(w).Encode(&response)
+
 		case errors.Is(err, entities.ErrAmountLessOrEqualZero):
 			response := server_http.Error{Reason: entities.ErrAmountLessOrEqualZero.Error()}
 			w.WriteHeader(http.StatusBadRequest)
@@ -50,6 +57,11 @@ func (h Handler) Make(w http.ResponseWriter, r *http.Request) {
 
 		case errors.Is(err, entities.ErrSameAccountTransfer):
 			response := server_http.Error{Reason: entities.ErrSameAccountTransfer.Error()}
+			w.WriteHeader(http.StatusBadRequest)
+			json.NewEncoder(w).Encode(&response)
+
+		case errors.Is(err, transfers.ErrInsufficientFunds):
+			response := server_http.Error{Reason: transfers.ErrInsufficientFunds.Error()}
 			w.WriteHeader(http.StatusBadRequest)
 			json.NewEncoder(w).Encode(&response)
 
