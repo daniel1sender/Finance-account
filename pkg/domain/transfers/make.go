@@ -9,7 +9,7 @@ import (
 
 var (
 	ErrCreatingNewTransfer = errors.New("error when creating a transfer")
-	ErrInsufficientFunds   = errors.New("insifficient balance on account")
+	ErrInsufficientFunds   = errors.New("insufficient balance on account")
 )
 
 func (tu TransferUseCase) Make(originID, destinationID string, amount int) (entities.Transfer, error) {
