@@ -16,7 +16,7 @@ func (tu TransferUseCase) Make(originID, destinationID string, amount int) (enti
 
 	originAccountBalance, err := tu.accountStorage.GetBalanceByID(originID)
 	if err != nil {
-		return entities.Transfer{}, fmt.Errorf("origin ID not found: %w", err)
+		return entities.Transfer{}, fmt.Errorf("invalid id informed: %w", err)
 	}
 	if originAccountBalance < amount {
 		return entities.Transfer{}, ErrInsufficientFunds
@@ -24,7 +24,7 @@ func (tu TransferUseCase) Make(originID, destinationID string, amount int) (enti
 
 	_, err = tu.accountStorage.GetByID(destinationID)
 	if err != nil {
-		return entities.Transfer{}, fmt.Errorf("destination ID not found: %w", err)
+		return entities.Transfer{}, fmt.Errorf("invalid id informed: %w", err)
 	}
 
 	transfer, err := entities.NewTransfer(originID, destinationID, amount)
