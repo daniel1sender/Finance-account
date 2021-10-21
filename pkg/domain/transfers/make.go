@@ -33,6 +33,7 @@ func (tu TransferUseCase) Make(originID, destinationID string, amount int) (enti
 	}
 
 	tu.transferStorage.UpdateByID(transfer.ID, transfer)
+	tu.accountStorage.UpdateBalance(originID, destinationID, amount)
 
 	return transfer, nil
 }
