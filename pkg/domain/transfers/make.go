@@ -9,21 +9,25 @@ import (
 
 var (
 	ErrCreatingNewTransfer = errors.New("error when creating a transfer")
+	ErrInsufficientFunds   = errors.New("insifficient balance on account")
 )
 
 func (tu TransferUseCase) Make(originID, destinationID string, amount int) (entities.Transfer, error) {
 
-	_, err := tu.accountStorage.GetByID(originID)
+	originAccountBalance, err := tu.accountStorage.GetBalanceByID(originID)
 	if err != nil {
 		return entities.Transfer{}, fmt.Errorf("origin ID not found: %w", err)
 	}
+	if originAccountBalance < amount {
+		return entities.Transfer{}, ErrInsufficientFunds
+	}
+
 	_, err = tu.accountStorage.GetByID(destinationID)
 	if err != nil {
 		return entities.Transfer{}, fmt.Errorf("destination ID not found: %w", err)
 	}
 
 	transfer, err := entities.NewTransfer(originID, destinationID, amount)
-
 	if err != nil {
 		return entities.Transfer{}, ErrCreatingNewTransfer
 	}
