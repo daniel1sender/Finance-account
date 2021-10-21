@@ -75,7 +75,7 @@ func TestAccountUseCase_Make(t *testing.T) {
 		makeTransfer, err := transferUseCase.Make(originID, destinationID, amount)
 
 		if makeTransfer != (entities.Transfer{}) {
-			t.Errorf("expected a empty transfer but got '%+v'", makeTransfer)
+			t.Errorf("expected a empo transfer but got '%+v'", makeTransfer)
 		}
 
 		if !errors.Is(err, ErrInsufficientFunds) {
@@ -84,7 +84,7 @@ func TestAccountUseCase_Make(t *testing.T) {
 
 	})
 
-	t.Run("should return a empty transfer and a error message when the origin ID is not found", func(t *testing.T) {
+	t.Run("should return a empo transfer and a error message when the origin ID is not found", func(t *testing.T) {
 
 		transferStorage := transfers_storage.NewStorage()
 		accountStorage := accounts_storage.NewStorage()
@@ -96,25 +96,16 @@ func TestAccountUseCase_Make(t *testing.T) {
 		makeTransfer, err := transferUsecase.Make(originID, destinationID, amount)
 
 		if makeTransfer != (entities.Transfer{}) {
-			t.Errorf("expected a empty transfer but got '%+v'", makeTransfer)
+			t.Errorf("expected a empo transfer but got '%+v'", makeTransfer)
 		}
 
 		if !errors.Is(err, accounts_storage.ErrIDNotFound) {
 			t.Errorf("expected '%s' but got '%s'", accounts_storage.ErrIDNotFound, err)
 		}
 
-	})
-
-	t.Run("should return a empty transfer and a error message when the destination ID is not found", func(t *testing.T) {
-
-		transferStorage := transfers_storage.NewStorage()
-		accountStorage := accounts_storage.NewStorage()
-		transferUsecase := NewUseCase(transferStorage, accountStorage)
-		amount := 0
-		originID := "1"
-		destinationID := "2"
-
-		makeTransfer, err := transferUsecase.Make(originID, destinationID, amount)
+		originAccount := entities.Account{ID: originID, Balance: 20}
+		accountStorage.Upsert(originID, originAccount)
+		makeTransfer, err = transferUsecase.Make(originID, destinationID, amount)
 
 		if makeTransfer != (entities.Transfer{}) {
 			t.Errorf("expected a empty transfer but got '%+v'", makeTransfer)
@@ -125,4 +116,5 @@ func TestAccountUseCase_Make(t *testing.T) {
 		}
 
 	})
+
 }
