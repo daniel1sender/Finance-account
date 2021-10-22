@@ -10,6 +10,7 @@ import (
 	"github.com/daniel1sender/Desafio-API/pkg/domain/entities"
 	"github.com/daniel1sender/Desafio-API/pkg/domain/transfers"
 	server_http "github.com/daniel1sender/Desafio-API/pkg/gateways/http"
+	accounts_storage "github.com/daniel1sender/Desafio-API/pkg/gateways/store/accounts"
 )
 
 func TestMake(t *testing.T) {
@@ -18,16 +19,12 @@ func TestMake(t *testing.T) {
 
 		transfer := entities.Transfer{AccountOriginID: "1", AccountDestinationID: "0", Amount: 10}
 		useCase := transfers.UseCaseMock{Transfer: transfer}
-
 		h := NewHandler(&useCase)
 
 		createRequest := Request{transfer.AccountOriginID, transfer.AccountDestinationID, transfer.Amount}
-
 		request, _ := json.Marshal(createRequest)
-
 		newRequest, _ := http.NewRequest(http.MethodPost, "/transfers", bytes.NewReader(request))
 		newResponse := httptest.NewRecorder()
-
 		h.Make(newResponse, newRequest)
 
 		ExpectedCreateAt := transfer.CreatedAt.Format(server_http.DateLayout)
@@ -66,11 +63,9 @@ func TestMake(t *testing.T) {
 
 		useCase := transfers.UseCaseMock{}
 		h := NewHandler(&useCase)
-
 		b := []byte{}
 		newRequest, _ := http.NewRequest(http.MethodPost, "transfers", bytes.NewBuffer(b))
 		newResponse := httptest.NewRecorder()
-
 		h.Make(newResponse, newRequest)
 
 		var responseReason server_http.Error
@@ -95,16 +90,12 @@ func TestMake(t *testing.T) {
 
 		transfer := entities.Transfer{AccountOriginID: "1", AccountDestinationID: "0", Amount: -10}
 		useCase := transfers.UseCaseMock{Transfer: transfer, Error: entities.ErrAmountLessOrEqualZero}
-
 		h := NewHandler(&useCase)
 
 		createRequest := Request{transfer.AccountOriginID, transfer.AccountDestinationID, transfer.Amount}
-
 		request, _ := json.Marshal(createRequest)
-
 		newRequest, _ := http.NewRequest(http.MethodPost, "/transfers", bytes.NewBuffer(request))
 		newResponse := httptest.NewRecorder()
-
 		h.Make(newResponse, newRequest)
 
 		var responseReason server_http.Error
@@ -128,15 +119,12 @@ func TestMake(t *testing.T) {
 
 		transfer := entities.Transfer{AccountOriginID: "0", AccountDestinationID: "0", Amount: 10}
 		useCase := transfers.UseCaseMock{Transfer: transfer, Error: entities.ErrSameAccountTransfer}
-
 		h := NewHandler(&useCase)
 
 		createRequest := Request{transfer.AccountOriginID, transfer.AccountDestinationID, transfer.Amount}
-
 		request, _ := json.Marshal(createRequest)
 		newRequest, _ := http.NewRequest(http.MethodPost, "/transfers", bytes.NewBuffer(request))
 		newResponse := httptest.NewRecorder()
-
 		h.Make(newResponse, newRequest)
 
 		var responseReason server_http.Error
@@ -153,6 +141,63 @@ func TestMake(t *testing.T) {
 		if responseReason.Reason != entities.ErrSameAccountTransfer.Error() {
 			t.Errorf("expected '%s' but got '%s'", entities.ErrSameAccountTransfer.Error(), responseReason.Reason)
 		}
+	})
+
+	t.Run("should return 400 and an error message when ids of transfer isn't found", func(t *testing.T) {
+
+		transfer := entities.Transfer{AccountOriginID: "0", AccountDestinationID: "1", Amount: 10}
+		useCase := transfers.UseCaseMock{Transfer: transfer, Error: accounts_storage.ErrIDNotFound}
+		h := NewHandler(&useCase)
+
+		createRequest := Request{transfer.AccountOriginID, transfer.AccountDestinationID, transfer.Amount}
+		request, _ := json.Marshal(createRequest)
+		newRequest, _ := http.NewRequest(http.MethodPost, "/transfers", bytes.NewBuffer(request))
+		newResponse := httptest.NewRecorder()
+		h.Make(newResponse, newRequest)
+
+		var responseReason server_http.Error
+		json.Unmarshal(newResponse.Body.Bytes(), &responseReason)
+
+		if newResponse.Code != http.StatusBadRequest {
+			t.Errorf("expected status '%d' but got '%d'", http.StatusBadRequest, newResponse.Code)
+		}
+
+		if newResponse.Header().Get("content-type") != server_http.JSONContentType {
+			t.Errorf("expected '%s' but got '%s'", server_http.JSONContentType, newResponse.Header().Get("content-type"))
+		}
+
+		if responseReason.Reason != accounts_storage.ErrIDNotFound.Error() {
+			t.Errorf("expected '%s' but got '%s'", accounts_storage.ErrIDNotFound.Error(), responseReason.Reason)
+		}
+	})
+
+	t.Run("should return 400 and error message when origin account doesn't have sufficient funds", func(t *testing.T) {
+
+		transfer := entities.Transfer{AccountOriginID: "0", AccountDestinationID: "1", Amount: 10}
+		useCase := transfers.UseCaseMock{Transfer: transfer, Error: transfers.ErrInsufficientFunds}
+		h := NewHandler(&useCase)
+
+		createRequest := Request{transfer.AccountOriginID, transfer.AccountDestinationID, transfer.Amount}
+		request, _ := json.Marshal(createRequest)
+		newRequest, _ := http.NewRequest(http.MethodPost, "/transfers", bytes.NewBuffer(request))
+		newResponse := httptest.NewRecorder()
+		h.Make(newResponse, newRequest)
+
+		var responseReason server_http.Error
+		json.Unmarshal(newResponse.Body.Bytes(), &responseReason)
+
+		if newResponse.Code != http.StatusBadRequest {
+			t.Errorf("expected status '%d' but got '%d'", http.StatusBadRequest, newResponse.Code)
+		}
+
+		if newResponse.Header().Get("content-type") != server_http.JSONContentType {
+			t.Errorf("expected '%s' but got '%s'", server_http.JSONContentType, newResponse.Header().Get("content-type"))
+		}
+
+		if responseReason.Reason != transfers.ErrInsufficientFunds.Error() {
+			t.Errorf("expected '%s' but got '%s'", transfers.ErrInsufficientFunds.Error(), responseReason.Reason)
+		}
+
 	})
 
 }
