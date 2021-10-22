@@ -67,7 +67,7 @@ func (h Handler) Make(w http.ResponseWriter, r *http.Request) {
 
 		default:
 			response := server_http.Error{Reason: "internal server error"}
-			w.WriteHeader(http.StatusBadRequest)
+			w.WriteHeader(http.StatusInternalServerError)
 			json.NewEncoder(w).Encode(&response)
 		}
 		return
