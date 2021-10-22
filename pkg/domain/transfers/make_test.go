@@ -30,6 +30,22 @@ func TestAccountUseCase_Make(t *testing.T) {
 			t.Errorf("expected a transfer but got '%+v'", makeTransfer)
 		}
 
+		if makeTransfer.AccountOriginID != originAccount.ID {
+			t.Errorf("expected '%s' but got '%s'", originAccount.ID, makeTransfer.AccountOriginID)
+		}
+
+		if makeTransfer.AccountDestinationID != destinationAccount.ID {
+			t.Errorf("expected '%s' but got '%s'", destinationAccount.ID, makeTransfer.AccountDestinationID)
+		}
+
+		if makeTransfer.Amount != amount {
+			t.Errorf("expected '%d' but got '%d'", amount, makeTransfer.Amount)
+		}
+
+		if makeTransfer.CreatedAt.IsZero() {
+			t.Error("expected a time different from zero")
+		}
+
 		if err != nil {
 			t.Errorf("expected no error but got '%s'", err)
 		}
@@ -61,7 +77,7 @@ func TestAccountUseCase_Make(t *testing.T) {
 
 	})
 
-	t.Run("should return a empty transfer when amount is less than origin account balance", func(t *testing.T) {
+	t.Run("should return an empty transfer and an error message when the origin account doesn't have sufficient funds", func(t *testing.T) {
 		transferStorage := transfers_storage.NewStorage()
 		accountStorage := accounts_storage.NewStorage()
 		transferUseCase := NewUseCase(transferStorage, accountStorage)
@@ -113,27 +129,6 @@ func TestAccountUseCase_Make(t *testing.T) {
 
 		if !errors.Is(err, accounts_storage.ErrIDNotFound) {
 			t.Errorf("expected '%s' but got '%s'", accounts_storage.ErrIDNotFound, err)
-		}
-
-	})
-
-	t.Run("should return an empty transfer and an error message when the origin account doesn't have sufficient funds", func(t *testing.T) {
-
-		transferStorage := transfers_storage.NewStorage()
-		accountStorage := accounts_storage.NewStorage()
-		transferUsecase := NewUseCase(transferStorage, accountStorage)
-		amount := 0
-		originID := "1"
-		destinationID := "2"
-
-		makeTransfer, err := transferUsecase.Make(originID, destinationID, amount)
-
-		if makeTransfer != (entities.Transfer{}) {
-			t.Errorf("expected a empty transfer but got '%+v'", makeTransfer)
-		}
-
-		if errors.Is(err, ErrInsufficientFunds) {
-			t.Errorf("expected '%s' but got '%s'", err, ErrInsufficientFunds)
 		}
 
 	})
