@@ -8,8 +8,8 @@ import (
 
 	"github.com/daniel1sender/Desafio-API/pkg/domain/accounts"
 	"github.com/daniel1sender/Desafio-API/pkg/domain/entities"
-
 	server_http "github.com/daniel1sender/Desafio-API/pkg/gateways/http"
+	"github.com/sirupsen/logrus"
 )
 
 func TestGet(t *testing.T) {
@@ -19,7 +19,7 @@ func TestGet(t *testing.T) {
 		account := entities.Account{Name: "Jonh Doe", CPF: "12345678910", Secret: "123", Balance: 0}
 		useCase := accounts.UseCaseMock{List: []entities.Account{account}}
 
-		h := NewHandler(&useCase)
+		h := NewHandler(&useCase, &logrus.Entry{})
 
 		newRequest, _ := http.NewRequest(http.MethodGet, "/accounts", nil)
 		newResponse := httptest.NewRecorder()
@@ -61,7 +61,7 @@ func TestGet(t *testing.T) {
 		newRequest, _ := http.NewRequest(http.MethodGet, "/accounts", nil)
 		newResponse := httptest.NewRecorder()
 
-		h := NewHandler(&useCase)
+		h := NewHandler(&useCase, &logrus.Entry{})
 
 		h.GetAll(newResponse, newRequest)
 

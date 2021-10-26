@@ -2,9 +2,11 @@ package accounts
 
 import (
 	"encoding/json"
+	"errors"
 	"net/http"
 
 	server_http "github.com/daniel1sender/Desafio-API/pkg/gateways/http"
+	"github.com/sirupsen/logrus"
 )
 
 type Account struct {
@@ -20,10 +22,14 @@ type GetResponse struct {
 
 func (h Handler) GetAll(w http.ResponseWriter, r *http.Request) {
 
+	h.logger.Logger.SetFormatter(&logrus.JSONFormatter{})
 	accountsList := h.useCase.GetAll()
 	if len(accountsList) == 0 {
 		w.Header().Add("Content-Type", server_http.JSONContentType)
 		w.WriteHeader(http.StatusOK)
+		err := errors.New("empty account list")
+		h.logger.WithError(err).Errorf("failed to list accounts")
+		return
 	}
 
 	getResponse := GetResponse{}

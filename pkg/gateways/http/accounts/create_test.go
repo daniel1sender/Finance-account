@@ -11,6 +11,7 @@ import (
 	"github.com/daniel1sender/Desafio-API/pkg/domain/accounts"
 	"github.com/daniel1sender/Desafio-API/pkg/domain/entities"
 	server_http "github.com/daniel1sender/Desafio-API/pkg/gateways/http"
+	"github.com/sirupsen/logrus"
 )
 
 func TestCreate(t *testing.T) {
@@ -19,7 +20,7 @@ func TestCreate(t *testing.T) {
 
 		account := entities.Account{Name: "Jonh Doe", CPF: "12345678910", Secret: "123", Balance: 0, CreatedAt: time.Now()}
 		useCase := accounts.UseCaseMock{Account: account}
-		h := NewHandler(&useCase)
+		h := NewHandler(&useCase, &logrus.Entry{})
 
 		createRequest := CreateRequest{account.Name, account.CPF, account.Secret, account.Balance}
 		request, _ := json.Marshal(createRequest)
@@ -58,10 +59,10 @@ func TestCreate(t *testing.T) {
 		}
 	})
 
-	t.Run("should return 400 and a error message when it failed to decode the request successfully", func(t *testing.T) {
+	 t.Run("should return 400 and a error message when it failed to decode the request successfully", func(t *testing.T) {
 
 		useCase := accounts.UseCaseMock{}
-		h := NewHandler(&useCase)
+		h := NewHandler(&useCase, &logrus.Entry{})
 
 		b := []byte{}
 		newRequest, _ := http.NewRequest("POST", "/anyroute", bytes.NewReader(b))
@@ -90,7 +91,7 @@ func TestCreate(t *testing.T) {
 	t.Run("should return 400 and a message error when an empty name is informed", func(t *testing.T) {
 
 		useCase := accounts.UseCaseMock{Error: entities.ErrInvalidName}
-		h := NewHandler(&useCase)
+		h := NewHandler(&useCase, &logrus.Entry{})
 
 		createRequest := CreateRequest{}
 		request, _ := json.Marshal(createRequest)
@@ -118,7 +119,7 @@ func TestCreate(t *testing.T) {
 	t.Run("should return 400 and a message error when the cpf informed doesn't have eleven digits", func(t *testing.T) {
 
 		useCase := accounts.UseCaseMock{Error: entities.ErrInvalidCPF}
-		h := NewHandler(&useCase)
+		h := NewHandler(&useCase, &logrus.Entry{})
 
 		createRequest := CreateRequest{}
 		requestBody, _ := json.Marshal(createRequest)
@@ -147,7 +148,7 @@ func TestCreate(t *testing.T) {
 	t.Run("should return a 409 and a message error when cpf informed already exist", func(t *testing.T) {
 
 		useCase := accounts.UseCaseMock{Error: accounts.ErrExistingCPF}
-		h := NewHandler(&useCase)
+		h := NewHandler(&useCase, &logrus.Entry{})
 
 		createRequest := CreateRequest{}
 		requestBody, _ := json.Marshal(createRequest)
@@ -176,7 +177,7 @@ func TestCreate(t *testing.T) {
 	t.Run("should return 400 and a message error when a blanc secret is informed", func(t *testing.T) {
 
 		useCase := accounts.UseCaseMock{Error: entities.ErrEmptySecret}
-		h := NewHandler(&useCase)
+		h := NewHandler(&useCase, &logrus.Entry{})
 
 		createRequest := CreateRequest{}
 		requestBody, _ := json.Marshal(createRequest)
@@ -205,7 +206,7 @@ func TestCreate(t *testing.T) {
 	t.Run("should return 400 and a message error when balance informed is less than zero", func(t *testing.T) {
 
 		useCase := accounts.UseCaseMock{Error: entities.ErrNegativeBalance}
-		h := NewHandler(&useCase)
+		h := NewHandler(&useCase, &logrus.Entry{})
 
 		createRequest := CreateRequest{}
 		requestBody, _ := json.Marshal(createRequest)
@@ -229,6 +230,6 @@ func TestCreate(t *testing.T) {
 			t.Errorf("expected '%s' but got '%s'", entities.ErrNegativeBalance.Error(), responseReason.Reason)
 		}
 
-	})
+	}) 
 
 }

@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
+	"github.com/sirupsen/logrus"
 
 	accounts_usecase "github.com/daniel1sender/Desafio-API/pkg/domain/accounts"
 	transfers_usecase "github.com/daniel1sender/Desafio-API/pkg/domain/transfers"
@@ -22,7 +23,7 @@ func main() {
 
 	accountStorage := accounts_storage.NewStorage()
 	accountUseCase := accounts_usecase.NewUseCase(accountStorage)
-	accountHandler := accounts_handler.NewHandler(accountUseCase)
+	accountHandler := accounts_handler.NewHandler(accountUseCase, logrus.NewEntry(logrus.New()))
 
 	r := mux.NewRouter()
 	r.HandleFunc("/accounts", accountHandler.Create).Methods(http.MethodPost)
