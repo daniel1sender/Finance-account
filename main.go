@@ -19,7 +19,7 @@ func main() {
 
 	transferStorage := transfers_storage.NewStorage()
 	transferUseCase := transfers_usecase.NewUseCase(transferStorage)
-	transferHandler := transfers_handler.NewHandler(transferUseCase)
+	transferHandler := transfers_handler.NewHandler(transferUseCase, logrus.NewEntry(logrus.New()))
 
 	accountStorage := accounts_storage.NewStorage()
 	accountUseCase := accounts_usecase.NewUseCase(accountStorage)

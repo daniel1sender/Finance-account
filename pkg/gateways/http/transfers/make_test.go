@@ -10,6 +10,7 @@ import (
 	"github.com/daniel1sender/Desafio-API/pkg/domain/entities"
 	"github.com/daniel1sender/Desafio-API/pkg/domain/transfers"
 	server_http "github.com/daniel1sender/Desafio-API/pkg/gateways/http"
+	"github.com/sirupsen/logrus"
 )
 
 func TestMake(t *testing.T) {
@@ -19,7 +20,7 @@ func TestMake(t *testing.T) {
 		transfer := entities.Transfer{AccountOriginID: "1", AccountDestinationID: "0", Amount: 10}
 		useCase := transfers.UseCaseMock{Transfer: transfer}
 
-		h := NewHandler(&useCase)
+		h := NewHandler(&useCase, &logrus.Entry{})
 
 		createRequest := Request{transfer.AccountOriginID, transfer.AccountDestinationID, transfer.Amount}
 
@@ -65,7 +66,7 @@ func TestMake(t *testing.T) {
 	t.Run("should return 400 and a error message when it failed to decode the request", func(t *testing.T) {
 
 		useCase := transfers.UseCaseMock{}
-		h := NewHandler(&useCase)
+		h := NewHandler(&useCase, &logrus.Entry{})
 
 		b := []byte{}
 		newRequest, _ := http.NewRequest(http.MethodPost, "transfers", bytes.NewBuffer(b))
@@ -96,7 +97,7 @@ func TestMake(t *testing.T) {
 		transfer := entities.Transfer{AccountOriginID: "1", AccountDestinationID: "0", Amount: -10}
 		useCase := transfers.UseCaseMock{Transfer: transfer, Error: entities.ErrAmountLessOrEqualZero}
 
-		h := NewHandler(&useCase)
+		h := NewHandler(&useCase, &logrus.Entry{})
 
 		createRequest := Request{transfer.AccountOriginID, transfer.AccountDestinationID, transfer.Amount}
 
@@ -129,7 +130,7 @@ func TestMake(t *testing.T) {
 		transfer := entities.Transfer{AccountOriginID: "0", AccountDestinationID: "0", Amount: 10}
 		useCase := transfers.UseCaseMock{Transfer: transfer, Error: entities.ErrSameAccountTransfer}
 
-		h := NewHandler(&useCase)
+		h := NewHandler(&useCase, &logrus.Entry{})
 
 		createRequest := Request{transfer.AccountOriginID, transfer.AccountDestinationID, transfer.Amount}
 

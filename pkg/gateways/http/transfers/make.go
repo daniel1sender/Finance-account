@@ -3,11 +3,11 @@ package transfers
 import (
 	"encoding/json"
 	"errors"
-	"log"
 	"net/http"
 
 	"github.com/daniel1sender/Desafio-API/pkg/domain/entities"
 	server_http "github.com/daniel1sender/Desafio-API/pkg/gateways/http"
+	"github.com/sirupsen/logrus"
 )
 
 type Request struct {
@@ -25,13 +25,13 @@ type Response struct {
 }
 
 func (h Handler) Make(w http.ResponseWriter, r *http.Request) {
-
+	h.logger.Logger.SetFormatter(&logrus.JSONFormatter{})
 	var createRequest Request
 	err := json.NewDecoder(r.Body).Decode(&createRequest)
 	if err != nil {
 		w.Header().Add("Content-Type", server_http.JSONContentType)
 		response := server_http.Error{Reason: "invalid request body"}
-		log.Printf("error decoding body: %s\n", err)
+		h.logger.WithError(err).Errorf("error decoding body: %s\n", err)
 		w.WriteHeader(http.StatusBadRequest)
 		json.NewEncoder(w).Encode(response)
 		return
@@ -40,7 +40,7 @@ func (h Handler) Make(w http.ResponseWriter, r *http.Request) {
 	transfer, err := h.useCase.Make(createRequest.AccountOriginID, createRequest.AccountDestinationID, createRequest.Amount)
 	w.Header().Add("Content-Type", server_http.JSONContentType)
 	if err != nil {
-		log.Printf("create transfer request failed: %s\n", err.Error())
+		h.logger.WithError(err).Errorf("error decoding body: %s\n", err)
 		switch {
 
 		case errors.Is(err, entities.ErrAmountLessOrEqualZero):
