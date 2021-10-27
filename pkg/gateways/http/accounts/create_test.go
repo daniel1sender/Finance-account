@@ -58,6 +58,35 @@ func TestCreate(t *testing.T) {
 		}
 	})
 
+	t.Run("should return 400 and an error message when no request-id in the header was informed", func(t *testing.T) {
+
+		useCase := accounts.UseCaseMock{}
+		h := NewHandler(&useCase, &logrus.Entry{})
+
+		createRequest := CreateRequest{}
+		request, _ := json.Marshal(createRequest)
+		newRequest, _ := http.NewRequest("POST", "/anyroute", bytes.NewReader(request))
+		newResponse := httptest.NewRecorder()
+
+		h.Create(newResponse, newRequest)
+		var responseReason server_http.Error
+		json.Unmarshal(newResponse.Body.Bytes(), &responseReason)
+
+		if newResponse.Code != http.StatusBadRequest {
+			t.Errorf("expected status '%d' but got '%d'", http.StatusBadRequest, newResponse.Code)
+		}
+
+		if newResponse.Header().Get("content-type") != server_http.JSONContentType {
+			t.Errorf("expected '%s' but got '%s'", server_http.JSONContentType, newResponse.Header().Get("content-type"))
+		}
+
+		expected := "invalid request header"
+		if responseReason.Reason != expected {
+			t.Errorf("expected '%s' but got '%s'", expected, responseReason.Reason)
+		}
+
+	})
+
 	t.Run("should return 400 and a error message when it failed to decode the request successfully", func(t *testing.T) {
 
 		useCase := accounts.UseCaseMock{}
@@ -68,7 +97,6 @@ func TestCreate(t *testing.T) {
 		newResponse := httptest.NewRecorder()
 
 		h.Create(newResponse, newRequest)
-
 		var responseReason server_http.Error
 		json.Unmarshal(newResponse.Body.Bytes(), &responseReason)
 
