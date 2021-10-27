@@ -8,7 +8,6 @@ import (
 	server_http "github.com/daniel1sender/Desafio-API/pkg/gateways/http"
 	"github.com/daniel1sender/Desafio-API/pkg/gateways/store/accounts"
 	"github.com/gorilla/mux"
-	"github.com/sirupsen/logrus"
 )
 
 type ByIdResponse struct {
@@ -16,13 +15,14 @@ type ByIdResponse struct {
 }
 
 func (h Handler) GetBalanceByID(w http.ResponseWriter, r *http.Request) {
-	h.logger.Logger.SetFormatter(&logrus.JSONFormatter{})
+	log := h.logger
 	accountID := mux.Vars(r)["id"]
+	log = log.WithField("account_id", accountID)
 	w.Header().Add("Content-Type", server_http.JSONContentType)
 
 	balance, err := h.useCase.GetBalanceByID(accountID)
 	if err != nil {
-		h.logger.Logger.WithError(err).Errorf("get balance by id request failed: %s", err)
+		log.Errorf("get balance by id request failed: %s", err)
 		switch {
 		case errors.Is(err, accounts.ErrIDNotFound):
 			response := server_http.Error{Reason: accounts.ErrIDNotFound.Error()}
