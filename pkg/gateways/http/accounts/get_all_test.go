@@ -13,13 +13,13 @@ import (
 )
 
 func TestGet(t *testing.T) {
-
+	log := logrus.NewEntry(logrus.New())
 	t.Run("should return 200 and the list of accounts", func(t *testing.T) {
 
 		account := entities.Account{Name: "Jonh Doe", CPF: "12345678910", Secret: "123", Balance: 0}
 		useCase := accounts.UseCaseMock{List: []entities.Account{account}}
 
-		h := NewHandler(&useCase, &logrus.Entry{})
+		h := NewHandler(&useCase, log)
 
 		newRequest, _ := http.NewRequest(http.MethodGet, "/accounts", nil)
 		newResponse := httptest.NewRecorder()
@@ -61,7 +61,7 @@ func TestGet(t *testing.T) {
 		newRequest, _ := http.NewRequest(http.MethodGet, "/accounts", nil)
 		newResponse := httptest.NewRecorder()
 
-		h := NewHandler(&useCase, &logrus.Entry{})
+		h := NewHandler(&useCase, log)
 
 		h.GetAll(newResponse, newRequest)
 

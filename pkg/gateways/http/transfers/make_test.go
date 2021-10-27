@@ -14,13 +14,14 @@ import (
 )
 
 func TestMake(t *testing.T) {
+	log := logrus.NewEntry(logrus.New())
 
 	t.Run("should return 201 and a transfer when it's been sucessfully created", func(t *testing.T) {
 
 		transfer := entities.Transfer{AccountOriginID: "1", AccountDestinationID: "0", Amount: 10}
 		useCase := transfers.UseCaseMock{Transfer: transfer}
 
-		h := NewHandler(&useCase, &logrus.Entry{})
+		h := NewHandler(&useCase, log)
 
 		createRequest := Request{transfer.AccountOriginID, transfer.AccountDestinationID, transfer.Amount}
 
@@ -66,7 +67,7 @@ func TestMake(t *testing.T) {
 	t.Run("should return 400 and a error message when it failed to decode the request", func(t *testing.T) {
 
 		useCase := transfers.UseCaseMock{}
-		h := NewHandler(&useCase, &logrus.Entry{})
+		h := NewHandler(&useCase, log)
 
 		b := []byte{}
 		newRequest, _ := http.NewRequest(http.MethodPost, "transfers", bytes.NewBuffer(b))
@@ -97,7 +98,7 @@ func TestMake(t *testing.T) {
 		transfer := entities.Transfer{AccountOriginID: "1", AccountDestinationID: "0", Amount: -10}
 		useCase := transfers.UseCaseMock{Transfer: transfer, Error: entities.ErrAmountLessOrEqualZero}
 
-		h := NewHandler(&useCase, &logrus.Entry{})
+		h := NewHandler(&useCase, log)
 
 		createRequest := Request{transfer.AccountOriginID, transfer.AccountDestinationID, transfer.Amount}
 
@@ -130,7 +131,7 @@ func TestMake(t *testing.T) {
 		transfer := entities.Transfer{AccountOriginID: "0", AccountDestinationID: "0", Amount: 10}
 		useCase := transfers.UseCaseMock{Transfer: transfer, Error: entities.ErrSameAccountTransfer}
 
-		h := NewHandler(&useCase, &logrus.Entry{})
+		h := NewHandler(&useCase, log)
 
 		createRequest := Request{transfer.AccountOriginID, transfer.AccountDestinationID, transfer.Amount}
 

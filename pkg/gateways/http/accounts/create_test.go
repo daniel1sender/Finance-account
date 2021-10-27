@@ -15,15 +15,17 @@ import (
 )
 
 func TestCreate(t *testing.T) {
+	log := logrus.NewEntry(logrus.New())
 
 	t.Run("should return 201 and a account when it's been sucessfully created", func(t *testing.T) {
 
 		account := entities.Account{Name: "Jonh Doe", CPF: "12345678910", Secret: "123", Balance: 0, CreatedAt: time.Now()}
 		useCase := accounts.UseCaseMock{Account: account}
-		h := NewHandler(&useCase, &logrus.Entry{})
+		h := NewHandler(&useCase, log)
 		createRequest := CreateRequest{account.Name, account.CPF, account.Secret, account.Balance}
 		request, _ := json.Marshal(createRequest)
 		newRequest, _ := http.NewRequest("POST", "/anyroute", bytes.NewReader(request))
+		newRequest.Header.Add("Request-Id", "request-id")
 		newResponse := httptest.NewRecorder()
 
 		h.Create(newResponse, newRequest)
@@ -61,7 +63,7 @@ func TestCreate(t *testing.T) {
 	t.Run("should return 400 and an error message when no request-id in the header was informed", func(t *testing.T) {
 
 		useCase := accounts.UseCaseMock{}
-		h := NewHandler(&useCase, &logrus.Entry{})
+		h := NewHandler(&useCase, log)
 
 		createRequest := CreateRequest{}
 		request, _ := json.Marshal(createRequest)
@@ -90,10 +92,11 @@ func TestCreate(t *testing.T) {
 	t.Run("should return 400 and a error message when it failed to decode the request successfully", func(t *testing.T) {
 
 		useCase := accounts.UseCaseMock{}
-		h := NewHandler(&useCase, &logrus.Entry{})
+		h := NewHandler(&useCase, log)
 
 		b := []byte{}
 		newRequest, _ := http.NewRequest("POST", "/anyroute", bytes.NewReader(b))
+		newRequest.Header.Add("Request-Id", "request-id")
 		newResponse := httptest.NewRecorder()
 
 		h.Create(newResponse, newRequest)
@@ -118,11 +121,12 @@ func TestCreate(t *testing.T) {
 	t.Run("should return 400 and a message error when an empty name is informed", func(t *testing.T) {
 
 		useCase := accounts.UseCaseMock{Error: entities.ErrInvalidName}
-		h := NewHandler(&useCase, &logrus.Entry{})
+		h := NewHandler(&useCase, log)
 
 		createRequest := CreateRequest{}
 		request, _ := json.Marshal(createRequest)
 		newRequest, _ := http.NewRequest("POST", "/anyroute", bytes.NewReader(request))
+		newRequest.Header.Add("Request-Id", "request-id")
 		newResponse := httptest.NewRecorder()
 
 		h.Create(newResponse, newRequest)
@@ -146,11 +150,12 @@ func TestCreate(t *testing.T) {
 	t.Run("should return 400 and a message error when the cpf informed doesn't have eleven digits", func(t *testing.T) {
 
 		useCase := accounts.UseCaseMock{Error: entities.ErrInvalidCPF}
-		h := NewHandler(&useCase, &logrus.Entry{})
+		h := NewHandler(&useCase, log)
 
 		createRequest := CreateRequest{}
 		requestBody, _ := json.Marshal(createRequest)
 		newRequest, _ := http.NewRequest("POST", "/anyroute", bytes.NewReader(requestBody))
+		newRequest.Header.Add("Request-Id", "request-id")
 		newResponse := httptest.NewRecorder()
 
 		h.Create(newResponse, newRequest)
@@ -175,11 +180,12 @@ func TestCreate(t *testing.T) {
 	t.Run("should return a 409 and a message error when cpf informed already exist", func(t *testing.T) {
 
 		useCase := accounts.UseCaseMock{Error: accounts.ErrExistingCPF}
-		h := NewHandler(&useCase, &logrus.Entry{})
+		h := NewHandler(&useCase, log)
 
 		createRequest := CreateRequest{}
 		requestBody, _ := json.Marshal(createRequest)
 		newRequest, _ := http.NewRequest("POST", "anyroute", bytes.NewReader(requestBody))
+		newRequest.Header.Add("Request-Id", "request-id")
 		newResponse := httptest.NewRecorder()
 
 		h.Create(newResponse, newRequest)
@@ -204,11 +210,12 @@ func TestCreate(t *testing.T) {
 	t.Run("should return 400 and a message error when a blanc secret is informed", func(t *testing.T) {
 
 		useCase := accounts.UseCaseMock{Error: entities.ErrEmptySecret}
-		h := NewHandler(&useCase, &logrus.Entry{})
+		h := NewHandler(&useCase, log)
 
 		createRequest := CreateRequest{}
 		requestBody, _ := json.Marshal(createRequest)
 		newRequest, _ := http.NewRequest("POST", "anyroute", bytes.NewReader(requestBody))
+		newRequest.Header.Add("Request-Id", "request-id")
 		newResponse := httptest.NewRecorder()
 
 		h.Create(newResponse, newRequest)
@@ -233,11 +240,12 @@ func TestCreate(t *testing.T) {
 	t.Run("should return 400 and a message error when balance informed is less than zero", func(t *testing.T) {
 
 		useCase := accounts.UseCaseMock{Error: entities.ErrNegativeBalance}
-		h := NewHandler(&useCase, &logrus.Entry{})
+		h := NewHandler(&useCase, log)
 
 		createRequest := CreateRequest{}
 		requestBody, _ := json.Marshal(createRequest)
 		newRequest, _ := http.NewRequest("POST", "anyroute", bytes.NewReader(requestBody))
+		newRequest.Header.Add("Request-Id", "request-id")
 		newResponse := httptest.NewRecorder()
 
 		h.Create(newResponse, newRequest)
