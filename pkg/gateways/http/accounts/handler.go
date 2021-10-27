@@ -13,6 +13,6 @@ type Handler struct {
 func NewHandler(useCase accounts.UseCase, logger *logrus.Entry) Handler {
 	return Handler{
 		useCase: useCase,
-		logger:  logrus.NewEntry(logrus.New()),
+		logger:  logger,
 	}
 }

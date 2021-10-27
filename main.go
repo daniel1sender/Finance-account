@@ -1,7 +1,6 @@
 package main
 
 import (
-	"log"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -16,14 +15,17 @@ import (
 )
 
 func main() {
+	log := logrus.New()
+	log.SetFormatter(&logrus.JSONFormatter{})
+	entry := logrus.NewEntry(log)
 
 	transferStorage := transfers_storage.NewStorage()
 	transferUseCase := transfers_usecase.NewUseCase(transferStorage)
-	transferHandler := transfers_handler.NewHandler(transferUseCase, logrus.NewEntry(logrus.New()))
+	transferHandler := transfers_handler.NewHandler(transferUseCase, entry)
 
 	accountStorage := accounts_storage.NewStorage()
 	accountUseCase := accounts_usecase.NewUseCase(accountStorage)
-	accountHandler := accounts_handler.NewHandler(accountUseCase, logrus.NewEntry(logrus.New()))
+	accountHandler := accounts_handler.NewHandler(accountUseCase, entry)
 
 	r := mux.NewRouter()
 	r.HandleFunc("/accounts", accountHandler.Create).Methods(http.MethodPost)

@@ -21,7 +21,6 @@ func TestCreate(t *testing.T) {
 		account := entities.Account{Name: "Jonh Doe", CPF: "12345678910", Secret: "123", Balance: 0, CreatedAt: time.Now()}
 		useCase := accounts.UseCaseMock{Account: account}
 		h := NewHandler(&useCase, &logrus.Entry{})
-
 		createRequest := CreateRequest{account.Name, account.CPF, account.Secret, account.Balance}
 		request, _ := json.Marshal(createRequest)
 		newRequest, _ := http.NewRequest("POST", "/anyroute", bytes.NewReader(request))
@@ -59,7 +58,7 @@ func TestCreate(t *testing.T) {
 		}
 	})
 
-	 t.Run("should return 400 and a error message when it failed to decode the request successfully", func(t *testing.T) {
+	t.Run("should return 400 and a error message when it failed to decode the request successfully", func(t *testing.T) {
 
 		useCase := accounts.UseCaseMock{}
 		h := NewHandler(&useCase, &logrus.Entry{})
@@ -230,6 +229,6 @@ func TestCreate(t *testing.T) {
 			t.Errorf("expected '%s' but got '%s'", entities.ErrNegativeBalance.Error(), responseReason.Reason)
 		}
 
-	}) 
+	})
 
 }

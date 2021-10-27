@@ -18,9 +18,9 @@ type ByIdResponse struct {
 func (h Handler) GetBalanceByID(w http.ResponseWriter, r *http.Request) {
 	h.logger.Logger.SetFormatter(&logrus.JSONFormatter{})
 	accountID := mux.Vars(r)["id"]
-	balance, err := h.useCase.GetBalanceByID(accountID)
-
 	w.Header().Add("Content-Type", server_http.JSONContentType)
+
+	balance, err := h.useCase.GetBalanceByID(accountID)
 	if err != nil {
 		h.logger.Logger.WithError(err).Errorf("get balance by id request failed: %s", err)
 		switch {
