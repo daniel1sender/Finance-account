@@ -99,8 +99,7 @@ func (h Handler) Create(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusCreated)
 	_ = json.NewEncoder(w).Encode(CreateResponse)
 	log.WithFields(logrus.Fields{
-		"account_id":  CreateResponse.ID,
-		"account_cpf": CreateResponse.CPF,
+		"account_id": CreateResponse.ID,
 	}).Info("successfully account created")
 
 }
