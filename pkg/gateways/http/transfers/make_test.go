@@ -20,20 +20,16 @@ func TestMake(t *testing.T) {
 
 		transfer := entities.Transfer{AccountOriginID: "1", AccountDestinationID: "0", Amount: 10}
 		useCase := transfers.UseCaseMock{Transfer: transfer}
-
 		h := NewHandler(&useCase, log)
-
 		createRequest := Request{transfer.AccountOriginID, transfer.AccountDestinationID, transfer.Amount}
-
 		request, _ := json.Marshal(createRequest)
-
 		newRequest, _ := http.NewRequest(http.MethodPost, "/transfers", bytes.NewReader(request))
+		newRequest.Header.Add("Request-Id", "request-id")
 		newResponse := httptest.NewRecorder()
 
 		h.Make(newResponse, newRequest)
 
 		ExpectedCreateAt := transfer.CreatedAt.Format(server_http.DateLayout)
-
 		var response Response
 		_ = json.Unmarshal(newResponse.Body.Bytes(), &response)
 
@@ -64,13 +60,42 @@ func TestMake(t *testing.T) {
 
 	})
 
+	t.Run("should return 400 and an error message when no request-id was found in request header", func(t *testing.T) {
+
+		useCase := transfers.UseCaseMock{}
+		h := NewHandler(&useCase, log)
+		createRequest := Request{}
+		request, _ := json.Marshal(createRequest)
+		newRequest, _ := http.NewRequest(http.MethodPost, "/transfers", bytes.NewBuffer(request))
+		newResponse := httptest.NewRecorder()
+
+		h.Make(newResponse, newRequest)
+
+		var responseReason server_http.Error
+		json.Unmarshal(newResponse.Body.Bytes(), &responseReason)
+
+		if newResponse.Code != http.StatusBadRequest {
+			t.Errorf("expected '%d' but got '%d'", http.StatusCreated, newResponse.Code)
+		}
+
+		headerType := newResponse.Header().Get("content-type")
+		if headerType != server_http.JSONContentType {
+			t.Errorf("expected '%s' but got '%s'", server_http.JSONContentType, headerType)
+		}
+
+		expected := "invalid request header"
+		if responseReason.Reason != expected {
+			t.Errorf("expected '%s' but got '%s'", expected, responseReason.Reason)
+		}
+	})
+
 	t.Run("should return 400 and a error message when it failed to decode the request", func(t *testing.T) {
 
 		useCase := transfers.UseCaseMock{}
 		h := NewHandler(&useCase, log)
-
 		b := []byte{}
 		newRequest, _ := http.NewRequest(http.MethodPost, "transfers", bytes.NewBuffer(b))
+		newRequest.Header.Add("Request-Id", "request-id")
 		newResponse := httptest.NewRecorder()
 
 		h.Make(newResponse, newRequest)
@@ -97,14 +122,11 @@ func TestMake(t *testing.T) {
 
 		transfer := entities.Transfer{AccountOriginID: "1", AccountDestinationID: "0", Amount: -10}
 		useCase := transfers.UseCaseMock{Transfer: transfer, Error: entities.ErrAmountLessOrEqualZero}
-
 		h := NewHandler(&useCase, log)
-
 		createRequest := Request{transfer.AccountOriginID, transfer.AccountDestinationID, transfer.Amount}
-
 		request, _ := json.Marshal(createRequest)
-
 		newRequest, _ := http.NewRequest(http.MethodPost, "/transfers", bytes.NewBuffer(request))
+		newRequest.Header.Add("Request-Id", "request-id")
 		newResponse := httptest.NewRecorder()
 
 		h.Make(newResponse, newRequest)
@@ -130,13 +152,11 @@ func TestMake(t *testing.T) {
 
 		transfer := entities.Transfer{AccountOriginID: "0", AccountDestinationID: "0", Amount: 10}
 		useCase := transfers.UseCaseMock{Transfer: transfer, Error: entities.ErrSameAccountTransfer}
-
 		h := NewHandler(&useCase, log)
-
 		createRequest := Request{transfer.AccountOriginID, transfer.AccountDestinationID, transfer.Amount}
-
 		request, _ := json.Marshal(createRequest)
 		newRequest, _ := http.NewRequest(http.MethodPost, "/transfers", bytes.NewBuffer(request))
+		newRequest.Header.Add("Request-Id", "request-id")
 		newResponse := httptest.NewRecorder()
 
 		h.Make(newResponse, newRequest)

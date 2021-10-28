@@ -60,7 +60,7 @@ func TestCreate(t *testing.T) {
 		}
 	})
 
-	t.Run("should return 400 and an error message when no request-id in the header was informed", func(t *testing.T) {
+	t.Run("should return 400 and an error message when no request-id was found in request header", func(t *testing.T) {
 
 		useCase := accounts.UseCaseMock{}
 		h := NewHandler(&useCase, log)

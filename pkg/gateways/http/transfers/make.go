@@ -7,7 +7,6 @@ import (
 
 	"github.com/daniel1sender/Desafio-API/pkg/domain/entities"
 	server_http "github.com/daniel1sender/Desafio-API/pkg/gateways/http"
-	"github.com/sirupsen/logrus"
 )
 
 type Request struct {
@@ -25,7 +24,18 @@ type Response struct {
 }
 
 func (h Handler) Make(w http.ResponseWriter, r *http.Request) {
-	h.logger.Logger.SetFormatter(&logrus.JSONFormatter{})
+	log := h.logger
+	requestID := r.Header.Get("Request-Id")
+	if requestID == "" {
+		log.Error("no request id informed")
+		w.Header().Add("Content-Type", server_http.JSONContentType)
+		response := server_http.Error{Reason: "invalid request header"}
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(response)
+		return
+	}
+	log = log.WithField("request_id", requestID)
+
 	var createRequest Request
 	err := json.NewDecoder(r.Body).Decode(&createRequest)
 	if err != nil {
@@ -40,7 +50,7 @@ func (h Handler) Make(w http.ResponseWriter, r *http.Request) {
 	transfer, err := h.useCase.Make(createRequest.AccountOriginID, createRequest.AccountDestinationID, createRequest.Amount)
 	w.Header().Add("Content-Type", server_http.JSONContentType)
 	if err != nil {
-		h.logger.WithError(err).Errorf("error decoding body: %s\n", err)
+		log.WithError(err).Error("make transfer request failed")
 		switch {
 
 		case errors.Is(err, entities.ErrAmountLessOrEqualZero):
