@@ -7,6 +7,7 @@ import (
 
 	"github.com/daniel1sender/Desafio-API/pkg/domain/entities"
 	server_http "github.com/daniel1sender/Desafio-API/pkg/gateways/http"
+	"github.com/sirupsen/logrus"
 )
 
 type Request struct {
@@ -41,7 +42,7 @@ func (h Handler) Make(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		w.Header().Add("Content-Type", server_http.JSONContentType)
 		response := server_http.Error{Reason: "invalid request body"}
-		h.logger.WithError(err).Errorf("error decoding body: %s\n", err)
+		log.Errorf("error decoding body: %s\n", err)
 		w.WriteHeader(http.StatusBadRequest)
 		json.NewEncoder(w).Encode(response)
 		return
@@ -75,5 +76,9 @@ func (h Handler) Make(w http.ResponseWriter, r *http.Request) {
 	response := Response{transfer.ID, transfer.AccountOriginID, transfer.AccountDestinationID, transfer.Amount, ExpectedCreateAt}
 	w.WriteHeader(http.StatusCreated)
 	_ = json.NewEncoder(w).Encode(response)
-
+	log.WithFields(logrus.Fields{
+		"transfer_id":            response.ID,
+		"account_origin_id":      response.AccountOriginID,
+		"account_destination_id": response.AccountDestinationID,
+	}).Info("successfully transfer created")
 }
