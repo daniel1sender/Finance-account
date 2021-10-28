@@ -16,6 +16,7 @@ import (
 
 func TestCreate(t *testing.T) {
 	log := logrus.NewEntry(logrus.New())
+	log.Logger.SetFormatter(&logrus.JSONFormatter{})
 
 	t.Run("should return 201 and a account when it's been sucessfully created", func(t *testing.T) {
 
@@ -64,13 +65,12 @@ func TestCreate(t *testing.T) {
 
 		useCase := accounts.UseCaseMock{}
 		h := NewHandler(&useCase, log)
-
 		createRequest := CreateRequest{}
 		request, _ := json.Marshal(createRequest)
 		newRequest, _ := http.NewRequest("POST", "/anyroute", bytes.NewReader(request))
 		newResponse := httptest.NewRecorder()
-
 		h.Create(newResponse, newRequest)
+
 		var responseReason server_http.Error
 		json.Unmarshal(newResponse.Body.Bytes(), &responseReason)
 
@@ -93,13 +93,12 @@ func TestCreate(t *testing.T) {
 
 		useCase := accounts.UseCaseMock{}
 		h := NewHandler(&useCase, log)
-
 		b := []byte{}
 		newRequest, _ := http.NewRequest("POST", "/anyroute", bytes.NewReader(b))
 		newRequest.Header.Add("Request-Id", "request-id")
 		newResponse := httptest.NewRecorder()
-
 		h.Create(newResponse, newRequest)
+		
 		var responseReason server_http.Error
 		json.Unmarshal(newResponse.Body.Bytes(), &responseReason)
 
@@ -122,7 +121,6 @@ func TestCreate(t *testing.T) {
 
 		useCase := accounts.UseCaseMock{Error: entities.ErrInvalidName}
 		h := NewHandler(&useCase, log)
-
 		createRequest := CreateRequest{}
 		request, _ := json.Marshal(createRequest)
 		newRequest, _ := http.NewRequest("POST", "/anyroute", bytes.NewReader(request))
@@ -151,7 +149,6 @@ func TestCreate(t *testing.T) {
 
 		useCase := accounts.UseCaseMock{Error: entities.ErrInvalidCPF}
 		h := NewHandler(&useCase, log)
-
 		createRequest := CreateRequest{}
 		requestBody, _ := json.Marshal(createRequest)
 		newRequest, _ := http.NewRequest("POST", "/anyroute", bytes.NewReader(requestBody))
@@ -181,7 +178,6 @@ func TestCreate(t *testing.T) {
 
 		useCase := accounts.UseCaseMock{Error: accounts.ErrExistingCPF}
 		h := NewHandler(&useCase, log)
-
 		createRequest := CreateRequest{}
 		requestBody, _ := json.Marshal(createRequest)
 		newRequest, _ := http.NewRequest("POST", "anyroute", bytes.NewReader(requestBody))
@@ -211,7 +207,6 @@ func TestCreate(t *testing.T) {
 
 		useCase := accounts.UseCaseMock{Error: entities.ErrEmptySecret}
 		h := NewHandler(&useCase, log)
-
 		createRequest := CreateRequest{}
 		requestBody, _ := json.Marshal(createRequest)
 		newRequest, _ := http.NewRequest("POST", "anyroute", bytes.NewReader(requestBody))
@@ -241,7 +236,6 @@ func TestCreate(t *testing.T) {
 
 		useCase := accounts.UseCaseMock{Error: entities.ErrNegativeBalance}
 		h := NewHandler(&useCase, log)
-
 		createRequest := CreateRequest{}
 		requestBody, _ := json.Marshal(createRequest)
 		newRequest, _ := http.NewRequest("POST", "anyroute", bytes.NewReader(requestBody))

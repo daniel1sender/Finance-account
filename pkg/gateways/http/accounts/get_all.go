@@ -20,10 +20,21 @@ type GetResponse struct {
 
 func (h Handler) GetAll(w http.ResponseWriter, r *http.Request) {
 	log := h.logger
+	requestID := r.Header.Get("Request-Id")
+	if requestID == "" {
+		log.Error("no request id informed")
+		w.Header().Add("Content-Type", server_http.JSONContentType)
+		response := server_http.Error{Reason: "invalid request header"}
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(response)
+		return
+	}
+	log = log.WithField("request_id", requestID)
+
 	accountsList := h.useCase.GetAll()
 	if len(accountsList) == 0 {
 		w.Header().Add("Content-Type", server_http.JSONContentType)
-		w.WriteHeader(http.StatusOK)
+		w.WriteHeader(http.StatusConflict)
 		log.Error("empty account list")
 		return
 	}
@@ -38,5 +49,6 @@ func (h Handler) GetAll(w http.ResponseWriter, r *http.Request) {
 	responseGet := GetResponse{getResponse.List}
 	w.WriteHeader(http.StatusOK)
 	_ = json.NewEncoder(w).Encode(responseGet)
+	log.Info("accounts listed successfully")
 
 }

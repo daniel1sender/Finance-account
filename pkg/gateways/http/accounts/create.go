@@ -8,6 +8,7 @@ import (
 	"github.com/daniel1sender/Desafio-API/pkg/domain/accounts"
 	"github.com/daniel1sender/Desafio-API/pkg/domain/entities"
 	server_http "github.com/daniel1sender/Desafio-API/pkg/gateways/http"
+	"github.com/sirupsen/logrus"
 )
 
 type CreateRequest struct {
@@ -97,5 +98,9 @@ func (h Handler) Create(w http.ResponseWriter, r *http.Request) {
 	CreateResponse := CreateResponse{account.ID, account.Name, account.CPF, account.Balance, ExpectedCreateAt}
 	w.WriteHeader(http.StatusCreated)
 	_ = json.NewEncoder(w).Encode(CreateResponse)
+	log.WithFields(logrus.Fields{
+		"account_id":  CreateResponse.ID,
+		"account_cpf": CreateResponse.CPF,
+	}).Info("successfully account created")
 
 }

@@ -14,15 +14,16 @@ import (
 
 func TestGetBalanceByID(t *testing.T) {
 	log := logrus.NewEntry(logrus.New())
+	log.Logger.SetFormatter(&logrus.JSONFormatter{})
+
 	t.Run("should return 200 and the account balance", func(t *testing.T) {
 
 		expectedBalance := 20
 		useCase := accounts_usecase.UseCaseMock{Balance: expectedBalance, Error: nil}
 		h := NewHandler(&useCase, log)
-
 		newRequest, _ := http.NewRequest(http.MethodGet, "accounts/{id}/balance", nil)
+		newRequest.Header.Add("Request-Id", "request-id")
 		newResponse := httptest.NewRecorder()
-
 		h.GetBalanceByID(newResponse, newRequest)
 
 		var response ByIdResponse
@@ -42,14 +43,40 @@ func TestGetBalanceByID(t *testing.T) {
 
 	})
 
+	t.Run("should return 400 and an error message when no request-id was found in request header", func(t *testing.T) {
+
+		useCase := accounts_usecase.UseCaseMock{}
+		h := NewHandler(&useCase, log)
+		newRequest, _ := http.NewRequest(http.MethodGet, "accounts/{id}/balance", nil)
+		newResponse := httptest.NewRecorder()
+		h.GetBalanceByID(newResponse, newRequest)
+
+		var responseReason server_http.Error
+		json.Unmarshal(newResponse.Body.Bytes(), &responseReason)
+
+		if newResponse.Code != http.StatusBadRequest {
+			t.Errorf("expected '%d' but got '%d'", http.StatusBadRequest, newResponse.Code)
+		}
+
+		expected := "invalid request header"
+		if responseReason.Reason != expected {
+			t.Errorf("expected '%s' but got '%s'", expected, responseReason.Reason)
+		}
+
+		if newResponse.Header().Get("content-type") != server_http.JSONContentType {
+			t.Errorf("expected '%s' but got '%s'", server_http.JSONContentType, newResponse.Header().Get("content-type"))
+		}
+
+	})
+
 	t.Run("should return 404 and a error message when account is not found by id", func(t *testing.T) {
 
 		expectedBalance := 0
 		useCase := accounts_usecase.UseCaseMock{Balance: expectedBalance,
 			Error: accounts.ErrIDNotFound}
 		h := NewHandler(&useCase, log)
-
 		newRequest, _ := http.NewRequest(http.MethodGet, "accounts/{id}/balance", nil)
+		newRequest.Header.Add("Request-Id", "request-id")
 		newResponse := httptest.NewRecorder()
 
 		h.GetBalanceByID(newResponse, newRequest)
