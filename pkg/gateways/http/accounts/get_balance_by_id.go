@@ -7,7 +7,7 @@ import (
 	"net/http"
 
 	server_http "github.com/daniel1sender/Desafio-API/pkg/gateways/http"
-	"github.com/daniel1sender/Desafio-API/pkg/gateways/store/accounts"
+	"github.com/daniel1sender/Desafio-API/pkg/gateways/store/memory/accounts"
 	"github.com/gorilla/mux"
 )
 
