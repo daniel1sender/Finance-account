@@ -11,8 +11,8 @@ func TestAccountUseCase_Get(t *testing.T) {
 
 	t.Run("should return a full list of accounts", func(t *testing.T) {
 
-		storage := accounts.NewStorage()
-		accountUseCase := NewUseCase(storage)
+		storageMemory := accounts.NewStorage()
+		accountUseCase := NewUseCase(storageMemory)
 		name := "John Doe"
 		cpf := "11111111030"
 		secret := "123"
@@ -23,7 +23,7 @@ func TestAccountUseCase_Get(t *testing.T) {
 			t.Errorf("expected no error to create a new account but got '%s'", err)
 		}
 
-		storage.Upsert(account.ID, account)
+		storageMemory.Upsert(account)
 
 		getAccounts := accountUseCase.GetAll()
 

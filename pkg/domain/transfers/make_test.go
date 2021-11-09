@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	"github.com/daniel1sender/Desafio-API/pkg/domain/entities"
-	"github.com/daniel1sender/Desafio-API/pkg/gateways/store/transfers"
+	"github.com/daniel1sender/Desafio-API/pkg/gateways/store/memory/transfers"
 )
 
 func TestAccountUseCase_Make(t *testing.T) {

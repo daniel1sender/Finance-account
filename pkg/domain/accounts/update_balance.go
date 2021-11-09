@@ -18,7 +18,7 @@ func (au AccountUseCase) UpdateBalance(id string, balance int) error {
 	}
 
 	account.Balance = balance
-	au.storage.Upsert(account.ID, account)
+	au.storage.Upsert(account)
 
 	return nil
 }
