@@ -10,6 +10,7 @@ import (
 var (
 	ErrAmountLessOrEqualZero = errors.New("amount is less or equal zero")
 	ErrSameAccountTransfer   = errors.New("transfer attempt to the same account")
+	ErrInsufficientFunds   = errors.New("insufficient balance on account")
 )
 
 type Transfer struct {

@@ -174,7 +174,7 @@ func TestMake(t *testing.T) {
 	t.Run("should return 400 and error message when origin account doesn't have sufficient funds", func(t *testing.T) {
 
 		transfer := entities.Transfer{AccountOriginID: "0", AccountDestinationID: "1", Amount: 10}
-		useCase := transfers.UseCaseMock{Transfer: transfer, Error: transfers.ErrInsufficientFunds}
+		useCase := transfers.UseCaseMock{Transfer: transfer, Error: entities.ErrInsufficientFunds}
 		h := NewHandler(&useCase)
 
 		createRequest := Request{transfer.AccountOriginID, transfer.AccountDestinationID, transfer.Amount}
@@ -194,8 +194,8 @@ func TestMake(t *testing.T) {
 			t.Errorf("expected '%s' but got '%s'", server_http.JSONContentType, newResponse.Header().Get("content-type"))
 		}
 
-		if responseReason.Reason != transfers.ErrInsufficientFunds.Error() {
-			t.Errorf("expected '%s' but got '%s'", transfers.ErrInsufficientFunds.Error(), responseReason.Reason)
+		if responseReason.Reason != entities.ErrInsufficientFunds.Error() {
+			t.Errorf("expected '%s' but got '%s'", entities.ErrInsufficientFunds.Error(), responseReason.Reason)
 		}
 
 	})

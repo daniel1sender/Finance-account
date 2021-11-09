@@ -94,8 +94,8 @@ func TestAccountUseCase_Make(t *testing.T) {
 			t.Errorf("expected a empty transfer but got '%+v'", makeTransfer)
 		}
 
-		if !errors.Is(err, ErrInsufficientFunds) {
-			t.Errorf("expected '%s' but got '%s'", ErrInsufficientFunds, err)
+		if !errors.Is(err, entities.ErrInsufficientFunds) {
+			t.Errorf("expected '%s' but got '%s'", entities.ErrInsufficientFunds, err)
 		}
 
 	})
