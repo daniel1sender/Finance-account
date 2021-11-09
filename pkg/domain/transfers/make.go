@@ -16,7 +16,7 @@ func (tu TransferUseCase) Make(originID, destinationID string, amount int) (enti
 
 	originAccountBalance, err := tu.accountStorage.GetBalanceByID(originID)
 	if err != nil {
-		return entities.Transfer{}, fmt.Errorf("error finding an account: %w", err)
+		return entities.Transfer{}, fmt.Errorf("error getting balance account by id: %w", err)
 	}
 	if originAccountBalance < amount {
 		return entities.Transfer{}, ErrInsufficientFunds
