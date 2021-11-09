@@ -72,7 +72,7 @@ func TestAccountUseCase_Make(t *testing.T) {
 		}
 
 		if !errors.Is(err, entities.ErrAmountLessOrEqualZero) {
-			t.Errorf("expected '%s' but got '%s'", ErrCreatingNewTransfer, err)
+			t.Errorf("expected '%s' but got '%s'", entities.ErrAmountLessOrEqualZero, err)
 		}
 
 	})
