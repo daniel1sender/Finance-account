@@ -5,14 +5,14 @@ import (
 	"testing"
 
 	"github.com/daniel1sender/Desafio-API/pkg/domain/entities"
-	"github.com/daniel1sender/Desafio-API/pkg/gateways/store/accounts"
+	"github.com/daniel1sender/Desafio-API/pkg/gateways/store/memory/accounts"
 )
                                                                                 
 func TestAccountUseCase_Create(t *testing.T) {
 	t.Run("should successfully create an account and return it", func(t *testing.T) {
 
-		storage := accounts.NewStorage()
-		accountUsecase := NewUseCase(storage)
+		storageMemory := accounts.NewStorage()
+		accountUsecase := NewUseCase(storageMemory)
 		name := "John Doe"
 		cpf := "11111111030"
 		secret := "123"
@@ -46,8 +46,8 @@ func TestAccountUseCase_Create(t *testing.T) {
 
 	t.Run("should return an empty account and an error when trying to create account with already created cpf account", func(t *testing.T) {
 
-		storage := accounts.NewStorage()
-		accountUsecase := NewUseCase(storage)
+		storageMemory := accounts.NewStorage()
+		accountUsecase := NewUseCase(storageMemory)
 
 		name := "John Doe"
 		cpf := "11111111030"

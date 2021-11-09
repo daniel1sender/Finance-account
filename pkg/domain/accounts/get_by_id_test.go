@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	"github.com/daniel1sender/Desafio-API/pkg/domain/entities"
-	"github.com/daniel1sender/Desafio-API/pkg/gateways/store/accounts"
+	"github.com/daniel1sender/Desafio-API/pkg/gateways/store/memory/accounts"
 )
 
 func TestAccountUseCase_GetById(t *testing.T) {
@@ -25,7 +25,7 @@ func TestAccountUseCase_GetById(t *testing.T) {
 			t.Errorf("expected no error to create a new account but got '%s'", err)
 		}
 
-		storage.Upsert(account.ID, account)
+		storage.Upsert(account)
 		getAccountByID, err := accountUseCase.GetByID(account.ID)
 
 		if getAccountByID == (entities.Account{}) {

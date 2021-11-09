@@ -22,7 +22,7 @@ func (au AccountUseCase) Create(name, cpf, secret string, balance int) (entities
 		return entities.Account{}, fmt.Errorf("error while creating an account: %w", err)
 	}
 
-	au.storage.Upsert(account.ID, account)
+	au.storage.Upsert(account)
 
 	return account, nil
 }
