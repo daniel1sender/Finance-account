@@ -105,7 +105,7 @@ func TestAccountUseCase_Make(t *testing.T) {
 		transferStorage := transfers_storage.NewStorage()
 		accountStorage := accounts_storage.NewStorage()
 		transferUsecase := NewUseCase(transferStorage, accountStorage)
-		amount := 0
+		amount := 10
 		originID := "1"
 		destinationID := "2"
 

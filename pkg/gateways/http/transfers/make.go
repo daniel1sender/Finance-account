@@ -45,7 +45,7 @@ func (h Handler) Make(w http.ResponseWriter, r *http.Request) {
 		switch {
 
 		case errors.Is(err, accounts.ErrIDNotFound):
-			response := server_http.Error{Reason: accounts.ErrIDNotFound.Error()}
+			response := server_http.Error{Reason: err.Error()}
 			w.WriteHeader(http.StatusBadRequest)
 			json.NewEncoder(w).Encode(&response)
 

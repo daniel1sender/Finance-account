@@ -143,7 +143,7 @@ func TestMake(t *testing.T) {
 		}
 	})
 
-	t.Run("should return 400 and an error message when ids of transfer isn't found", func(t *testing.T) {
+	t.Run("should return 400 and an error message when ids of transfer aren't found", func(t *testing.T) {
 
 		transfer := entities.Transfer{AccountOriginID: "0", AccountDestinationID: "1", Amount: 10}
 		useCase := transfers.UseCaseMock{Transfer: transfer, Error: accounts_storage.ErrIDNotFound}
