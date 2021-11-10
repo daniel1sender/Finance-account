@@ -19,7 +19,7 @@ type AccountResponse struct {
 }
 
 func NewStorage() AccountRepository {
-	file, err := os.Create("repository")
+	file, err := os.OpenFile("repository", os.O_RDWR | os.O_CREATE | os.O_APPEND, 0666)
 	if err != nil {
 		log.Fatal(err)
 	}
