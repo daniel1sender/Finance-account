@@ -7,6 +7,7 @@ import (
 	"net/http"
 
 	"github.com/daniel1sender/Desafio-API/pkg/domain/entities"
+	"github.com/daniel1sender/Desafio-API/pkg/domain/transfers"
 	server_http "github.com/daniel1sender/Desafio-API/pkg/gateways/http"
 	"github.com/daniel1sender/Desafio-API/pkg/gateways/store/accounts"
 )
@@ -59,8 +60,8 @@ func (h Handler) Make(w http.ResponseWriter, r *http.Request) {
 			w.WriteHeader(http.StatusBadRequest)
 			json.NewEncoder(w).Encode(&response)
 
-		case errors.Is(err, entities.ErrInsufficientFunds):
-			response := server_http.Error{Reason: entities.ErrInsufficientFunds.Error()}
+		case errors.Is(err, transfers.ErrInsufficientFunds):
+			response := server_http.Error{Reason: transfers.ErrInsufficientFunds.Error()}
 			w.WriteHeader(http.StatusBadRequest)
 			json.NewEncoder(w).Encode(&response)
 

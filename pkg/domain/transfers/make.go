@@ -1,9 +1,14 @@
 package transfers
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/daniel1sender/Desafio-API/pkg/domain/entities"
+)
+
+var (
+	ErrInsufficientFunds = errors.New("insufficient balance on account")
 )
 
 func (tu TransferUseCase) Make(originID, destinationID string, amount int) (entities.Transfer, error) {
@@ -13,7 +18,7 @@ func (tu TransferUseCase) Make(originID, destinationID string, amount int) (enti
 		return entities.Transfer{}, fmt.Errorf("error getting balance by account id: %w", err)
 	}
 	if originAccountBalance < amount {
-		return entities.Transfer{}, entities.ErrInsufficientFunds
+		return entities.Transfer{}, ErrInsufficientFunds
 	}
 
 	_, err = tu.accountStorage.GetByID(destinationID)
