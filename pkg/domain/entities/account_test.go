@@ -34,10 +34,6 @@ func TestNewAccount(t *testing.T) {
 			t.Errorf("expected time different from zero time")
 		}
 
-		if account.Secret == secret {
-			t.Error("expected encrypted secret")
-		}
-
 	})
 
 	t.Run("should return a empty account and a error message when name is empty", func(t *testing.T) {

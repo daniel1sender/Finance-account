@@ -38,10 +38,6 @@ func TestAccountUseCase_Create(t *testing.T) {
 			t.Errorf("expected '%d' but got '%d'", account.Balance, createdAccount.Balance)
 		}
 
-		if createdAccount.Secret == account.Secret {
-			t.Errorf("expected '%s' but got '%s'", account.Secret, createdAccount.Secret)
-		}
-
 		if err != nil {
 			t.Errorf("expected no error but got '%s'", err)
 		}
