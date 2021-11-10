@@ -13,6 +13,5 @@ func (ar AccountRepository) Upsert(account entities.Account) {
 	if err != nil {
 		log.Fatal("error decoding account")
 	}
-	ar.storage.Write(keepAccount)
-	//ar.storage.Close()
+	ar.storage.WriteString(string(keepAccount) + "\n")
 }

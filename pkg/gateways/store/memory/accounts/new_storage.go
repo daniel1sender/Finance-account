@@ -7,8 +7,7 @@ import (
 )
 
 var (
-	ErrExistingCPF = errors.New("cpf informed alredy exists")
-	ErrIDNotFound  = errors.New("account id isn't found")
+	ErrIDNotFound = errors.New("account id isn't found")
 )
 
 type AccountStorage struct {
@@ -21,5 +20,3 @@ func NewStorage() AccountStorage {
 		storage: sto,
 	}
 }
-
-
