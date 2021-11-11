@@ -53,7 +53,7 @@ func TestAccountUseCase_Create(t *testing.T) {
 		createdAccount1, err1 := accountUsecase.Create(name, cpf, secret, balance)
 
 		if !errors.Is(err1, ErrExistingCPF) {
-			t.Errorf("expected '%s' but got '%s'", accounts.ErrExistingCPF, err1)
+			t.Errorf("expected '%s' but got '%s'", ErrExistingCPF, err1)
 		}
 
 		if createdAccount1 != (entities.Account{}) {
