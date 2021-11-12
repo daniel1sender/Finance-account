@@ -6,24 +6,13 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
-	"time"
+
+	"github.com/daniel1sender/Desafio-API/pkg/domain/entities"
 )
 
 type AccountRepository struct {
 	storage *os.File
-	Users   map[string]AccountResponse
-}
-
-type AccountResponse struct {
-	//	ID        string    `json:"id"`
-	Name      string    `json:"name"`
-	CPF       string    `json:"cpf"`
-	Balance   int       `json:"balance"`
-	CreatedAt time.Time `json:"created_at"`
-}
-
-type Account struct {
-	Users map[string]AccountResponse
+	Users   map[string]entities.Account
 }
 
 func NewStorage() AccountRepository {
@@ -31,7 +20,7 @@ func NewStorage() AccountRepository {
 	if err != nil {
 		log.Fatal(err)
 	}
-	accountMap := make(map[string]AccountResponse)
+	accountMap := make(map[string]entities.Account)
 
 	readFile, err := ioutil.ReadAll(openFile)
 	if err != nil {
