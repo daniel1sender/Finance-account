@@ -10,12 +10,10 @@ import (
 
 func (ar AccountRepository) Upsert(account entities.Account) {
 	users := ar.Users
-	users[account.ID] = AccountResponse{account.Name, account.CPF, account.Balance, account.CreatedAt}
-
+	users[account.ID] = entities.Account{Name: account.Name, CPF: account.CPF, Balance: account.Balance, CreatedAt: account.CreatedAt}
 	keepAccount, err := json.MarshalIndent(users, "", " ")
 	if err != nil {
 		log.Fatal("error decoding account")
 	}
-	//ar.storage.WriteString(string(keepAccount) + "\n")
 	_ = ioutil.WriteFile("repository.json", keepAccount, 0644)
 }
