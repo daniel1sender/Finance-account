@@ -2,6 +2,7 @@ package transfers
 
 import (
 	"github.com/daniel1sender/Desafio-API/pkg/domain/entities"
+	"github.com/daniel1sender/Desafio-API/pkg/gateways/store/memory/accounts"
 	"github.com/daniel1sender/Desafio-API/pkg/gateways/store/memory/transfers"
 )
 
@@ -19,4 +20,8 @@ func NewUseCase(transferStorage transfers.TransferStorage, accountStorage accoun
 
 type UseCase interface {
 	Make(originID, destinationID string, amount int) (entities.Transfer, error)
+}
+
+type Repository interface {
+	UpdateByID(transfer entities.Transfer)
 }

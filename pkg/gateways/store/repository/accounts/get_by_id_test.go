@@ -11,7 +11,7 @@ func TestGetByID(t *testing.T) {
 	t.Run("should return an account when id informed already exists", func(t *testing.T) {
 		storage := NewStorage()
 		account := entities.Account{ID: "123", Balance: 10}
-		storage.Users[account.ID] = account
+		storage.users[account.ID] = account
 		returnedAccount, err := storage.GetByID(account.ID)
 		if err != nil {
 			t.Errorf("expected null error but got %v", err)
