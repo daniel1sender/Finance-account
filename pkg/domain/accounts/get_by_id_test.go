@@ -6,6 +6,7 @@ import (
 
 	"github.com/daniel1sender/Desafio-API/pkg/domain/entities"
 	"github.com/daniel1sender/Desafio-API/pkg/gateways/store/memory/accounts"
+	"github.com/daniel1sender/Desafio-API/pkg/gateways/store"
 )
 
 func TestAccountUseCase_GetById(t *testing.T) {
@@ -50,8 +51,8 @@ func TestAccountUseCase_GetById(t *testing.T) {
 			t.Errorf("expected empty account but got %+v", getAccountByID)
 		}
 
-		if !errors.Is(err, accounts.ErrIDNotFound) {
-			t.Errorf("expected '%s' but got '%s'", accounts.ErrIDNotFound, err)
+		if !errors.Is(err, store.ErrIDNotFound) {
+			t.Errorf("expected '%s' but got '%s'", store.ErrIDNotFound, err)
 		}
 
 	})

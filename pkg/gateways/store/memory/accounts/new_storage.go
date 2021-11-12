@@ -1,13 +1,7 @@
 package accounts
 
 import (
-	"errors"
-
 	"github.com/daniel1sender/Desafio-API/pkg/domain/entities"
-)
-
-var (
-	ErrIDNotFound = errors.New("account id isn't found")
 )
 
 type AccountStorage struct {
