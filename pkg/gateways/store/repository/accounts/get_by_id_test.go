@@ -6,29 +6,31 @@ import (
 	"github.com/daniel1sender/Desafio-API/pkg/domain/entities"
 )
 
-func TestGetBalanceByID(t *testing.T) {
-	t.Run("should return the balance when account it is found by id", func(t *testing.T) {
+func TestGetByID(t *testing.T) {
+
+	t.Run("should return an account when id informed already exists", func(t *testing.T) {
 		storage := NewStorage()
 		account := entities.Account{ID: "123", Balance: 10}
 		storage.Users[account.ID] = account
-		balance, err := storage.GetBalanceByID(account.ID)
+		returnedAccount, err := storage.GetByID(account.ID)
 		if err != nil {
-			t.Errorf("expected null error but got '%v'", err)
+			t.Errorf("expected null error but got %v", err)
 		}
-		if balance != account.Balance {
-			t.Errorf("expected '%d' but got '%d'", account.Balance, balance)
+		if returnedAccount != account {
+			t.Errorf("expected %v but got %v", account, returnedAccount)
 		}
 	})
 
 	t.Run("should return an error when account it is not found by id", func(t *testing.T) {
 		storage := NewStorage()
 		account := entities.Account{ID: "123", Balance: 10}
-		balance, err := storage.GetBalanceByID(account.ID)
+		returnedAccount, err := storage.GetByID(account.ID)
 		if err == nil {
 			t.Errorf("expected null error but got '%v'", err)
 		}
-		if balance == account.Balance {
-			t.Errorf("expected '%d' but got '%d'", account.Balance, balance)
+		if returnedAccount != (entities.Account{}) {
+			t.Errorf("expected %v but got %v", entities.Account{}, returnedAccount)
 		}
 	})
+
 }
