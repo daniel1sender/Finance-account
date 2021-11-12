@@ -20,7 +20,7 @@ func TestCheckCPF(t *testing.T) {
 	t.Run("should return an error when cpf account exist", func(t *testing.T) {
 		storage := NewStorage()
 		account := entities.Account{ID: "123", Balance: 10}
-		storage.Users[account.ID] = account
+		storage.users[account.ID] = account
 		err := storage.CheckCPF(account.CPF)
 		if err == nil {
 			t.Errorf("expected null error but got %v", err)

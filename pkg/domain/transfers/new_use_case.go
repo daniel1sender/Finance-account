@@ -2,14 +2,13 @@ package transfers
 
 import (
 	"github.com/daniel1sender/Desafio-API/pkg/domain/entities"
-	"github.com/daniel1sender/Desafio-API/pkg/gateways/store/memory/transfers"
 )
 
 type TransferUseCase struct {
-	storage transfers.TransferStorage
+	storage Repository
 }
 
-func NewUseCase(storage transfers.TransferStorage) TransferUseCase {
+func NewUseCase(storage Repository) TransferUseCase {
 	return TransferUseCase{
 		storage: storage,
 	}
@@ -17,4 +16,8 @@ func NewUseCase(storage transfers.TransferStorage) TransferUseCase {
 
 type UseCase interface {
 	Make(originID, destinationID string, amount int) (entities.Transfer, error)
+}
+
+type Repository interface {
+	UpdateByID(transfer entities.Transfer)
 }

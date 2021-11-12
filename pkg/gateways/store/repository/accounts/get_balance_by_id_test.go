@@ -10,7 +10,7 @@ func TestGetBalanceByID(t *testing.T) {
 	t.Run("should return the balance when account it is found by id", func(t *testing.T) {
 		storage := NewStorage()
 		account := entities.Account{ID: "123", Balance: 10}
-		storage.Users[account.ID] = account
+		storage.users[account.ID] = account
 		balance, err := storage.GetBalanceByID(account.ID)
 		if err != nil {
 			t.Errorf("expected null error but got '%v'", err)
