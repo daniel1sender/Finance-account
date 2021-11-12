@@ -10,30 +10,27 @@ import (
 	"github.com/daniel1sender/Desafio-API/pkg/domain/entities"
 )
 
-type AccountRepository struct {
+type accountRepository struct {
 	storage *os.File
-	Users   map[string]entities.Account
+	users   map[string]entities.Account
 }
 
-func NewStorage() AccountRepository {
-	openFile, err := os.OpenFile("repository.json", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
+func NewStorage() accountRepository {
+	openFile, err := os.OpenFile("Account_Repository.json", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
 	if err != nil {
 		log.Fatal(err)
 	}
 	accountMap := make(map[string]entities.Account)
-
 	readFile, err := ioutil.ReadAll(openFile)
 	if err != nil {
-		return AccountRepository{}
+		return accountRepository{}
 	}
-
 	err = json.Unmarshal(readFile, &accountMap)
 	if err != nil {
 		fmt.Println(err)
 	}
-
-	return AccountRepository{
+	return accountRepository{
 		storage: openFile,
-		Users:   accountMap,
+		users:   accountMap,
 	}
 }
