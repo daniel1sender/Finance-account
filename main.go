@@ -10,6 +10,7 @@ import (
 	transfers_usecase "github.com/daniel1sender/Desafio-API/pkg/domain/transfers"
 	accounts_handler "github.com/daniel1sender/Desafio-API/pkg/gateways/http/accounts"
 	transfers_handler "github.com/daniel1sender/Desafio-API/pkg/gateways/http/transfers"
+
 	//accounts_memory "github.com/daniel1sender/Desafio-API/pkg/gateways/store/memory/accounts"
 	transfers_memory "github.com/daniel1sender/Desafio-API/pkg/gateways/store/memory/transfers"
 	accounts_repository "github.com/daniel1sender/Desafio-API/pkg/gateways/store/repository/accounts"
@@ -24,7 +25,7 @@ func main() {
 	//accountMemory := accounts_memory.NewStorage()
 	//accountUseCase := accounts_usecase.NewUseCase(accountMemory)
 	//accountHandler := accounts_handler.NewHandler(accountUseCase)
-	
+
 	accountRepository := accounts_repository.NewStorage()
 	accountUseCase := accounts_usecase.NewUseCase(accountRepository)
 	accountHandler := accounts_handler.NewHandler(accountUseCase)
