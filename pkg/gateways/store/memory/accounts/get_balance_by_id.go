@@ -1,6 +1,8 @@
 package accounts
 
-import "github.com/daniel1sender/Desafio-API/pkg/gateways/store"
+import (
+	"github.com/daniel1sender/Desafio-API/pkg/domain/accounts"
+)
 
 func (s AccountStorage) GetBalanceByID(id string) (int, error) {
 	for key, value := range s.storage {
@@ -9,5 +11,5 @@ func (s AccountStorage) GetBalanceByID(id string) (int, error) {
 			return balance, nil
 		}
 	}
-	return 0, store.ErrIDNotFound
+	return 0, accounts.ErrIDNotFound
 }

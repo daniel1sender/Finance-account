@@ -6,11 +6,12 @@ import (
 
 	"github.com/gorilla/mux"
 
-	accounts_usecase "github.com/daniel1sender/Desafio-API/pkg/domain/accounts"
+	"github.com/daniel1sender/Desafio-API/pkg/domain/accounts/usecases"
 	transfers_usecase "github.com/daniel1sender/Desafio-API/pkg/domain/transfers"
 	accounts_handler "github.com/daniel1sender/Desafio-API/pkg/gateways/http/accounts"
 	transfers_handler "github.com/daniel1sender/Desafio-API/pkg/gateways/http/transfers"
 	transfers_repository "github.com/daniel1sender/Desafio-API/pkg/gateways/store/repository/transfers"
+
 	//accounts_memory "github.com/daniel1sender/Desafio-API/pkg/gateways/store/memory/accounts"
 	//transfers_memory "github.com/daniel1sender/Desafio-API/pkg/gateways/store/memory/transfers"
 	accounts_repository "github.com/daniel1sender/Desafio-API/pkg/gateways/store/repository/accounts"
@@ -31,7 +32,7 @@ func main() {
 	//accountHandler := accounts_handler.NewHandler(accountUseCase)
 
 	accountRepository := accounts_repository.NewStorage()
-	accountUseCase := accounts_usecase.NewUseCase(accountRepository)
+	accountUseCase := usecases.NewUseCase(accountRepository)
 	accountHandler := accounts_handler.NewHandler(accountUseCase)
 
 	/* 	name := "John Doe"

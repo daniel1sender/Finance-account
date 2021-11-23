@@ -1,4 +1,4 @@
-package accounts
+package usecases
 
 import (
 	"github.com/daniel1sender/Desafio-API/pkg/domain/entities"

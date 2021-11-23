@@ -6,8 +6,8 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/daniel1sender/Desafio-API/pkg/domain/accounts"
 	server_http "github.com/daniel1sender/Desafio-API/pkg/gateways/http"
-	"github.com/daniel1sender/Desafio-API/pkg/gateways/store"
 	"github.com/gorilla/mux"
 )
 
@@ -24,8 +24,8 @@ func (h Handler) GetBalanceByID(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Printf("get by id request failed: %s", err)
 		switch {
-		case errors.Is(err, store.ErrIDNotFound):
-			response := server_http.Error{Reason: store.ErrIDNotFound.Error()}
+		case errors.Is(err, accounts.ErrIDNotFound):
+			response := server_http.Error{Reason: accounts.ErrIDNotFound.Error()}
 			w.WriteHeader(http.StatusNotFound)
 			json.NewEncoder(w).Encode(response)
 
