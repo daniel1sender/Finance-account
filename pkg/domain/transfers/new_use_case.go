@@ -23,5 +23,5 @@ type UseCase interface {
 }
 
 type Repository interface {
-	UpdateByID(transfer entities.Transfer)
+	UpdateByID(transfer entities.Transfer)error
 }
