@@ -1,9 +1,10 @@
-package accounts
+package usecases
 
 import (
 	"errors"
 	"testing"
 
+	accounts_usecase "github.com/daniel1sender/Desafio-API/pkg/domain/accounts"
 	"github.com/daniel1sender/Desafio-API/pkg/domain/entities"
 	"github.com/daniel1sender/Desafio-API/pkg/gateways/store/memory/accounts"
 )
@@ -66,8 +67,8 @@ func TestAccountUseCase_Create(t *testing.T) {
 
 		createdAccount1, err1 := accountUsecase.Create(name, cpf, secret, balance)
 
-		if !errors.Is(err1, ErrExistingCPF) {
-			t.Errorf("expected '%s' but got '%s'", ErrExistingCPF, err1)
+		if !errors.Is(err1, accounts_usecase.ErrExistingCPF) {
+			t.Errorf("expected '%s' but got '%s'", accounts_usecase.ErrExistingCPF, err1)
 		}
 
 		if createdAccount1 != (entities.Account{}) {

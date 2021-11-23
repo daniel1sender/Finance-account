@@ -1,12 +1,12 @@
-package accounts
+package usecases
 
 import (
 	"errors"
 	"testing"
 
+	accounts_usecase "github.com/daniel1sender/Desafio-API/pkg/domain/accounts"
 	"github.com/daniel1sender/Desafio-API/pkg/domain/entities"
 	"github.com/daniel1sender/Desafio-API/pkg/gateways/store/memory/accounts"
-	"github.com/daniel1sender/Desafio-API/pkg/gateways/store"
 )
 
 func TestAccountUseCase_GetById(t *testing.T) {
@@ -51,8 +51,8 @@ func TestAccountUseCase_GetById(t *testing.T) {
 			t.Errorf("expected empty account but got %+v", getAccountByID)
 		}
 
-		if !errors.Is(err, store.ErrIDNotFound) {
-			t.Errorf("expected '%s' but got '%s'", store.ErrIDNotFound, err)
+		if !errors.Is(err, accounts_usecase.ErrIDNotFound) {
+			t.Errorf("expected '%s' but got '%s'", accounts_usecase.ErrIDNotFound, err)
 		}
 
 	})

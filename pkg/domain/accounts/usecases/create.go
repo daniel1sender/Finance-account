@@ -1,21 +1,17 @@
-package accounts
+package usecases
 
 import (
-	"errors"
 	"fmt"
 
+	"github.com/daniel1sender/Desafio-API/pkg/domain/accounts"
 	"github.com/daniel1sender/Desafio-API/pkg/domain/entities"
-)
-
-var (
-	ErrExistingCPF = errors.New("cpf informed is invalid")
 )
 
 func (au AccountUseCase) Create(name, cpf, secret string, balance int) (entities.Account, error) {
 
- 	if err := au.storage.CheckCPF(cpf); err != nil {
-		return entities.Account{}, ErrExistingCPF
-	} 
+	if err := au.storage.CheckCPF(cpf); err != nil {
+		return entities.Account{}, accounts.ErrExistingCPF
+	}
 
 	account, err := entities.NewAccount(name, cpf, secret, balance)
 	if err != nil {
