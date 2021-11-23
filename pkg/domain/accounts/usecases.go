@@ -24,5 +24,5 @@ type Repository interface {
 	GetBalanceByID(id string) (int, error)
 	GetByID(id string) (entities.Account, error)
 	CheckCPF(cpf string) error
-	Upsert(account entities.Account)
+	Upsert(account entities.Account) error
 }
