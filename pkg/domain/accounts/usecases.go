@@ -1,18 +1,15 @@
 package accounts
 
 import (
+	"errors"
+
 	"github.com/daniel1sender/Desafio-API/pkg/domain/entities"
 )
 
-type AccountUseCase struct {
-	storage Repository
-}
-
-func NewUseCase(storage Repository) AccountUseCase {
-	return AccountUseCase{
-		storage: storage,
-	}
-}
+var (
+	ErrExistingCPF = errors.New("cpf informed alredy exists")
+	ErrIDNotFound  = errors.New("account id isn't found")
+)
 
 type UseCase interface {
 	GetBalanceByID(id string) (int, error)

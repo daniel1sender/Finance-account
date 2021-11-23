@@ -6,11 +6,12 @@ import (
 
 	"github.com/gorilla/mux"
 
-	accounts_usecase "github.com/daniel1sender/Desafio-API/pkg/domain/accounts"
+	"github.com/daniel1sender/Desafio-API/pkg/domain/accounts/usecases"
 	transfers_usecase "github.com/daniel1sender/Desafio-API/pkg/domain/transfers"
 	accounts_handler "github.com/daniel1sender/Desafio-API/pkg/gateways/http/accounts"
 	transfers_handler "github.com/daniel1sender/Desafio-API/pkg/gateways/http/transfers"
 	transfers_repository "github.com/daniel1sender/Desafio-API/pkg/gateways/store/repository/transfers"
+
 	//accounts_memory "github.com/daniel1sender/Desafio-API/pkg/gateways/store/memory/accounts"
 	accounts_storage "github.com/daniel1sender/Desafio-API/pkg/gateways/store/memory/transfers"
 	transfers_storage "github.com/daniel1sender/Desafio-API/pkg/gateways/store/memory/transfers"

@@ -1,11 +1,11 @@
-package accounts
+package usecases
 
 import (
 	"errors"
 	"testing"
 
+	accounts_usecase "github.com/daniel1sender/Desafio-API/pkg/domain/accounts"
 	"github.com/daniel1sender/Desafio-API/pkg/domain/entities"
-	"github.com/daniel1sender/Desafio-API/pkg/gateways/store"
 	"github.com/daniel1sender/Desafio-API/pkg/gateways/store/memory/accounts"
 )
 
@@ -43,8 +43,8 @@ func TestAccountUseCase_UpdateBalance(t *testing.T) {
 		//passando qualquer id, sem criar a conta
 		err := accountUseCase.UpdateBalance("1", 20.0)
 
-		if err != store.ErrIDNotFound {
-			t.Errorf("expected '%s' but got '%s'", store.ErrIDNotFound, err)
+		if err != accounts_usecase.ErrIDNotFound {
+			t.Errorf("expected '%s' but got '%s'", accounts_usecase.ErrIDNotFound, err)
 		}
 
 	})
