@@ -7,6 +7,7 @@ import (
 	accounts_usecase "github.com/daniel1sender/Desafio-API/pkg/domain/accounts"
 	"github.com/daniel1sender/Desafio-API/pkg/domain/entities"
 	"github.com/daniel1sender/Desafio-API/pkg/gateways/store/memory/accounts"
+	//accounts_repository "github.com/daniel1sender/Desafio-API/pkg/gateways/store/repository/accounts"
 )
 
 func TestAccountUseCase_Create(t *testing.T) {
@@ -14,6 +15,9 @@ func TestAccountUseCase_Create(t *testing.T) {
 
 		storageMemory := accounts.NewStorage()
 		accountUsecase := NewUseCase(storageMemory)
+		//storageFiles := accounts_repository.NewStorage()
+		//accountUsecase := NewUseCase(storageFiles)
+
 		name := "John Doe"
 		cpf := "11111111030"
 		secret := "123"

@@ -1,3 +1,2 @@
 .vscode
-Account_Repository.json
-Transfer_Respository.json
+*.json
