@@ -3,7 +3,6 @@ package accounts
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"log"
 	"os"
 
@@ -11,17 +10,18 @@ import (
 )
 
 type accountRepository struct {
-	storage *os.File
-	users   map[string]entities.Account
+	users map[string]entities.Account
 }
 
 func NewStorage() accountRepository {
-	openFile, err := os.OpenFile("Account_Repository.json", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
-	if err != nil {
-		log.Fatal(err)
-	}
 	accountMap := make(map[string]entities.Account)
-	readFile, err := ioutil.ReadAll(openFile)
+	if _, err := os.Stat("Account_Repository.json"); err != nil {
+		_, err := os.OpenFile("Account_Repository.json", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
+	readFile, err := os.ReadFile("Account_Repository.json")
 	if err != nil {
 		return accountRepository{}
 	}
@@ -30,7 +30,6 @@ func NewStorage() accountRepository {
 		fmt.Println(err)
 	}
 	return accountRepository{
-		storage: openFile,
-		users:   accountMap,
+		users: accountMap,
 	}
 }
