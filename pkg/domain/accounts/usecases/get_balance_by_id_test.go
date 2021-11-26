@@ -1,18 +1,21 @@
 package usecases
 
 import (
+	"os"
 	"testing"
 
 	"github.com/daniel1sender/Desafio-API/pkg/domain/entities"
-	"github.com/daniel1sender/Desafio-API/pkg/gateways/store/memory/accounts"
+	accounts_repository "github.com/daniel1sender/Desafio-API/pkg/gateways/store/repository/accounts"
 )
 
 func TestAccountUseCase_GetBalanceByID(t *testing.T) {
 
 	t.Run("should return an account balance when id is found", func(t *testing.T) {
 
-		storage := accounts.NewStorage()
-		accountUseCase := NewUseCase(storage)
+		//storage := accounts.NewStorage()
+		//accountUseCase := NewUseCase(storage)
+		storageFiles := accounts_repository.NewStorage()
+		accountUsecase := NewUseCase(storageFiles)
 		name := "John Doe"
 		cpf := "11111111030"
 		secret := "123"
@@ -22,9 +25,10 @@ func TestAccountUseCase_GetBalanceByID(t *testing.T) {
 		if err != nil {
 			t.Errorf("expected no error to create a new account but got '%s'", err)
 		}
-		storage.Upsert(account)
+		storageFiles.Upsert(account)
+		//storage.Upsert(account)
 
-		getBalance, err := accountUseCase.GetBalanceByID(account.ID)
+		getBalance, err := accountUsecase.GetBalanceByID(account.ID)
 
 		if getBalance == 0 {
 			t.Error("expected balance account different from 0")
@@ -38,8 +42,11 @@ func TestAccountUseCase_GetBalanceByID(t *testing.T) {
 
 	t.Run("should return a null account balance when id isn't found", func(t *testing.T) {
 
-		storage := accounts.NewStorage()
-		accountUseCase := NewUseCase(storage)
+		//storage := accounts.NewStorage()
+		//accountUseCase := NewUseCase(storage)
+		_ = os.Remove("Account_Repository.json")
+		storageFiles := accounts_repository.NewStorage()
+		accountUsecase := NewUseCase(storageFiles)
 		name := "John Doe"
 		cpf := "11111111030"
 		secret := "123"
@@ -50,7 +57,7 @@ func TestAccountUseCase_GetBalanceByID(t *testing.T) {
 			t.Errorf("expected no error to create a new account but got '%s'", err)
 		}
 
-		getBalance, err := accountUseCase.GetBalanceByID(account.ID)
+		getBalance, err := accountUsecase.GetBalanceByID(account.ID)
 
 		if getBalance != 0 {
 			t.Error("expected account balance equal zero")

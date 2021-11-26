@@ -1,18 +1,21 @@
 package usecases
 
 import (
+	"os"
 	"testing"
 
 	"github.com/daniel1sender/Desafio-API/pkg/domain/entities"
-	"github.com/daniel1sender/Desafio-API/pkg/gateways/store/memory/accounts"
+	accounts_repository "github.com/daniel1sender/Desafio-API/pkg/gateways/store/repository/accounts"
 )
 
 func TestAccountUseCase_Get(t *testing.T) {
 
 	t.Run("should return a full list of accounts", func(t *testing.T) {
 
-		storageMemory := accounts.NewStorage()
-		accountUseCase := NewUseCase(storageMemory)
+		//storageMemory := accounts.NewStorage()
+		//accountUseCase := NewUseCase(storageMemory)
+		storageFiles := accounts_repository.NewStorage()
+		accountUsecase := NewUseCase(storageFiles)
 		name := "John Doe"
 		cpf := "11111111030"
 		secret := "123"
@@ -23,9 +26,10 @@ func TestAccountUseCase_Get(t *testing.T) {
 			t.Errorf("expected no error to create a new account but got '%s'", err)
 		}
 
-		storageMemory.Upsert(account)
+		//storageMemory.Upsert(account)
+		storageFiles.Upsert(account)
 
-		getAccounts := accountUseCase.GetAll()
+		getAccounts := accountUsecase.GetAll()
 
 		if len(getAccounts) == 0 {
 			t.Error("expected a full list of accounts")
@@ -34,11 +38,11 @@ func TestAccountUseCase_Get(t *testing.T) {
 	})
 
 	t.Run("should return an empty list", func(t *testing.T) {
+		_ = os.Remove("Account_Repository.json")
+		storageFiles := accounts_repository.NewStorage()
+		accountUsecase := NewUseCase(storageFiles)
 
-		storage := accounts.NewStorage()
-		accountUseCase := NewUseCase(storage)
-
-		getAccounts := accountUseCase.GetAll()
+		getAccounts := accountUsecase.GetAll()
 
 		if len(getAccounts) != 0 {
 			t.Error("expected an empty list")
