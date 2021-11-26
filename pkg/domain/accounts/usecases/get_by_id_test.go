@@ -2,19 +2,22 @@ package usecases
 
 import (
 	"errors"
+	"os"
 	"testing"
 
 	accounts_usecase "github.com/daniel1sender/Desafio-API/pkg/domain/accounts"
 	"github.com/daniel1sender/Desafio-API/pkg/domain/entities"
-	"github.com/daniel1sender/Desafio-API/pkg/gateways/store/memory/accounts"
+	accounts_repository "github.com/daniel1sender/Desafio-API/pkg/gateways/store/repository/accounts"
 )
 
 func TestAccountUseCase_GetById(t *testing.T) {
 
 	t.Run("should return an account when the searched account is found", func(t *testing.T) {
 
-		storage := accounts.NewStorage()
-		accountUseCase := NewUseCase(storage)
+		//storage := accounts.NewStorage()
+		//accountUseCase := NewUseCase(storage)
+		storageFiles := accounts_repository.NewStorage()
+		accountUseCase := NewUseCase(storageFiles)
 
 		name := "John Doe"
 		cpf := "11111111030"
@@ -26,7 +29,8 @@ func TestAccountUseCase_GetById(t *testing.T) {
 			t.Errorf("expected no error to create a new account but got '%s'", err)
 		}
 
-		storage.Upsert(account)
+		//storage.Upsert(account)
+		storageFiles.Upsert(account)
 		getAccountByID, err := accountUseCase.GetByID(account.ID)
 
 		if getAccountByID == (entities.Account{}) {
@@ -41,8 +45,11 @@ func TestAccountUseCase_GetById(t *testing.T) {
 
 	t.Run("should return an empty account and a error when account don't exist", func(t *testing.T) {
 
-		storage := accounts.NewStorage()
-		accountUseCase := NewUseCase(storage)
+		//storage := accounts.NewStorage()
+		//accountUseCase := NewUseCase(storage)
+		_ = os.Remove("Account_Repository.json")
+		storageFiles := accounts_repository.NewStorage()
+		accountUseCase := NewUseCase(storageFiles)
 
 		//passando qualquer id
 		getAccountByID, err := accountUseCase.GetByID("account.ID")
