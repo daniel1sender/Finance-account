@@ -88,7 +88,7 @@ func TestAccountUseCase_Make(t *testing.T) {
 		originAccount := entities.Account{ID: originID, Balance: 0}
 		accountStorage.Upsert(originID, originAccount)
 
-		makeTransfer, err := transferUseCase.Make(originID, destinationID, amount)
+		makeTransfer, err := transferUsecase.Make(originID, destinationID, amount)
 
 		if makeTransfer != (entities.Transfer{}) {
 			t.Errorf("expected an empty transfer but got '%+v'", makeTransfer)
