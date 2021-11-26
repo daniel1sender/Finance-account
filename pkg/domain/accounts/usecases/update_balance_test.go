@@ -7,7 +7,7 @@ import (
 
 	accounts_usecase "github.com/daniel1sender/Desafio-API/pkg/domain/accounts"
 	"github.com/daniel1sender/Desafio-API/pkg/domain/entities"
-	accounts_repository "github.com/daniel1sender/Desafio-API/pkg/gateways/store/repository/accounts"
+	accounts_repository "github.com/daniel1sender/Desafio-API/pkg/gateways/store/files/accounts"
 )
 
 func TestAccountUseCase_UpdateBalance(t *testing.T) {
