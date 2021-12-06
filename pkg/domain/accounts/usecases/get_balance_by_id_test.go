@@ -12,8 +12,6 @@ func TestAccountUseCase_GetBalanceByID(t *testing.T) {
 
 	t.Run("should return an account balance when id is found", func(t *testing.T) {
 
-		//storage := accounts.NewStorage()
-		//accountUseCase := NewUseCase(storage)
 		storageFiles := accounts_repository.NewStorage()
 		accountUsecase := NewUseCase(storageFiles)
 		name := "John Doe"
@@ -26,7 +24,6 @@ func TestAccountUseCase_GetBalanceByID(t *testing.T) {
 			t.Errorf("expected no error to create a new account but got '%s'", err)
 		}
 		storageFiles.Upsert(account)
-		//storage.Upsert(account)
 
 		getBalance, err := accountUsecase.GetBalanceByID(account.ID)
 
@@ -42,8 +39,6 @@ func TestAccountUseCase_GetBalanceByID(t *testing.T) {
 
 	t.Run("should return a null account balance and an error when id isn't found", func(t *testing.T) {
 
-		//storage := accounts.NewStorage()
-		//accountUseCase := NewUseCase(storage)
 		_ = os.Remove("Account_Repository.json")
 		storageFiles := accounts_repository.NewStorage()
 		accountUsecase := NewUseCase(storageFiles)

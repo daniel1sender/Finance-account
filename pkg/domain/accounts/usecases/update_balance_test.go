@@ -14,8 +14,6 @@ func TestAccountUseCase_UpdateBalance(t *testing.T) {
 
 	t.Run("should return an account and null error when account was updated", func(t *testing.T) {
 
-		//storage := accounts.NewStorage()
-		//accountUseCase := NewUseCase(storage)
 		storageFiles := accounts_repository.NewStorage()
 		accountUseCase := NewUseCase(storageFiles)
 		name := "John Doe"
@@ -28,7 +26,6 @@ func TestAccountUseCase_UpdateBalance(t *testing.T) {
 			t.Errorf("expected no error to create a new account but got '%s'", err)
 		}
 
-		//storage.Upsert(account)
 		storageFiles.Upsert(account)
 
 		updateAccountError := accountUseCase.UpdateBalance(account.ID, 20.0)
@@ -44,7 +41,6 @@ func TestAccountUseCase_UpdateBalance(t *testing.T) {
 		storage := accounts.NewStorage()
 		accountUseCase := NewUseCase(storage)
 
-		//passando qualquer id, sem criar a conta
 		err := accountUseCase.UpdateBalance("1", 20.0)
 
 		if err != accounts_usecase.ErrIDNotFound {
@@ -55,8 +51,6 @@ func TestAccountUseCase_UpdateBalance(t *testing.T) {
 
 	t.Run("should return an empty account and an error when balance account is less than zero", func(t *testing.T) {
 
-		//storage := accounts.NewStorage()
-		//accountUseCase := NewUseCase(storage)
 		storageFiles := accounts_repository.NewStorage()
 		accountUseCase := NewUseCase(storageFiles)
 
@@ -70,7 +64,6 @@ func TestAccountUseCase_UpdateBalance(t *testing.T) {
 			t.Errorf("expected no error to create a new account but got '%s'", err)
 		}
 
-		//storage.Upsert(account)
 		storageFiles.Upsert(account)
 
 		err = accountUseCase.UpdateBalance(account.ID, -10)

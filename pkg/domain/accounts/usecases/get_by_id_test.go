@@ -14,8 +14,6 @@ func TestAccountUseCase_GetById(t *testing.T) {
 
 	t.Run("should return an account when the searched account is found", func(t *testing.T) {
 
-		//storage := accounts.NewStorage()
-		//accountUseCase := NewUseCase(storage)
 		storageFiles := accounts_repository.NewStorage()
 		accountUseCase := NewUseCase(storageFiles)
 
@@ -29,7 +27,6 @@ func TestAccountUseCase_GetById(t *testing.T) {
 			t.Errorf("expected no error to create a new account but got '%s'", err)
 		}
 
-		//storage.Upsert(account)
 		storageFiles.Upsert(account)
 		getAccountByID, err := accountUseCase.GetByID(account.ID)
 
@@ -45,13 +42,10 @@ func TestAccountUseCase_GetById(t *testing.T) {
 
 	t.Run("should return an empty account and a error when account don't exist", func(t *testing.T) {
 
-		//storage := accounts.NewStorage()
-		//accountUseCase := NewUseCase(storage)
 		_ = os.Remove("Account_Repository.json")
 		storageFiles := accounts_repository.NewStorage()
 		accountUseCase := NewUseCase(storageFiles)
 
-		//passando qualquer id
 		getAccountByID, err := accountUseCase.GetByID("account.ID")
 
 		if getAccountByID != (entities.Account{}) {
