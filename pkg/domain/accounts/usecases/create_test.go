@@ -14,8 +14,6 @@ func TestAccountUseCase_Create(t *testing.T) {
 
 	t.Run("should successfully create an account and return it", func(t *testing.T) {
 		_ = os.Remove("Account_Repository.json")
-		//storageMemory := accounts.NewStorage()
-		//accountUsecase := NewUseCase(storageMemory)
 		storageFiles := accounts_repository.NewStorage()
 		accountUsecase := NewUseCase(storageFiles)
 
@@ -38,8 +36,6 @@ func TestAccountUseCase_Create(t *testing.T) {
 
 	t.Run("should return error when trying to create account with already created cpf account", func(t *testing.T) {
 		_ = os.Remove("Account_Repository.json")
-		//storageMemory := accounts.NewStorage()
-		//accountUsecase := NewUseCase(storageMemory)
 		storageFiles := accounts_repository.NewStorage()
 		accountUsecase := NewUseCase(storageFiles)
 

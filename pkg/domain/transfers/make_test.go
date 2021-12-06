@@ -12,8 +12,6 @@ func TestAccountUseCase_Make(t *testing.T) {
 
 	t.Run("should return a transfer", func(t *testing.T) {
 
-		//storage := transfers.NewStorage()
-		//transferUsecase := NewUseCase(storage)
 		storage := transfers_repository.NewStorage()
 		transferUsecase := NewUseCase(storage)
 		amount := 10
@@ -34,8 +32,6 @@ func TestAccountUseCase_Make(t *testing.T) {
 
 	t.Run("should return a blank transfer when the transfer isn't created", func(*testing.T) {
 
-		//storage := transfers.NewStorage()
-		//transferUseCase := NewUseCase(storage)
 		storage := transfers_repository.NewStorage()
 		transferUsecase := NewUseCase(storage)
 		amount := 0
