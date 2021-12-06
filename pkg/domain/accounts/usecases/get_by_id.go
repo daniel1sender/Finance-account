@@ -5,5 +5,6 @@ import (
 )
 
 func (au AccountUseCase) GetByID(id string) (entities.Account, error) {
-	return au.storage.GetByID(id)
+	account, err := au.storage.GetByID(id)
+	return account, err
 }
