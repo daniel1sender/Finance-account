@@ -7,6 +7,7 @@ import (
 
 	accounts_usecase "github.com/daniel1sender/Desafio-API/pkg/domain/accounts"
 	"github.com/daniel1sender/Desafio-API/pkg/domain/entities"
+	"github.com/daniel1sender/Desafio-API/pkg/gateways/store/files/accounts"
 	accounts_repository "github.com/daniel1sender/Desafio-API/pkg/gateways/store/files/accounts"
 )
 
@@ -14,8 +15,6 @@ func TestAccountUseCase_Create(t *testing.T) {
 
 	t.Run("should successfully create an account and return it", func(t *testing.T) {
 		_ = os.Remove("Account_Repository.json")
-		//storageMemory := accounts.NewStorage()
-		//accountUsecase := NewUseCase(storageMemory)
 		storageFiles := accounts_repository.NewStorage()
 		accountUsecase := NewUseCase(storageFiles)
 
