@@ -20,25 +20,9 @@ func main() {
 	transferUseCase := transfers_usecase.NewUseCase(transferRepository)
 	transferHandler := transfers_handler.NewHandler(transferUseCase)
 
-	//transferMemory := transfers_memory.NewStorage()
-	//transferUseCase := transfers_usecase.NewUseCase(transferMemory)
-	//transferHandler := transfers_handler.NewHandler(transferUseCase)
-
-	//accountMemory := accounts_memory.NewStorage()
-	//accountUseCase := accounts_usecase.NewUseCase(accountMemory)
-	//accountHandler := accounts_handler.NewHandler(accountUseCase)
-
 	accountRepository := accounts_repository.NewStorage()
 	accountUseCase := usecases.NewUseCase(accountRepository)
 	accountHandler := accounts_handler.NewHandler(accountUseCase)
-
-	/* 	name := "John Doe"
-	   	cpf := "11111111030"
-	   	secret := "123"
-	   	balance := 10
-	   	account, _ := entities.NewAccount(name, cpf, secret, balance)
-	   	accountRepository := accounts_repository.NewStorage()
-	   	accountRepository.Upsert(account) */
 
 	r := mux.NewRouter()
 	r.HandleFunc("/accounts", accountHandler.Create).Methods(http.MethodPost)
