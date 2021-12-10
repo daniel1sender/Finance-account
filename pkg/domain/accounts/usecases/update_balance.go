@@ -2,6 +2,7 @@ package usecases
 
 import (
 	"errors"
+	"fmt"
 )
 
 var (
@@ -14,11 +15,14 @@ func (au AccountUseCase) UpdateBalance(id string, balance int) error {
 		return err
 	}
 	if balance < 0 {
-		return ErrBalanceLessZero
+		return fmt.Errorf("error updating balance account: %v", ErrBalanceLessZero)
 	}
 
 	account.Balance = balance
-	au.storage.Upsert(account)
+	err = au.storage.Upsert(account)
+	if err != nil {
+		return fmt.Errorf("error updating balance account: %w", err)
+	}
 
 	return nil
 }
