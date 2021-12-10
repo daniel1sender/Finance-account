@@ -1,0 +1,10 @@
+{
+ "3ab1ee3b-42e9-4dc0-81ac-ad1ab20faa42": {
+  "ID": "3ab1ee3b-42e9-4dc0-81ac-ad1ab20faa42",
+  "Name": "John Doe",
+  "CPF": "11111111030",
+  "Secret": "",
+  "Balance": 10,
+  "CreatedAt": "2021-11-26T16:18:50.362067368Z"
+ }
+}

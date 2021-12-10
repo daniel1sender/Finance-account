@@ -1,0 +1,30 @@
+{
+ "9425b39c-14b9-4540-a70c-1785d4147395": {
+  "ID": "9425b39c-14b9-4540-a70c-1785d4147395",
+  "AccountOriginID": "1",
+  "AccountDestinationID": "2",
+  "Amount": 0,
+  "CreatedAt": "0001-01-01T00:00:00Z"
+ },
+ "b4dffddf-8411-4278-ba93-e470773bb99e": {
+  "ID": "b4dffddf-8411-4278-ba93-e470773bb99e",
+  "AccountOriginID": "1",
+  "AccountDestinationID": "2",
+  "Amount": 0,
+  "CreatedAt": "0001-01-01T00:00:00Z"
+ },
+ "b70a2e3f-7ec4-4254-b559-58a18fee0b9a": {
+  "ID": "b70a2e3f-7ec4-4254-b559-58a18fee0b9a",
+  "AccountOriginID": "1",
+  "AccountDestinationID": "2",
+  "Amount": 0,
+  "CreatedAt": "0001-01-01T00:00:00Z"
+ },
+ "d06e7887-e783-413e-b75c-0b182c266183": {
+  "ID": "d06e7887-e783-413e-b75c-0b182c266183",
+  "AccountOriginID": "1",
+  "AccountDestinationID": "2",
+  "Amount": 0,
+  "CreatedAt": "0001-01-01T00:00:00Z"
+ }
+}
