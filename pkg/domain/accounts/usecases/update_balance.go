@@ -15,7 +15,7 @@ func (au AccountUseCase) UpdateBalance(id string, balance int) error {
 		return err
 	}
 	if balance < 0 {
-		return fmt.Errorf("error updating balance account: %v", ErrBalanceLessZero)
+		return fmt.Errorf("error updating balance account: %w", ErrBalanceLessZero)
 	}
 
 	account.Balance = balance
