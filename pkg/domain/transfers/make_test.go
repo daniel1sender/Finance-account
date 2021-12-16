@@ -100,7 +100,7 @@ func TestAccountUseCase_Make(t *testing.T) {
 
 	})
 
-	t.Run("should return a empty transfer and a error message when the account id is not found", func(t *testing.T) {
+	t.Run("should return a empty transfer and a error message when the transfer account id is not found", func(t *testing.T) {
 
 		transferStorage := transfers_storage.NewStorage()
 		accountStorage := accounts_storage.NewStorage()
@@ -115,8 +115,8 @@ func TestAccountUseCase_Make(t *testing.T) {
 			t.Errorf("expected a empty transfer but got '%+v'", makeTransfer)
 		}
 
-		if !errors.Is(err, accounts_storage.ErrIDNotFound) {
-			t.Errorf("expected '%s' but got '%s'", accounts_storage.ErrIDNotFound, err)
+		if !errors.Is(err, ErrOriginIDNotFound) {
+			t.Errorf("expected '%s' but got '%s'", ErrOriginIDNotFound, err)
 		}
 
 		originAccount := entities.Account{ID: originID, Balance: 20}
@@ -127,8 +127,8 @@ func TestAccountUseCase_Make(t *testing.T) {
 			t.Errorf("expected a empty transfer but got '%+v'", makeTransfer)
 		}
 
-		if !errors.Is(err, accounts_storage.ErrIDNotFound) {
-			t.Errorf("expected '%s' but got '%s'", accounts_storage.ErrIDNotFound, err)
+		if !errors.Is(err, ErrDestinationIDNotFound) {
+			t.Errorf("expected '%s' but got '%s'", ErrDestinationIDNotFound, err)
 		}
 
 	})
