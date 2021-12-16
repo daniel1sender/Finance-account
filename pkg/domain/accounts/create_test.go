@@ -7,7 +7,7 @@ import (
 	"github.com/daniel1sender/Desafio-API/pkg/domain/entities"
 	"github.com/daniel1sender/Desafio-API/pkg/gateways/store/accounts"
 )
-
+                                                                                
 func TestAccountUseCase_Create(t *testing.T) {
 	t.Run("should successfully create an account and return it", func(t *testing.T) {
 
@@ -76,3 +76,4 @@ func TestAccountUseCase_Create(t *testing.T) {
 
 	})
 }
+                                                                                                                                                                      

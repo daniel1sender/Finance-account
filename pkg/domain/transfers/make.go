@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/daniel1sender/Desafio-API/pkg/domain/entities"
+	"github.com/daniel1sender/Desafio-API/pkg/gateways/store/accounts"
 )
 
 var (
@@ -16,16 +17,16 @@ var (
 func (tu TransferUseCase) Make(originID, destinationID string, amount int) (entities.Transfer, error) {
 
 	originAccountBalance, err := tu.accountStorage.GetBalanceByID(originID)
-	if err != nil {
-		return entities.Transfer{}, fmt.Errorf("error getting balance: %s: %w", ErrOriginIDNotFound, err)
+	if errors.Is(err, accounts.ErrIDNotFound) {
+		return entities.Transfer{}, ErrOriginIDNotFound
 	}
 	if originAccountBalance < amount {
 		return entities.Transfer{}, ErrInsufficientFunds
 	}
 
 	_, err = tu.accountStorage.GetByID(destinationID)
-	if err != nil {
-		return entities.Transfer{}, fmt.Errorf("%s: %w", ErrDestinationIDNotFound, err)
+	if errors.Is(err, accounts.ErrIDNotFound) {
+		return entities.Transfer{}, ErrDestinationIDNotFound
 	}
 
 	transfer, err := entities.NewTransfer(originID, destinationID, amount)
