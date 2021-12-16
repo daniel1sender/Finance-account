@@ -13,7 +13,7 @@ import (
 	server_http "github.com/daniel1sender/Desafio-API/pkg/gateways/http"
 )
 
-func TestCreate(t *testing.T) {
+func TestHandlerCreate(t *testing.T) {
 
 	t.Run("should return 201 and a account when it's been sucessfully created", func(t *testing.T) {
 
