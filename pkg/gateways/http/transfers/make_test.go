@@ -143,10 +143,10 @@ func TestMake(t *testing.T) {
 		}
 	})
 
-	t.Run("should return 400 and an error message when ids of transfer aren't found", func(t *testing.T) {
+	t.Run("should return 400 and an error message when transfer origin id is not found", func(t *testing.T) {
 
 		transfer := entities.Transfer{AccountOriginID: "0", AccountDestinationID: "1", Amount: 10}
-		useCase := transfers.UseCaseMock{Transfer: transfer, Error: accounts_storage.ErrIDNotFound}
+		useCase := transfers.UseCaseMock{Transfer: transfer, Error: transfers.ErrOriginIDNotFound}
 		h := NewHandler(&useCase)
 
 		createRequest := Request{transfer.AccountOriginID, transfer.AccountDestinationID, transfer.Amount}
@@ -166,7 +166,35 @@ func TestMake(t *testing.T) {
 			t.Errorf("expected '%s' but got '%s'", server_http.JSONContentType, newResponse.Header().Get("content-type"))
 		}
 
-		if responseReason.Reason != accounts_storage.ErrIDNotFound.Error() {
+		if responseReason.Reason != transfers.ErrOriginIDNotFound.Error() {
+			t.Errorf("expected '%s' but got '%s'", accounts_storage.ErrIDNotFound.Error(), responseReason.Reason)
+		}
+	})
+
+	t.Run("should return 400 and an error message when transfer destination id is not found", func(t *testing.T) {
+
+		transfer := entities.Transfer{AccountOriginID: "0", AccountDestinationID: "1", Amount: 10}
+		useCase := transfers.UseCaseMock{Transfer: transfer, Error: transfers.ErrDestinationIDNotFound}
+		h := NewHandler(&useCase)
+
+		createRequest := Request{transfer.AccountOriginID, transfer.AccountDestinationID, transfer.Amount}
+		request, _ := json.Marshal(createRequest)
+		newRequest, _ := http.NewRequest(http.MethodPost, "/transfers", bytes.NewBuffer(request))
+		newResponse := httptest.NewRecorder()
+		h.Make(newResponse, newRequest)
+
+		var responseReason server_http.Error
+		json.Unmarshal(newResponse.Body.Bytes(), &responseReason)
+
+		if newResponse.Code != http.StatusBadRequest {
+			t.Errorf("expected status '%d' but got '%d'", http.StatusBadRequest, newResponse.Code)
+		}
+
+		if newResponse.Header().Get("content-type") != server_http.JSONContentType {
+			t.Errorf("expected '%s' but got '%s'", server_http.JSONContentType, newResponse.Header().Get("content-type"))
+		}
+
+		if responseReason.Reason != transfers.ErrDestinationIDNotFound.Error() {
 			t.Errorf("expected '%s' but got '%s'", accounts_storage.ErrIDNotFound.Error(), responseReason.Reason)
 		}
 	})
