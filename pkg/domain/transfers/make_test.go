@@ -52,7 +52,7 @@ func TestAccountUseCase_Make(t *testing.T) {
 
 	})
 
-	t.Run("should return an empty transfer when amount is less or equal zero", func(*testing.T) {
+	t.Run("should return an empty transfer and a error message when amount is less or equal zero", func(*testing.T) {
 
 		transferStorage := transfers_storage.NewStorage()
 		accountStorage := accounts_storage.NewStorage()
