@@ -2,7 +2,6 @@ package transfers
 
 import (
 	"encoding/json"
-	"fmt"
 	"log"
 	"os"
 
@@ -20,14 +19,15 @@ func NewStorage() TransferRepository {
 	if err != nil {
 		log.Fatalf("error to open file: %v", err)
 	}
-	trasnferMap := make(map[string]entities.Transfer)	
+	trasnferMap := make(map[string]entities.Transfer)
 	readFile, err := os.ReadFile(fileName)
 	if err != nil {
+		log.Fatalf("error while reading file: %v", readFile)
 		return TransferRepository{}
 	}
 	err = json.Unmarshal(readFile, &trasnferMap)
 	if err != nil {
-		fmt.Println(err)
+		log.Fatalf("error while deconding file: %v", err)
 	}
 	return TransferRepository{
 		storage:   openFile,
