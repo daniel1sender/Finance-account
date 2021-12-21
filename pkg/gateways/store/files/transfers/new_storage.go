@@ -18,9 +18,9 @@ func NewStorage() TransferRepository {
 	fileName := "Transfer_Respository.json"
 	openFile, err := os.OpenFile(fileName, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalf("error to open file: %v", err)
 	}
-	trasnferMap := make(map[string]entities.Transfer)
+	trasnferMap := make(map[string]entities.Transfer)	
 	readFile, err := os.ReadFile(fileName)
 	if err != nil {
 		return TransferRepository{}

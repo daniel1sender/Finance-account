@@ -18,7 +18,7 @@ func NewStorage() accountRepository {
 	if _, err := os.Stat("Account_Repository.json"); err != nil {
 		_, err := os.OpenFile("Account_Repository.json", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
 		if err != nil {
-			log.Fatal(err)
+			log.Fatalf("error to open file: %v", err)
 		}
 	}
 	readFile, err := os.ReadFile("Account_Repository.json")
