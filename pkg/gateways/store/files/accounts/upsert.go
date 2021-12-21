@@ -12,8 +12,11 @@ func (ar accountRepository) Upsert(account entities.Account) error {
 	ar.users[account.ID] = entities.Account{ID: account.ID, Name: account.Name, CPF: account.CPF, Balance: account.Balance, CreatedAt: account.CreatedAt}
 	keepAccount, err := json.MarshalIndent(ar.users, "", " ")
 	if err != nil {
-		return fmt.Errorf("error decoding account '%v'", err)
+		return fmt.Errorf("error decoding account %v", err)
 	}
-	_ = os.WriteFile("Account_Repository.json", keepAccount, 0644)
+	err = os.WriteFile("Account_Repository.json", keepAccount, 0644)
+	if err != nil{
+		return fmt.Errorf("error while writing in file: %v", err)
+	}
 	return nil
 }
