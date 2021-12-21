@@ -13,9 +13,9 @@ import (
 	server_http "github.com/daniel1sender/Desafio-API/pkg/gateways/http"
 )
 
-func TestCreate(t *testing.T) {
+func TestHandlerCreate(t *testing.T) {
 
-	t.Run("should return 201 and a account when it's been sucessfully created", func(t *testing.T) {
+	t.Run("should return 201 and an account when it's been sucessfully created", func(t *testing.T) {
 
 		account := entities.Account{Name: "Jonh Doe", CPF: "12345678910", Secret: "123", Balance: 0, CreatedAt: time.Now()}
 		useCase := accounts.UseCaseMock{Account: account}
@@ -58,7 +58,7 @@ func TestCreate(t *testing.T) {
 		}
 	})
 
-	t.Run("should return 400 and a error message when it failed to decode the request successfully", func(t *testing.T) {
+	t.Run("should return 400 and an error when it failed to decode the request successfully", func(t *testing.T) {
 
 		useCase := accounts.UseCaseMock{}
 		h := NewHandler(&useCase)
@@ -87,7 +87,7 @@ func TestCreate(t *testing.T) {
 
 	})
 
-	t.Run("should return 400 and a message error when an empty name is informed", func(t *testing.T) {
+	t.Run("should return 400 and an error when an empty name is informed", func(t *testing.T) {
 
 		useCase := accounts.UseCaseMock{Error: entities.ErrInvalidName}
 		h := NewHandler(&useCase)
@@ -115,7 +115,7 @@ func TestCreate(t *testing.T) {
 		}
 	})
 
-	t.Run("should return 400 and a message error when the cpf informed doesn't have eleven digits", func(t *testing.T) {
+	t.Run("should return 400 and an error when the cpf informed doesn't have eleven digits", func(t *testing.T) {
 
 		useCase := accounts.UseCaseMock{Error: entities.ErrInvalidCPF}
 		h := NewHandler(&useCase)
@@ -144,7 +144,7 @@ func TestCreate(t *testing.T) {
 
 	})
 
-	t.Run("should return a 409 and a message error when cpf informed already exist", func(t *testing.T) {
+	t.Run("should return 409 and an error when cpf informed already exist", func(t *testing.T) {
 
 		useCase := accounts.UseCaseMock{Error: accounts.ErrExistingCPF}
 		h := NewHandler(&useCase)
@@ -173,7 +173,7 @@ func TestCreate(t *testing.T) {
 
 	})
 
-	t.Run("should return 400 and a message error when a blanc secret is informed", func(t *testing.T) {
+	t.Run("should return 400 and an error when an empty secret is informed", func(t *testing.T) {
 
 		useCase := accounts.UseCaseMock{Error: entities.ErrEmptySecret}
 		h := NewHandler(&useCase)
@@ -202,7 +202,7 @@ func TestCreate(t *testing.T) {
 
 	})
 
-	t.Run("should return 400 and a message error when balance informed is less than zero", func(t *testing.T) {
+	t.Run("should return 400 and an error when balance informed is less than zero", func(t *testing.T) {
 
 		useCase := accounts.UseCaseMock{Error: entities.ErrNegativeBalance}
 		h := NewHandler(&useCase)

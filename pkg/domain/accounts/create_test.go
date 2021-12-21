@@ -7,7 +7,7 @@ import (
 	"github.com/daniel1sender/Desafio-API/pkg/domain/entities"
 	"github.com/daniel1sender/Desafio-API/pkg/gateways/store/accounts"
 )
-
+                                                                                
 func TestAccountUseCase_Create(t *testing.T) {
 	t.Run("should successfully create an account and return it", func(t *testing.T) {
 
@@ -18,19 +18,33 @@ func TestAccountUseCase_Create(t *testing.T) {
 		secret := "123"
 		balance := 10
 
-		createdAccount, err := accountUsecase.Create(name, cpf, secret, balance)
+		account := entities.Account{Name: name, CPF: cpf, Secret: secret, Balance: balance}
 
-		if err != nil {
-			t.Errorf("expected no error but got '%s'", err)
-		}
+		createdAccount, err := accountUsecase.Create(account.Name, account.CPF, account.Secret, account.Balance)
 
 		if createdAccount == (entities.Account{}) {
 			t.Errorf("expected an account but got %+v", createdAccount)
 		}
 
+		if createdAccount.Name != account.Name {
+			t.Errorf("expected '%s' but got '%s'", account.Name, createdAccount.Name)
+		}
+
+		if createdAccount.CPF != account.CPF {
+			t.Errorf("expected '%s' but got '%s'", account.CPF, createdAccount.CPF)
+		}
+
+		if createdAccount.Balance != account.Balance {
+			t.Errorf("expected '%d' but got '%d'", account.Balance, createdAccount.Balance)
+		}
+
+		if err != nil {
+			t.Errorf("expected no error but got '%s'", err)
+		}
+
 	})
 
-	t.Run("should return error when trying to create account with already created cpf account", func(t *testing.T) {
+	t.Run("should return an empty account and an error when trying to create account with already created cpf account", func(t *testing.T) {
 
 		storage := accounts.NewStorage()
 		accountUsecase := NewUseCase(storage)
@@ -62,3 +76,4 @@ func TestAccountUseCase_Create(t *testing.T) {
 
 	})
 }
+                                                                                                                                                                      

@@ -26,7 +26,7 @@ func TestNewTransfer(t *testing.T) {
 		}
 
 		if transfer.AccountDestinationID != destinationID {
-			t.Errorf("expected originId '%s' but got '%s'", destinationID, transfer.AccountDestinationID)
+			t.Errorf("expected detinationId '%s' but got '%s'", destinationID, transfer.AccountDestinationID)
 		}
 
 		if transfer.CreatedAt.IsZero() == true {
@@ -35,7 +35,7 @@ func TestNewTransfer(t *testing.T) {
 
 	})
 
-	t.Run("should return a empty transfer when amount is less or equal zero", func(t *testing.T) {
+	t.Run("should return an empty transfer and an error when amount is less or equal zero", func(t *testing.T) {
 
 		amount := 0
 		originID := "1"
@@ -52,7 +52,7 @@ func TestNewTransfer(t *testing.T) {
 
 	})
 
-	t.Run("should return a empty transfer when transfer is to the same account", func(t *testing.T) {
+	t.Run("should return an empty transfer and an error when transfer is to the same account", func(t *testing.T) {
 
 		amount := 10
 		originID := "1"
@@ -64,7 +64,7 @@ func TestNewTransfer(t *testing.T) {
 		}
 
 		if transfer != (Transfer{}) {
-			t.Errorf("expected blank transfer but got '%+v'", transfer)
+			t.Errorf("expected an empty transfer but got '%+v'", transfer)
 		}
 
 	})

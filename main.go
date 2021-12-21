@@ -16,13 +16,13 @@ import (
 
 func main() {
 
-	transferStorage := transfers_storage.NewStorage()
-	transferUseCase := transfers_usecase.NewUseCase(transferStorage)
-	transferHandler := transfers_handler.NewHandler(transferUseCase)
-
 	accountStorage := accounts_storage.NewStorage()
 	accountUseCase := accounts_usecase.NewUseCase(accountStorage)
 	accountHandler := accounts_handler.NewHandler(accountUseCase)
+
+	transferStorage := transfers_storage.NewStorage()
+	transferUseCase := transfers_usecase.NewUseCase(transferStorage, accountStorage)
+	transferHandler := transfers_handler.NewHandler(transferUseCase)
 
 	r := mux.NewRouter()
 	r.HandleFunc("/accounts", accountHandler.Create).Methods(http.MethodPost)

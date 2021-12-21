@@ -34,13 +34,9 @@ func TestNewAccount(t *testing.T) {
 			t.Errorf("expected time different from zero time")
 		}
 
-		if account.Secret == secret {
-			t.Error("expected encrypted secret")
-		}
-
 	})
 
-	t.Run("should return a empty account and a error message when name is empty", func(t *testing.T) {
+	t.Run("should return an empty account and an error when name is empty", func(t *testing.T) {
 
 		name := ""
 		cpf := "11111111030"
@@ -59,7 +55,7 @@ func TestNewAccount(t *testing.T) {
 
 	})
 
-	t.Run("should return a empty account and a error message when cpf don't have 11 digits", func(t *testing.T) {
+	t.Run("should return an empty account and an error when cpf don't have 11 digits", func(t *testing.T) {
 
 		name := "John Doe"
 		cpf := "1111111030"
@@ -78,7 +74,7 @@ func TestNewAccount(t *testing.T) {
 
 	})
 
-	t.Run("should return a blank account and a error message when secret informed is empty", func(t *testing.T) {
+	t.Run("should return an empty account and an error when secret informed is empty", func(t *testing.T) {
 
 		name := "John Doe"
 		cpf := "11111111030"
@@ -97,7 +93,7 @@ func TestNewAccount(t *testing.T) {
 
 	})
 
-	t.Run("should return a empty account and a error message when balance is less than zero", func(t *testing.T) {
+	t.Run("should return an empty account and an error when balance is less than zero", func(t *testing.T) {
 
 		name := "John Doe"
 		cpf := "11111111030"

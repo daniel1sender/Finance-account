@@ -11,7 +11,7 @@ import (
 	"github.com/daniel1sender/Desafio-API/pkg/gateways/store/accounts"
 )
 
-func TestGetBalanceByID(t *testing.T) {
+func TestHandlerGetBalanceByID(t *testing.T) {
 	t.Run("should return 200 and the account balance", func(t *testing.T) {
 
 		expectedBalance := 20
@@ -40,7 +40,7 @@ func TestGetBalanceByID(t *testing.T) {
 
 	})
 
-	t.Run("should return 404 and a error message when account is not found by id", func(t *testing.T) {
+	t.Run("should return 404 and an error when account is not found by id", func(t *testing.T) {
 
 		expectedBalance := 0
 		useCase := accounts_usecase.UseCaseMock{Balance: expectedBalance,

@@ -12,7 +12,7 @@ import (
 	server_http "github.com/daniel1sender/Desafio-API/pkg/gateways/http"
 )
 
-func TestGet(t *testing.T) {
+func TestHandlerGet(t *testing.T) {
 
 	t.Run("should return 200 and the list of accounts", func(t *testing.T) {
 

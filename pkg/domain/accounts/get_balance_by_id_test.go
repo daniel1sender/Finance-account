@@ -36,7 +36,7 @@ func TestAccountUseCase_GetBalanceByID(t *testing.T) {
 
 	})
 
-	t.Run("should return a null account balance when id isn't found", func(t *testing.T) {
+	t.Run("should return a null account balance and an error when id isn't found", func(t *testing.T) {
 
 		storage := accounts.NewStorage()
 		accountUseCase := NewUseCase(storage)

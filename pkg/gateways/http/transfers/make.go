@@ -7,6 +7,7 @@ import (
 	"net/http"
 
 	"github.com/daniel1sender/Desafio-API/pkg/domain/entities"
+	"github.com/daniel1sender/Desafio-API/pkg/domain/transfers"
 	server_http "github.com/daniel1sender/Desafio-API/pkg/gateways/http"
 )
 
@@ -43,6 +44,16 @@ func (h Handler) Make(w http.ResponseWriter, r *http.Request) {
 		log.Printf("create transfer request failed: %s\n", err.Error())
 		switch {
 
+		case errors.Is(err, transfers.ErrOriginIDNotFound):
+			response := server_http.Error{Reason: err.Error()}
+			w.WriteHeader(http.StatusBadRequest)
+			json.NewEncoder(w).Encode(&response)
+
+		case errors.Is(err, transfers.ErrDestinationIDNotFound):
+			response := server_http.Error{Reason: err.Error()}
+			w.WriteHeader(http.StatusBadRequest)
+			json.NewEncoder(w).Encode(&response)
+
 		case errors.Is(err, entities.ErrAmountLessOrEqualZero):
 			response := server_http.Error{Reason: entities.ErrAmountLessOrEqualZero.Error()}
 			w.WriteHeader(http.StatusBadRequest)
@@ -53,9 +64,14 @@ func (h Handler) Make(w http.ResponseWriter, r *http.Request) {
 			w.WriteHeader(http.StatusBadRequest)
 			json.NewEncoder(w).Encode(&response)
 
+		case errors.Is(err, transfers.ErrInsufficientFunds):
+			response := server_http.Error{Reason: transfers.ErrInsufficientFunds.Error()}
+			w.WriteHeader(http.StatusBadRequest)
+			json.NewEncoder(w).Encode(&response)
+
 		default:
 			response := server_http.Error{Reason: "internal server error"}
-			w.WriteHeader(http.StatusBadRequest)
+			w.WriteHeader(http.StatusInternalServerError)
 			json.NewEncoder(w).Encode(&response)
 		}
 		return

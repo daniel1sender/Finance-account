@@ -38,7 +38,7 @@ func TestAccountUseCase_GetById(t *testing.T) {
 
 	})
 
-	t.Run("should return an empty account and a error message when account don't exist", func(t *testing.T) {
+	t.Run("should return an empty account and a error when account don't exist", func(t *testing.T) {
 
 		storage := accounts.NewStorage()
 		accountUseCase := NewUseCase(storage)
