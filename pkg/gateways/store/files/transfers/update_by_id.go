@@ -9,8 +9,8 @@ import (
 )
 
 func (tr TransferRepository) UpdateByID(transfer entities.Transfer) error {
-	tr.users[transfer.ID] = entities.Transfer{ID: transfer.ID, AccountOriginID: transfer.AccountOriginID, AccountDestinationID: transfer.AccountDestinationID}
-	keepTransfer, err := json.MarshalIndent(tr.users, "", " ")
+	tr.transfers[transfer.ID] = entities.Transfer{ID: transfer.ID, AccountOriginID: transfer.AccountOriginID, AccountDestinationID: transfer.AccountDestinationID}
+	keepTransfer, err := json.MarshalIndent(tr.transfers, "", " ")
 	if err != nil {
 		return fmt.Errorf("error decoding account '%v'", err)
 	}

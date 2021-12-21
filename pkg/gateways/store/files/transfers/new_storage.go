@@ -12,7 +12,7 @@ import (
 
 type TransferRepository struct {
 	storage *os.File
-	users   map[string]entities.Transfer
+	transfers   map[string]entities.Transfer
 }
 
 func NewStorage() TransferRepository {
@@ -31,6 +31,6 @@ func NewStorage() TransferRepository {
 	}
 	return TransferRepository{
 		storage: openFile,
-		users:   trasnferMap,
+		transfers:   trasnferMap,
 	}
 }
