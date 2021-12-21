@@ -3,7 +3,7 @@ package transfers
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"os"
 
 	"github.com/daniel1sender/Desafio-API/pkg/domain/entities"
 )
@@ -14,6 +14,6 @@ func (tr TransferRepository) UpdateByID(transfer entities.Transfer) error {
 	if err != nil {
 		return fmt.Errorf("error decoding account '%v'", err)
 	}
-	_ = ioutil.WriteFile("Transfer_Respository.json", keepTransfer, 0644)
+	_ = os.WriteFile(tr.storage.Name(), keepTransfer, 0644)
 	return nil
 }
