@@ -3,7 +3,6 @@ package transfers
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"log"
 	"os"
 
@@ -11,17 +10,18 @@ import (
 )
 
 type TransferRepository struct {
-	storage *os.File
-	transfers   map[string]entities.Transfer
+	storage   *os.File
+	transfers map[string]entities.Transfer
 }
 
 func NewStorage() TransferRepository {
-	openFile, err := os.OpenFile("Transfer_Respository.json", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
+	fileName := "Transfer_Respository.json"
+	openFile, err := os.OpenFile(fileName, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
 	if err != nil {
 		log.Fatal(err)
 	}
 	trasnferMap := make(map[string]entities.Transfer)
-	readFile, err := ioutil.ReadAll(openFile)
+	readFile, err := os.ReadFile(fileName)
 	if err != nil {
 		return TransferRepository{}
 	}
@@ -30,7 +30,7 @@ func NewStorage() TransferRepository {
 		fmt.Println(err)
 	}
 	return TransferRepository{
-		storage: openFile,
-		transfers:   trasnferMap,
+		storage:   openFile,
+		transfers: trasnferMap,
 	}
 }
