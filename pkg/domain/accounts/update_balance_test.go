@@ -10,7 +10,7 @@ import (
 
 func TestAccountUseCase_UpdateBalance(t *testing.T) {
 
-	t.Run("should return nil when account was updated", func(t *testing.T) {
+	t.Run("should return an account and null error when account was updated", func(t *testing.T) {
 
 		storage := accounts.NewStorage()
 		accountUseCase := NewUseCase(storage)
@@ -34,7 +34,7 @@ func TestAccountUseCase_UpdateBalance(t *testing.T) {
 
 	})
 
-	t.Run("should return an error massage when account don't exists", func(t *testing.T) {
+	t.Run("should return an empty account an error when account don't exists", func(t *testing.T) {
 
 		storage := accounts.NewStorage()
 		accountUseCase := NewUseCase(storage)
@@ -48,7 +48,7 @@ func TestAccountUseCase_UpdateBalance(t *testing.T) {
 
 	})
 
-	t.Run("should return an error message when balance account is less than zero", func(t *testing.T) {
+	t.Run("should return an empty account and an error when balance account is less than zero", func(t *testing.T) {
 
 		storage := accounts.NewStorage()
 		accountUseCase := NewUseCase(storage)

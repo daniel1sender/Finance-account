@@ -59,7 +59,7 @@ func TestHandlerMake(t *testing.T) {
 
 	})
 
-	t.Run("should return 400 and an error message when it failed to decode the request", func(t *testing.T) {
+	t.Run("should return 400 and an error when it failed to decode the request", func(t *testing.T) {
 
 		useCase := transfers.UseCaseMock{}
 		h := NewHandler(&useCase)
@@ -86,7 +86,7 @@ func TestHandlerMake(t *testing.T) {
 
 	})
 
-	t.Run("should return 400 and an error message when amount is less or equal zero", func(t *testing.T) {
+	t.Run("should return 400 and an error when amount is less or equal zero", func(t *testing.T) {
 
 		transfer := entities.Transfer{AccountOriginID: "1", AccountDestinationID: "0", Amount: -10}
 		useCase := transfers.UseCaseMock{Transfer: transfer, Error: entities.ErrAmountLessOrEqualZero}
@@ -115,7 +115,7 @@ func TestHandlerMake(t *testing.T) {
 
 	})
 
-	t.Run("should return 400 and an error message when the transfer is to the same account", func(t *testing.T) {
+	t.Run("should return 400 and an error when the transfer is to the same account", func(t *testing.T) {
 
 		transfer := entities.Transfer{AccountOriginID: "0", AccountDestinationID: "0", Amount: 10}
 		useCase := transfers.UseCaseMock{Transfer: transfer, Error: entities.ErrSameAccountTransfer}
@@ -143,7 +143,7 @@ func TestHandlerMake(t *testing.T) {
 		}
 	})
 
-	t.Run("should return 400 and an error message when transfer origin id is not found", func(t *testing.T) {
+	t.Run("should return 400 and an error when transfer origin id is not found", func(t *testing.T) {
 
 		transfer := entities.Transfer{AccountOriginID: "0", AccountDestinationID: "1", Amount: 10}
 		useCase := transfers.UseCaseMock{Transfer: transfer, Error: transfers.ErrOriginIDNotFound}
@@ -171,7 +171,7 @@ func TestHandlerMake(t *testing.T) {
 		}
 	})
 
-	t.Run("should return 400 and an error message when transfer destination id is not found", func(t *testing.T) {
+	t.Run("should return 400 and an error when transfer destination id is not found", func(t *testing.T) {
 
 		transfer := entities.Transfer{AccountOriginID: "0", AccountDestinationID: "1", Amount: 10}
 		useCase := transfers.UseCaseMock{Transfer: transfer, Error: transfers.ErrDestinationIDNotFound}
@@ -199,7 +199,7 @@ func TestHandlerMake(t *testing.T) {
 		}
 	})
 
-	t.Run("should return 400 and error message when origin account doesn't have sufficient funds", func(t *testing.T) {
+	t.Run("should return 400 and error when origin account doesn't have sufficient funds", func(t *testing.T) {
 
 		transfer := entities.Transfer{AccountOriginID: "0", AccountDestinationID: "1", Amount: 10}
 		useCase := transfers.UseCaseMock{Transfer: transfer, Error: transfers.ErrInsufficientFunds}

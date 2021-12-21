@@ -40,7 +40,7 @@ func TestHandlerGetBalanceByID(t *testing.T) {
 
 	})
 
-	t.Run("should return 404 and an error message when account is not found by id", func(t *testing.T) {
+	t.Run("should return 404 and an error when account is not found by id", func(t *testing.T) {
 
 		expectedBalance := 0
 		useCase := accounts_usecase.UseCaseMock{Balance: expectedBalance,

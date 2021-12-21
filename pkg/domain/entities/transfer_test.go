@@ -35,7 +35,7 @@ func TestNewTransfer(t *testing.T) {
 
 	})
 
-	t.Run("should return an empty transfer when amount is less or equal zero", func(t *testing.T) {
+	t.Run("should return an empty transfer and an error when amount is less or equal zero", func(t *testing.T) {
 
 		amount := 0
 		originID := "1"
@@ -52,7 +52,7 @@ func TestNewTransfer(t *testing.T) {
 
 	})
 
-	t.Run("should return an empty transfer when transfer is to the same account", func(t *testing.T) {
+	t.Run("should return an empty transfer and an error when transfer is to the same account", func(t *testing.T) {
 
 		amount := 10
 		originID := "1"

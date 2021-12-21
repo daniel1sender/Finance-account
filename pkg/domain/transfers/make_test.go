@@ -52,7 +52,7 @@ func TestAccountUseCase_Make(t *testing.T) {
 
 	})
 
-	t.Run("should return an empty transfer and a error message when amount is less or equal zero", func(*testing.T) {
+	t.Run("should return an empty transfer and a error when amount is less or equal zero", func(*testing.T) {
 
 		transferStorage := transfers_storage.NewStorage()
 		accountStorage := accounts_storage.NewStorage()
@@ -77,7 +77,7 @@ func TestAccountUseCase_Make(t *testing.T) {
 
 	})
 
-	t.Run("should return an empty transfer and an error message when the origin account doesn't have sufficient funds", func(t *testing.T) {
+	t.Run("should return an empty transfer and an error when the origin account doesn't have sufficient funds", func(t *testing.T) {
 		transferStorage := transfers_storage.NewStorage()
 		accountStorage := accounts_storage.NewStorage()
 		transferUseCase := NewUseCase(transferStorage, accountStorage)
@@ -100,7 +100,7 @@ func TestAccountUseCase_Make(t *testing.T) {
 
 	})
 
-	t.Run("should return an empty transfer and an error message when the transfer origin account id is not found", func(t *testing.T) {
+	t.Run("should return an empty transfer and an error when the transfer origin account id is not found", func(t *testing.T) {
 		transferStorage := transfers_storage.NewStorage()
 		accountStorage := accounts_storage.NewStorage()
 		transferUseCase := NewUseCase(transferStorage, accountStorage)
@@ -119,7 +119,7 @@ func TestAccountUseCase_Make(t *testing.T) {
 		}
 	})
 
-	t.Run("should return an empty transfer and an error message when the transfer destination account id is not found", func(t *testing.T) {
+	t.Run("should return an empty transfer and an error when the transfer destination account id is not found", func(t *testing.T) {
 
 		transferStorage := transfers_storage.NewStorage()
 		accountStorage := accounts_storage.NewStorage()

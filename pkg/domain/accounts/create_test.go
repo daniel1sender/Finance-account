@@ -44,7 +44,7 @@ func TestAccountUseCase_Create(t *testing.T) {
 
 	})
 
-	t.Run("should return error when trying to create account with already created cpf account", func(t *testing.T) {
+	t.Run("should return an empty account and an error when trying to create account with already created cpf account", func(t *testing.T) {
 
 		storage := accounts.NewStorage()
 		accountUsecase := NewUseCase(storage)
