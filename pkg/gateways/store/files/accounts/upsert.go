@@ -3,7 +3,7 @@ package accounts
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"os"
 
 	"github.com/daniel1sender/Desafio-API/pkg/domain/entities"
 )
@@ -14,6 +14,6 @@ func (ar accountRepository) Upsert(account entities.Account) error {
 	if err != nil {
 		return fmt.Errorf("error decoding account '%v'", err)
 	}
-	_ = ioutil.WriteFile("Account_Repository.json", keepAccount, 0644)
+	_ = os.WriteFile("Account_Repository.json", keepAccount, 0644)
 	return nil
 }
