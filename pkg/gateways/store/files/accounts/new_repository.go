@@ -27,7 +27,7 @@ func NewStorage() accountRepository {
 	}
 	err = json.Unmarshal(readFile, &accountMap)
 	if err != nil {
-		log.Fatalf("error while decoding file: %v", err)
+		log.Printf("error while decoding file: %v", err)
 	}
 	return accountRepository{
 		users: accountMap,

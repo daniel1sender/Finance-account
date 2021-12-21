@@ -15,7 +15,7 @@ func (ar accountRepository) Upsert(account entities.Account) error {
 		return fmt.Errorf("error decoding account %v", err)
 	}
 	err = os.WriteFile("Account_Repository.json", keepAccount, 0644)
-	if err != nil{
+	if err != nil {
 		return fmt.Errorf("error while writing in file: %v", err)
 	}
 	return nil
