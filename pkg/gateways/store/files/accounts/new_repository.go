@@ -2,7 +2,6 @@ package accounts
 
 import (
 	"encoding/json"
-	"fmt"
 	"log"
 	"os"
 
@@ -23,11 +22,12 @@ func NewStorage() accountRepository {
 	}
 	readFile, err := os.ReadFile("Account_Repository.json")
 	if err != nil {
+		log.Fatalf("error while reading file: %v", err)
 		return accountRepository{}
 	}
 	err = json.Unmarshal(readFile, &accountMap)
 	if err != nil {
-		fmt.Println(err)
+		log.Fatalf("error while decoding file: %v", err)
 	}
 	return accountRepository{
 		users: accountMap,
