@@ -3,7 +3,6 @@ package transfers
 import (
 	"encoding/json"
 	"fmt"
-	"os"
 
 	"github.com/daniel1sender/Desafio-API/pkg/domain/entities"
 )
@@ -14,7 +13,7 @@ func (tr TransferRepository) UpdateByID(transfer entities.Transfer) error {
 	if err != nil {
 		return fmt.Errorf("error decoding account: %v", err)
 	}
-	err = os.WriteFile(tr.storage.Name(), keepTransfer, 0644)
+	tr.storage.Write(keepTransfer)
 	if err != nil {
 		return fmt.Errorf("error while writing in file: %v", err)
 	}
