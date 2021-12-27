@@ -14,19 +14,19 @@ type TransferRepository struct {
 }
 
 func NewStorage(storage *os.File) TransferRepository {
-
-	trasnferMap := make(map[string]entities.Transfer)
+	
+	transferMap := make(map[string]entities.Transfer)
 	readFile, err := os.ReadFile(storage.Name())
 	if err != nil {
-		log.Fatalf("error while reading file: %v", readFile)
+		log.Printf("error while reading file: %v", readFile)
 		return TransferRepository{}
 	}
-	err = json.Unmarshal(readFile, &trasnferMap)
+	err = json.Unmarshal(readFile, &transferMap)
 	if err != nil {
 		log.Printf("error while deconding file: %v", err)
 	}
 	return TransferRepository{
 		storage:   storage,
-		transfers: trasnferMap,
+		transfers: transferMap,
 	}
 }

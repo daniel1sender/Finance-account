@@ -3,7 +3,6 @@ package accounts
 import (
 	"encoding/json"
 	"fmt"
-	"os"
 
 	"github.com/daniel1sender/Desafio-API/pkg/domain/entities"
 )
@@ -14,7 +13,8 @@ func (ar accountRepository) Upsert(account entities.Account) error {
 	if err != nil {
 		return fmt.Errorf("error decoding account %v", err)
 	}
-	err = os.WriteFile("Account_Repository.json", keepAccount, 0644)
+
+	_, err = ar.storage.Write(keepAccount)
 	if err != nil {
 		return fmt.Errorf("error while writing in file: %v", err)
 	}
