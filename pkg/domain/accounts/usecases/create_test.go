@@ -2,6 +2,7 @@ package usecases
 
 import (
 	"errors"
+	"log"
 	"os"
 	"testing"
 
@@ -12,9 +13,15 @@ import (
 
 func TestAccountUseCase_Create(t *testing.T) {
 
+ 	accountFile := "Account_Repository.json"
+	openAccountFile, err := os.OpenFile(accountFile, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
+	if err != nil {
+		log.Fatalf("error to open file: %v", err)
+	} 
+
 	t.Run("should successfully create an account and return it", func(t *testing.T) {
-		_ = os.Remove("Account_Repository.json")
-		storageFiles := accounts_repository.NewStorage()
+		//_ = os.Remove("Account_Repository.json")
+		storageFiles := accounts_repository.NewStorage(openAccountFile)
 		accountUsecase := NewUseCase(storageFiles)
 
 		name := "John Doe"
@@ -35,8 +42,8 @@ func TestAccountUseCase_Create(t *testing.T) {
 	})
 
 	t.Run("should return error when trying to create account with already created cpf account", func(t *testing.T) {
-		_ = os.Remove("Account_Repository.json")
-		storageFiles := accounts_repository.NewStorage()
+		//_ = os.Remove("Account_Repository.json")
+		storageFiles := accounts_repository.NewStorage(openAccountFile)
 		accountUsecase := NewUseCase(storageFiles)
 
 		name := "John Doe"

@@ -2,6 +2,7 @@ package usecases
 
 import (
 	"errors"
+	"log"
 	"os"
 	"testing"
 
@@ -11,10 +12,14 @@ import (
 )
 
 func TestAccountUseCase_UpdateBalance(t *testing.T) {
-
+	accountFile := "Account_Repository.json"
+	openAccountFile, err := os.OpenFile(accountFile, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
+	if err != nil {
+		log.Fatalf("error to open file: %v", err)
+	}
 	t.Run("should return nil when account was updated", func(t *testing.T) {
 
-		storageFiles := accounts_repository.NewStorage()
+		storageFiles := accounts_repository.NewStorage(openAccountFile)
 		accountUseCase := NewUseCase(storageFiles)
 		name := "John Doe"
 		cpf := "11111111030"
@@ -38,7 +43,7 @@ func TestAccountUseCase_UpdateBalance(t *testing.T) {
 
 	t.Run("should return an error massage when account don't exists", func(t *testing.T) {
 		_ = os.Remove("Account_Repository.json")
-		storageFiles := accounts_repository.NewStorage()
+		storageFiles := accounts_repository.NewStorage(openAccountFile)
 		accountUseCase := NewUseCase(storageFiles)
 
 		err := accountUseCase.UpdateBalance("1", 20.0)
@@ -51,7 +56,7 @@ func TestAccountUseCase_UpdateBalance(t *testing.T) {
 
 	t.Run("should return an error message when balance account is less than zero", func(t *testing.T) {
 
-		storageFiles := accounts_repository.NewStorage()
+		storageFiles := accounts_repository.NewStorage(openAccountFile)
 		accountUseCase := NewUseCase(storageFiles)
 
 		name := "John Doe"

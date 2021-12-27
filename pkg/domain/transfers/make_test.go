@@ -2,6 +2,8 @@ package transfers
 
 import (
 	"errors"
+	"log"
+	"os"
 	"testing"
 
 	"github.com/daniel1sender/Desafio-API/pkg/domain/entities"
@@ -10,9 +12,15 @@ import (
 
 func TestAccountUseCase_Make(t *testing.T) {
 
+	transferFile := "Transfer_Respository.json"
+	openTransferFile, err := os.OpenFile(transferFile, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
+	if err != nil {
+		log.Fatalf("error to open file: %v", err)
+	}
+
 	t.Run("should return a transfer", func(t *testing.T) {
 
-		storage := transfers_repository.NewStorage()
+		storage := transfers_repository.NewStorage(openTransferFile)
 		transferUsecase := NewUseCase(storage)
 		amount := 10
 		originID := "1"
@@ -32,7 +40,7 @@ func TestAccountUseCase_Make(t *testing.T) {
 
 	t.Run("should return a blank transfer when the transfer isn't created", func(*testing.T) {
 
-		storage := transfers_repository.NewStorage()
+		storage := transfers_repository.NewStorage(openTransferFile)
 		transferUsecase := NewUseCase(storage)
 		amount := 0
 		originID := "1"

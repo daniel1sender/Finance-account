@@ -1,6 +1,7 @@
 package usecases
 
 import (
+	"log"
 	"os"
 	"testing"
 
@@ -9,10 +10,14 @@ import (
 )
 
 func TestAccountUseCase_Get(t *testing.T) {
-
+	accountFile := "Account_Repository.json"
+	openAccountFile, err := os.OpenFile(accountFile, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
+	if err != nil {
+		log.Fatalf("error to open file: %v", err)
+	}
 	t.Run("should return a full list of accounts", func(t *testing.T) {
 
-		storageFiles := accounts_repository.NewStorage()
+		storageFiles := accounts_repository.NewStorage(openAccountFile)
 		accountUsecase := NewUseCase(storageFiles)
 		name := "John Doe"
 		cpf := "11111111030"
@@ -36,7 +41,7 @@ func TestAccountUseCase_Get(t *testing.T) {
 
 	t.Run("should return an empty list", func(t *testing.T) {
 		_ = os.Remove("Account_Repository.json")
-		storageFiles := accounts_repository.NewStorage()
+		storageFiles := accounts_repository.NewStorage(openAccountFile)
 		accountUsecase := NewUseCase(storageFiles)
 
 		getAccounts := accountUsecase.GetAll()

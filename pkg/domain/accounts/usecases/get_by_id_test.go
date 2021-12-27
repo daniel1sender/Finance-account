@@ -2,6 +2,7 @@ package usecases
 
 import (
 	"errors"
+	"log"
 	"os"
 	"testing"
 
@@ -11,10 +12,15 @@ import (
 )
 
 func TestAccountUseCase_GetById(t *testing.T) {
+	accountFile := "Account_Repository.json"
+	openAccountFile, err := os.OpenFile(accountFile, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
+	if err != nil {
+		log.Fatalf("error to open file: %v", err)
+	}
 
 	t.Run("should return an account when the searched account is found", func(t *testing.T) {
 
-		storageFiles := accounts_repository.NewStorage()
+		storageFiles := accounts_repository.NewStorage(openAccountFile)
 		accountUseCase := NewUseCase(storageFiles)
 
 		name := "John Doe"
@@ -43,7 +49,7 @@ func TestAccountUseCase_GetById(t *testing.T) {
 	t.Run("should return an empty account and a error message when account don't exist", func(t *testing.T) {
 
 		_ = os.Remove("Account_Repository.json")
-		storageFiles := accounts_repository.NewStorage()
+		storageFiles := accounts_repository.NewStorage(openAccountFile)
 		accountUseCase := NewUseCase(storageFiles)
 
 		getAccountByID, err := accountUseCase.GetByID("account.ID")
