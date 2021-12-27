@@ -42,7 +42,6 @@ func TestAccountUseCase_UpdateBalance(t *testing.T) {
 	})
 
 	t.Run("should return an error massage when account don't exists", func(t *testing.T) {
-		_ = os.Remove("Account_Repository.json")
 		storageFiles := accounts_repository.NewStorage(openAccountFile)
 		accountUseCase := NewUseCase(storageFiles)
 
