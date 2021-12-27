@@ -26,6 +26,7 @@ func NewStorage(storage *os.File) accountRepository {
 		log.Printf("error while decoding file: %v", err)
 	}
 	return accountRepository{
-		users: accountMap,
+		storage: storage,
+		users:   accountMap,
 	}
 }
