@@ -20,7 +20,6 @@ func TestAccountUseCase_Create(t *testing.T) {
 	}
 
 	t.Run("should successfully create an account and return it", func(t *testing.T) {
-		//_ = os.Remove("Account_Repository.json")
 		storageFiles := accounts_repository.NewStorage(openAccountFile)
 		accountUsecase := NewUseCase(storageFiles)
 
@@ -42,12 +41,11 @@ func TestAccountUseCase_Create(t *testing.T) {
 	})
 
 	t.Run("should return error when trying to create account with already created cpf account", func(t *testing.T) {
-		//_ = os.Remove("Account_Repository.json")
 		storageFiles := accounts_repository.NewStorage(openAccountFile)
 		accountUsecase := NewUseCase(storageFiles)
 
 		name := "John Doe"
-		cpf := "11111111030"
+		cpf := "11111111031"
 		secret := "123"
 		balance := 10
 
