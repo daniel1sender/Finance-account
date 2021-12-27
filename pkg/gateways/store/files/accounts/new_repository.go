@@ -9,20 +9,16 @@ import (
 )
 
 type accountRepository struct {
-	users map[string]entities.Account
+	storage *os.File
+	users   map[string]entities.Account
 }
 
-func NewStorage() accountRepository {
+func NewStorage(storage *os.File) accountRepository {
 	accountMap := make(map[string]entities.Account)
-	if _, err := os.Stat("Account_Repository.json"); err != nil {
-		_, err := os.OpenFile("Account_Repository.json", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
-		if err != nil {
-			log.Fatalf("error to open file: %v", err)
-		}
-	}
-	readFile, err := os.ReadFile("Account_Repository.json")
+
+	readFile, err := os.ReadFile(storage.Name())
 	if err != nil {
-		log.Fatalf("error while reading file: %v", err)
+		log.Printf("error while reading file: %v", err)
 		return accountRepository{}
 	}
 	err = json.Unmarshal(readFile, &accountMap)

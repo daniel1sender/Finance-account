@@ -17,17 +17,23 @@ import (
 
 func main() {
 
-	fileName := "Transfer_Respository.json"
-	openFile, err := os.OpenFile(fileName, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
+	transferFile := "Transfer_Respository.json"
+	openTransferFile, err := os.OpenFile(transferFile, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
 	if err != nil {
 		log.Fatalf("error to open file: %v", err)
 	}
 
-	transferRepository := transfers_repository.NewStorage(openFile)
+	transferRepository := transfers_repository.NewStorage(openTransferFile)
 	transferUseCase := transfers_usecase.NewUseCase(transferRepository)
 	transferHandler := transfers_handler.NewHandler(transferUseCase)
 
-	accountRepository := accounts_repository.NewStorage()
+	accountFile := "Account_Repository.json"
+	openAccountFile, err := os.OpenFile(accountFile, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
+	if err != nil {
+		log.Fatalf("error to open file: %v", err)
+	}
+
+	accountRepository := accounts_repository.NewStorage(openAccountFile)
 	accountUseCase := usecases.NewUseCase(accountRepository)
 	accountHandler := accounts_handler.NewHandler(accountUseCase)
 
