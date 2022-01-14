@@ -11,7 +11,7 @@ func (ar AccountRepository) GetAll() []entities.Account {
 	var users []entities.Account
 	var user entities.Account
 
-	rows, err := ar.Query(context.Background(), "SELECT ID, NAME, CPF, SECRET, BALANCE, CREATEDAT FROM ACCOUNTS")
+	rows, err := ar.Query(context.Background(), "SELECT id, name, cpf, secret, balance, created_at FROM accounts")
 	if err != nil {
 		log.Printf("error to read table rows: %v", err)
 	}
