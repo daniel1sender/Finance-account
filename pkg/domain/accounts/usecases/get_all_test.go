@@ -1,19 +1,18 @@
 package usecases
 
 import (
-	"os"
+	"context"
 	"testing"
 
 	"github.com/daniel1sender/Desafio-API/pkg/domain/entities"
-	accounts_repository "github.com/daniel1sender/Desafio-API/pkg/gateways/store/files/accounts"
+	accounts_repository "github.com/daniel1sender/Desafio-API/pkg/gateways/store/postgres/accounts"
 )
 
-func TestAccountUseCase_Get(t *testing.T) {
+func TestAccountUseCase_GetAll(t *testing.T) {
 
 	t.Run("should return a full list of accounts", func(t *testing.T) {
-
-		storageFiles := accounts_repository.NewStorage()
-		accountUsecase := NewUseCase(storageFiles)
+		repository := accounts_repository.NewStorage(Db)
+		accountUsecase := NewUseCase(repository)
 		name := "John Doe"
 		cpf := "11111111030"
 		secret := "123"
@@ -24,7 +23,7 @@ func TestAccountUseCase_Get(t *testing.T) {
 			t.Errorf("expected no error to create a new account but got '%s'", err)
 		}
 
-		storageFiles.Upsert(account)
+		repository.Upsert(account)
 
 		getAccounts := accountUsecase.GetAll()
 
@@ -35,9 +34,9 @@ func TestAccountUseCase_Get(t *testing.T) {
 	})
 
 	t.Run("should return an empty list", func(t *testing.T) {
-		_ = os.Remove("Account_Repository.json")
-		storageFiles := accounts_repository.NewStorage()
-		accountUsecase := NewUseCase(storageFiles)
+		repository := accounts_repository.NewStorage(Db)
+		accountUsecase := NewUseCase(repository)
+		repository.Exec(context.Background(), "DELETE FROM accounts")
 
 		getAccounts := accountUsecase.GetAll()
 
