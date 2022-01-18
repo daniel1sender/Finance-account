@@ -19,7 +19,7 @@ func (au AccountUseCase) Create(name, cpf, secret string, balance int) (entities
 
 	err = au.storage.Upsert(account)
 	if err != nil {
-		return entities.Account{}, fmt.Errorf("error while creating an account: %w", err)
+		return entities.Account{}, fmt.Errorf("error while inserting an account: %w", err)
 	}
 
 	return account, nil
