@@ -1,21 +1,21 @@
 package usecases
 
 import (
+	"context"
 	"errors"
-	"os"
 	"testing"
 
 	accounts_usecase "github.com/daniel1sender/Desafio-API/pkg/domain/accounts"
 	"github.com/daniel1sender/Desafio-API/pkg/domain/entities"
-	accounts_repository "github.com/daniel1sender/Desafio-API/pkg/gateways/store/files/accounts"
+	accounts_repository "github.com/daniel1sender/Desafio-API/pkg/gateways/store/postgres/accounts"
 )
 
 func TestAccountUseCase_GetById(t *testing.T) {
 
 	t.Run("should return an account when the searched account is found", func(t *testing.T) {
 
-		storageFiles := accounts_repository.NewStorage()
-		accountUseCase := NewUseCase(storageFiles)
+		repository := accounts_repository.NewStorage(Db)
+		accountUseCase := NewUseCase(repository)
 
 		name := "John Doe"
 		cpf := "11111111030"
@@ -27,7 +27,7 @@ func TestAccountUseCase_GetById(t *testing.T) {
 			t.Errorf("expected no error to create a new account but got '%s'", err)
 		}
 
-		storageFiles.Upsert(account)
+		repository.Upsert(account)
 		getAccountByID, err := accountUseCase.GetByID(account.ID)
 
 		if getAccountByID == (entities.Account{}) {
@@ -42,11 +42,21 @@ func TestAccountUseCase_GetById(t *testing.T) {
 
 	t.Run("should return an empty account and a error when account don't exist", func(t *testing.T) {
 
-		_ = os.Remove("Account_Repository.json")
-		storageFiles := accounts_repository.NewStorage()
-		accountUseCase := NewUseCase(storageFiles)
+		storagepostgres := accounts_repository.NewStorage(Db)
+		accountUseCase := NewUseCase(storagepostgres)
 
-		getAccountByID, err := accountUseCase.GetByID("account.ID")
+		name := "John Doe"
+		cpf := "11111111030"
+		secret := "123"
+		balance := 10
+
+		account, err := entities.NewAccount(name, cpf, secret, balance)
+		if err != nil {
+			t.Errorf("expected no error to create a new account but got '%s'", err)
+		}
+		storagepostgres.Exec(context.Background(), "DELETE FROM accounts")
+
+		getAccountByID, err := accountUseCase.GetByID(account.ID)
 
 		if getAccountByID != (entities.Account{}) {
 			t.Errorf("expected empty account but got %+v", getAccountByID)
