@@ -2,24 +2,21 @@ package usecases
 
 import (
 	"errors"
-	"os"
 	"testing"
 
 	accounts_usecase "github.com/daniel1sender/Desafio-API/pkg/domain/accounts"
 	"github.com/daniel1sender/Desafio-API/pkg/domain/entities"
-	"github.com/daniel1sender/Desafio-API/pkg/gateways/store/files/accounts"
-	accounts_repository "github.com/daniel1sender/Desafio-API/pkg/gateways/store/files/accounts"
+	accounts_repository "github.com/daniel1sender/Desafio-API/pkg/gateways/store/postgres/accounts"
 )
 
 func TestAccountUseCase_Create(t *testing.T) {
 
 	t.Run("should successfully create an account and return it", func(t *testing.T) {
-		_ = os.Remove("Account_Repository.json")
-		storageFiles := accounts_repository.NewStorage()
-		accountUsecase := NewUseCase(storageFiles)
+		repository := accounts_repository.NewStorage(Db)
+		accountUsecase := NewUseCase(repository)
 
 		name := "John Doe"
-		cpf := "11111111030"
+		cpf := "11111111032"
 		secret := "123"
 		balance := 10
 
@@ -51,11 +48,11 @@ func TestAccountUseCase_Create(t *testing.T) {
 
 	t.Run("should return an empty account and an error when trying to create account with already created cpf account", func(t *testing.T) {
 
-		storageMemory := accounts.NewStorage()
-		accountUsecase := NewUseCase(storageMemory)
+		repository := accounts_repository.NewStorage(Db)
+		accountUsecase := NewUseCase(repository)
 
 		name := "John Doe"
-		cpf := "11111111030"
+		cpf := "12111111038"
 		secret := "123"
 		balance := 10
 
