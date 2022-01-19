@@ -1,7 +1,6 @@
 package usecases
 
 import (
-	"context"
 	"testing"
 
 	"github.com/daniel1sender/Desafio-API/pkg/domain/entities"
@@ -49,7 +48,7 @@ func TestAccountUseCase_GetBalanceByID(t *testing.T) {
 		if err != nil {
 			t.Errorf("expected no error to create a new account but got '%s'", err)
 		}
-		repository.Exec(context.Background(), "DELETE FROM accounts")
+		repository.DeleteAll()
 
 		getBalance, err := accountUsecase.GetBalanceByID(account.ID)
 
