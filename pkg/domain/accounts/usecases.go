@@ -9,6 +9,7 @@ import (
 var (
 	ErrExistingCPF = errors.New("cpf informed alredy exists")
 	ErrIDNotFound  = errors.New("account id isn't found")
+	ErrEmptyList   = errors.New("empty list of accounts")
 )
 
 type UseCase interface {
@@ -16,13 +17,14 @@ type UseCase interface {
 	Create(name, cpf, secret string, balance int) (entities.Account, error)
 	GetByID(id string) (entities.Account, error)
 	UpdateBalance(id string, balance int) error
-	GetAll() []entities.Account
+	GetAll() ([]entities.Account, error)
 }
 
 type Repository interface {
-	GetAll() []entities.Account
+	GetAll() ([]entities.Account, error)
 	GetBalanceByID(id string) (int, error)
 	GetByID(id string) (entities.Account, error)
 	CheckCPF(cpf string) error
 	Upsert(account entities.Account) error
+	DeleteAll() error
 }

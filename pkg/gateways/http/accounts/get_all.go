@@ -20,8 +20,8 @@ type GetResponse struct {
 
 func (h Handler) GetAll(w http.ResponseWriter, r *http.Request) {
 
-	accountsList := h.useCase.GetAll()
-	if len(accountsList) == 0 {
+	accountsList, err := h.useCase.GetAll()
+	if len(accountsList) == 0 && err != nil {
 		w.Header().Add("Content-Type", server_http.JSONContentType)
 		w.WriteHeader(http.StatusOK)
 	}

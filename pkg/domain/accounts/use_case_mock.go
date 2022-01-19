@@ -23,8 +23,8 @@ func (m *UseCaseMock) GetByID(id string) (entities.Account, error) {
 	panic("not implemented")
 }
 
-func (m *UseCaseMock) GetAll() []entities.Account {
-	return m.List
+func (m *UseCaseMock) GetAll() ([]entities.Account, error) {
+	return m.List, m.Error
 }
 
 func (m *UseCaseMock) UpdateBalance(id string, balance int) error {

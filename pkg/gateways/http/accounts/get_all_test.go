@@ -57,7 +57,7 @@ func TestHandlerGet(t *testing.T) {
 
 	t.Run("should return 200 and an empty list of accounts when no account was created", func(t *testing.T) {
 
-		useCase := accounts.UseCaseMock{List: []entities.Account{}}
+		useCase := accounts.UseCaseMock{List: []entities.Account{}, Error: accounts.ErrEmptyList }
 		newRequest, _ := http.NewRequest(http.MethodGet, "/accounts", nil)
 		newResponse := httptest.NewRecorder()
 
