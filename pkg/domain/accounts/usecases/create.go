@@ -9,7 +9,7 @@ import (
 func (au AccountUseCase) Create(name, cpf, secret string, balance int) (entities.Account, error) {
 
 	if err := au.storage.CheckCPF(cpf); err != nil {
-		return entities.Account{}, fmt.Errorf("error while creating an account: %w", err)
+		return entities.Account{}, fmt.Errorf("error while checking if the CPF exists: %w", err)
 	}
 
 	account, err := entities.NewAccount(name, cpf, secret, balance)
