@@ -1,7 +1,6 @@
 package usecases
 
 import (
-	"context"
 	"errors"
 	"testing"
 
@@ -35,7 +34,7 @@ func TestAccountUseCase_UpdateBalance(t *testing.T) {
 		}
 
 	})
-
+	
 	t.Run("should return an empty account an error when account don't exists", func(t *testing.T) {
 
 		repository := accounts_repository.NewStorage(Db)
@@ -50,7 +49,7 @@ func TestAccountUseCase_UpdateBalance(t *testing.T) {
 		if err != nil {
 			t.Errorf("expected no error to create a new account but got '%s'", err)
 		}
-		repository.Exec(context.Background(), "DELETE FROM accounts")
+		repository.DeleteAll()
 
 		err = accountUseCase.UpdateBalance(account.ID, 20.0)
 
