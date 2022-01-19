@@ -6,7 +6,6 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/daniel1sender/Desafio-API/pkg/domain/accounts"
 	accounts_usecase "github.com/daniel1sender/Desafio-API/pkg/domain/accounts"
 	server_http "github.com/daniel1sender/Desafio-API/pkg/gateways/http"
 )
@@ -44,7 +43,7 @@ func TestHandlerGetBalanceByID(t *testing.T) {
 
 		expectedBalance := 0
 		useCase := accounts_usecase.UseCaseMock{Balance: expectedBalance,
-			Error: accounts.ErrIDNotFound}
+			Error: accounts_usecase.ErrIDNotFound}
 		h := NewHandler(&useCase)
 
 		newRequest, _ := http.NewRequest(http.MethodGet, "accounts/{id}/balance", nil)
@@ -63,8 +62,8 @@ func TestHandlerGetBalanceByID(t *testing.T) {
 			t.Errorf("expected '%s' but got '%s'", server_http.JSONContentType, newResponse.Header().Get("content-type"))
 		}
 
-		if response.Reason != accounts.ErrIDNotFound.Error() {
-			t.Errorf("expected '%s' but got '%s'", accounts.ErrIDNotFound.Error(), response.Reason)
+		if response.Reason != accounts_usecase.ErrIDNotFound.Error() {
+			t.Errorf("expected '%s' but got '%s'", accounts_usecase.ErrIDNotFound.Error(), response.Reason)
 		}
 
 	})

@@ -1,7 +1,6 @@
 package usecases
 
 import (
-	"context"
 	"errors"
 	"testing"
 
@@ -42,8 +41,8 @@ func TestAccountUseCase_GetById(t *testing.T) {
 
 	t.Run("should return an empty account and a error when account don't exist", func(t *testing.T) {
 
-		storagepostgres := accounts_repository.NewStorage(Db)
-		accountUseCase := NewUseCase(storagepostgres)
+		repository := accounts_repository.NewStorage(Db)
+		accountUseCase := NewUseCase(repository)
 
 		name := "John Doe"
 		cpf := "11111111030"
@@ -54,7 +53,7 @@ func TestAccountUseCase_GetById(t *testing.T) {
 		if err != nil {
 			t.Errorf("expected no error to create a new account but got '%s'", err)
 		}
-		storagepostgres.Exec(context.Background(), "DELETE FROM accounts")
+		repository.DeleteAll()
 
 		getAccountByID, err := accountUseCase.GetByID(account.ID)
 
