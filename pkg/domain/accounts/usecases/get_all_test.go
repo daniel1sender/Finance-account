@@ -1,9 +1,10 @@
 package usecases
 
 import (
-	"context"
+	"errors"
 	"testing"
 
+	"github.com/daniel1sender/Desafio-API/pkg/domain/accounts"
 	"github.com/daniel1sender/Desafio-API/pkg/domain/entities"
 	accounts_repository "github.com/daniel1sender/Desafio-API/pkg/gateways/store/postgres/accounts"
 )
@@ -25,7 +26,11 @@ func TestAccountUseCase_GetAll(t *testing.T) {
 
 		repository.Upsert(account)
 
-		getAccounts := accountUsecase.GetAll()
+		getAccounts, err := accountUsecase.GetAll()
+
+		if err != nil {
+			t.Errorf("expected null error but got %v", err)
+		}
 
 		if len(getAccounts) == 0 {
 			t.Error("expected a full list of accounts")
@@ -36,9 +41,13 @@ func TestAccountUseCase_GetAll(t *testing.T) {
 	t.Run("should return an empty list", func(t *testing.T) {
 		repository := accounts_repository.NewStorage(Db)
 		accountUsecase := NewUseCase(repository)
-		repository.Exec(context.Background(), "DELETE FROM accounts")
+		repository.DeleteAll()
 
-		getAccounts := accountUsecase.GetAll()
+		getAccounts, err := accountUsecase.GetAll()
+
+		if !errors.Is(err, accounts.ErrEmptyList) {
+			t.Errorf("expected %v but got %v", accounts.ErrEmptyList, err)
+		}
 
 		if len(getAccounts) != 0 {
 			t.Error("expected an empty list")
