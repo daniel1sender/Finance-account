@@ -1,26 +1,48 @@
 package main
 
 import (
+	"context"
+	"fmt"
 	"log"
 	"net/http"
+	"os"
 
 	"github.com/gorilla/mux"
+	"github.com/jackc/pgx/v4/pgxpool"
 
 	accounts_usecase "github.com/daniel1sender/Desafio-API/pkg/domain/accounts/usecases"
 	transfers_usecase "github.com/daniel1sender/Desafio-API/pkg/domain/transfers"
 	accounts_handler "github.com/daniel1sender/Desafio-API/pkg/gateways/http/accounts"
 	transfers_handler "github.com/daniel1sender/Desafio-API/pkg/gateways/http/transfers"
+	postgres "github.com/daniel1sender/Desafio-API/pkg/gateways/store/postgres"
 	"github.com/daniel1sender/Desafio-API/pkg/gateways/store/postgres/accounts"
 	"github.com/daniel1sender/Desafio-API/pkg/gateways/store/postgres/transfers"
 )
 
 func main() {
 
-	accountRepository := accounts.NewStorage()
+	databaseUrl := "postgres://postgres:1234@localhost:5432/desafio"
+
+	err := postgres.RunMigrations(databaseUrl)
+	if err != nil {
+		log.Fatalf("error to run migrations: %v", err)
+	}
+
+	dbPool, err := pgxpool.Connect(context.Background(), databaseUrl)
+
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Unable to connect to database: %v\n", err)
+		os.Exit(1)
+	}
+
+	// to close DB pool
+	defer dbPool.Close()
+
+	accountRepository := accounts.NewStorage(dbPool)
 	accountUseCase := accounts_usecase.NewUseCase(accountRepository)
 	accountHandler := accounts_handler.NewHandler(accountUseCase)
 
-	transferStorage := transfers.NewStorage()
+	transferStorage := transfers.NewStorage(dbPool)
 	transferUseCase := transfers_usecase.NewUseCase(transferStorage, accountRepository)
 	transferHandler := transfers_handler.NewHandler(transferUseCase)
 

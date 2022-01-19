@@ -2,8 +2,10 @@ package postgres
 
 import (
 	"embed"
+	"errors"
 
 	"github.com/golang-migrate/migrate/v4"
+	_ "github.com/golang-migrate/migrate/v4/database/postgres"
 	"github.com/golang-migrate/migrate/v4/source/iofs"
 )
 
@@ -22,7 +24,7 @@ func RunMigrations(dbURL string) error {
 	}
 
 	err = m.Up()
-	if err != nil {
+	if err != nil && !errors.Is(err, migrate.ErrNoChange) {
 		return err
 	}
 	return nil
