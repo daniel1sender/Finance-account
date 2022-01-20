@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -19,19 +18,19 @@ import (
 	"github.com/daniel1sender/Desafio-API/pkg/gateways/store/postgres/transfers"
 )
 
+const DatabaseURL = "postgres://postgres:1234@localhost:5432/desafio"
+
 func main() {
 
-	databaseUrl := "postgres://postgres:1234@localhost:5432/desafio"
-
-	err := postgres.RunMigrations(databaseUrl)
+	err := postgres.RunMigrations(DatabaseURL)
 	if err != nil {
 		log.Fatalf("error to run migrations: %v", err)
 	}
 
-	dbPool, err := pgxpool.Connect(context.Background(), databaseUrl)
+	dbPool, err := pgxpool.Connect(context.Background(), DatabaseURL)
 
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Unable to connect to database: %v\n", err)
+		log.Fatalf("Unable to connect to database: %v\n", err)
 		os.Exit(1)
 	}
 
