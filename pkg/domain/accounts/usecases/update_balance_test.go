@@ -49,7 +49,7 @@ func TestAccountUseCase_UpdateBalance(t *testing.T) {
 		if err != nil {
 			t.Errorf("expected no error to create a new account but got '%s'", err)
 		}
-		repository.DeleteAll()
+		DeleteAll(Db)
 
 		err = accountUseCase.UpdateBalance(account.ID, 20.0)
 
