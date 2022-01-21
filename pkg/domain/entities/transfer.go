@@ -11,7 +11,7 @@ var (
 	ErrAmountLessOrEqualZero = errors.New("amount is less or equal zero")
 	ErrSameAccountTransfer   = errors.New("transfer attempt to the same account")
 	ErrEmptyOriginID         = errors.New("invalid origin id")
-	ErrEmptyDestinationID    = errors.New("invalid origin id")
+	ErrEmptyDestinationID    = errors.New("invalid destination id")
 )
 
 type Transfer struct {
