@@ -48,7 +48,7 @@ func TestAccountUseCase_GetBalanceByID(t *testing.T) {
 		if err != nil {
 			t.Errorf("expected no error to create a new account but got '%s'", err)
 		}
-		repository.DeleteAll()
+		DeleteAll(Db)
 
 		getBalance, err := accountUsecase.GetBalanceByID(account.ID)
 

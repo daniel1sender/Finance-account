@@ -26,5 +26,4 @@ type Repository interface {
 	GetByID(id string) (entities.Account, error)
 	CheckCPF(cpf string) error
 	Upsert(account entities.Account) error
-	DeleteAll() error
 }

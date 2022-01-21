@@ -41,7 +41,7 @@ func TestAccountUseCase_GetAll(t *testing.T) {
 	t.Run("should return an empty list", func(t *testing.T) {
 		repository := accounts_repository.NewStorage(Db)
 		accountUsecase := NewUseCase(repository)
-		repository.DeleteAll()
+		DeleteAll(Db)
 
 		getAccounts, err := accountUsecase.GetAll()
 
