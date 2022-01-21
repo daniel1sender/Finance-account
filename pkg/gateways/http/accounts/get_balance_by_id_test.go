@@ -9,13 +9,10 @@ import (
 	accounts_usecase "github.com/daniel1sender/Desafio-API/pkg/domain/accounts"
 	server_http "github.com/daniel1sender/Desafio-API/pkg/gateways/http"
 	"github.com/daniel1sender/Desafio-API/pkg/gateways/store/accounts"
-	"github.com/sirupsen/logrus"
 )
 
 func TestGetBalanceByID(t *testing.T) {
-	log := logrus.NewEntry(logrus.New())
-	log.Logger.SetFormatter(&logrus.JSONFormatter{})
-
+	log := server_http.NewLogger()
 	t.Run("should return 200 and the account balance", func(t *testing.T) {
 
 		expectedBalance := 20

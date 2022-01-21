@@ -10,11 +10,10 @@ import (
 	"github.com/daniel1sender/Desafio-API/pkg/domain/entities"
 	"github.com/daniel1sender/Desafio-API/pkg/domain/transfers"
 	server_http "github.com/daniel1sender/Desafio-API/pkg/gateways/http"
-	"github.com/sirupsen/logrus"
 )
 
 func TestMake(t *testing.T) {
-	log := logrus.NewEntry(logrus.New())
+	log := server_http.NewLogger()
 
 	t.Run("should return 201 and a transfer when it's been sucessfully created", func(t *testing.T) {
 

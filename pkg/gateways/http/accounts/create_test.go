@@ -11,13 +11,10 @@ import (
 	"github.com/daniel1sender/Desafio-API/pkg/domain/accounts"
 	"github.com/daniel1sender/Desafio-API/pkg/domain/entities"
 	server_http "github.com/daniel1sender/Desafio-API/pkg/gateways/http"
-	"github.com/sirupsen/logrus"
 )
 
 func TestCreate(t *testing.T) {
-	log := logrus.NewEntry(logrus.New())
-	log.Logger.SetFormatter(&logrus.JSONFormatter{})
-
+	log := server_http.NewLogger()
 	t.Run("should return 201 and a account when it's been sucessfully created", func(t *testing.T) {
 
 		account := entities.Account{Name: "Jonh Doe", CPF: "12345678910", Secret: "123", Balance: 0, CreatedAt: time.Now()}
@@ -98,7 +95,7 @@ func TestCreate(t *testing.T) {
 		newRequest.Header.Add("Request-Id", "request-id")
 		newResponse := httptest.NewRecorder()
 		h.Create(newResponse, newRequest)
-		
+
 		var responseReason server_http.Error
 		json.Unmarshal(newResponse.Body.Bytes(), &responseReason)
 
