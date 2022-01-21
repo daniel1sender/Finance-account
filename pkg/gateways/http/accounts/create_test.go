@@ -23,7 +23,7 @@ func TestCreate(t *testing.T) {
 		createRequest := CreateRequest{account.Name, account.CPF, account.Secret, account.Balance}
 		request, _ := json.Marshal(createRequest)
 		newRequest, _ := http.NewRequest("POST", "/anyroute", bytes.NewReader(request))
-		newRequest.Header.Add("Request-Id", "request-id")
+		newRequest.Header.Add("Request-Id", server_http.KeyHeader)
 		newResponse := httptest.NewRecorder()
 
 		h.Create(newResponse, newRequest)
@@ -92,7 +92,7 @@ func TestCreate(t *testing.T) {
 		h := NewHandler(&useCase, log)
 		b := []byte{}
 		newRequest, _ := http.NewRequest("POST", "/anyroute", bytes.NewReader(b))
-		newRequest.Header.Add("Request-Id", "request-id")
+		newRequest.Header.Add("Request-Id", server_http.KeyHeader)
 		newResponse := httptest.NewRecorder()
 		h.Create(newResponse, newRequest)
 
@@ -121,7 +121,7 @@ func TestCreate(t *testing.T) {
 		createRequest := CreateRequest{}
 		request, _ := json.Marshal(createRequest)
 		newRequest, _ := http.NewRequest("POST", "/anyroute", bytes.NewReader(request))
-		newRequest.Header.Add("Request-Id", "request-id")
+		newRequest.Header.Add("Request-Id", server_http.KeyHeader)
 		newResponse := httptest.NewRecorder()
 
 		h.Create(newResponse, newRequest)
@@ -149,7 +149,7 @@ func TestCreate(t *testing.T) {
 		createRequest := CreateRequest{}
 		requestBody, _ := json.Marshal(createRequest)
 		newRequest, _ := http.NewRequest("POST", "/anyroute", bytes.NewReader(requestBody))
-		newRequest.Header.Add("Request-Id", "request-id")
+		newRequest.Header.Add("Request-Id", server_http.KeyHeader)
 		newResponse := httptest.NewRecorder()
 
 		h.Create(newResponse, newRequest)
@@ -178,7 +178,7 @@ func TestCreate(t *testing.T) {
 		createRequest := CreateRequest{}
 		requestBody, _ := json.Marshal(createRequest)
 		newRequest, _ := http.NewRequest("POST", "anyroute", bytes.NewReader(requestBody))
-		newRequest.Header.Add("Request-Id", "request-id")
+		newRequest.Header.Add("Request-Id", server_http.KeyHeader)
 		newResponse := httptest.NewRecorder()
 
 		h.Create(newResponse, newRequest)
@@ -207,7 +207,7 @@ func TestCreate(t *testing.T) {
 		createRequest := CreateRequest{}
 		requestBody, _ := json.Marshal(createRequest)
 		newRequest, _ := http.NewRequest("POST", "anyroute", bytes.NewReader(requestBody))
-		newRequest.Header.Add("Request-Id", "request-id")
+		newRequest.Header.Add("Request-Id", server_http.KeyHeader)
 		newResponse := httptest.NewRecorder()
 
 		h.Create(newResponse, newRequest)
@@ -236,7 +236,7 @@ func TestCreate(t *testing.T) {
 		createRequest := CreateRequest{}
 		requestBody, _ := json.Marshal(createRequest)
 		newRequest, _ := http.NewRequest("POST", "anyroute", bytes.NewReader(requestBody))
-		newRequest.Header.Add("Request-Id", "request-id")
+		newRequest.Header.Add("Request-Id", server_http.KeyHeader)
 		newResponse := httptest.NewRecorder()
 
 		h.Create(newResponse, newRequest)

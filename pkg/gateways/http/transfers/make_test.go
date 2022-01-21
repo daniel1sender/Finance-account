@@ -23,7 +23,7 @@ func TestMake(t *testing.T) {
 		createRequest := Request{transfer.AccountOriginID, transfer.AccountDestinationID, transfer.Amount}
 		request, _ := json.Marshal(createRequest)
 		newRequest, _ := http.NewRequest(http.MethodPost, "/transfers", bytes.NewReader(request))
-		newRequest.Header.Add("Request-Id", "request-id")
+		newRequest.Header.Add("Request-Id", server_http.KeyHeader)
 		newResponse := httptest.NewRecorder()
 
 		h.Make(newResponse, newRequest)
@@ -94,7 +94,7 @@ func TestMake(t *testing.T) {
 		h := NewHandler(&useCase, log)
 		b := []byte{}
 		newRequest, _ := http.NewRequest(http.MethodPost, "transfers", bytes.NewBuffer(b))
-		newRequest.Header.Add("Request-Id", "request-id")
+		newRequest.Header.Add("Request-Id", server_http.KeyHeader)
 		newResponse := httptest.NewRecorder()
 
 		h.Make(newResponse, newRequest)
@@ -125,7 +125,7 @@ func TestMake(t *testing.T) {
 		createRequest := Request{transfer.AccountOriginID, transfer.AccountDestinationID, transfer.Amount}
 		request, _ := json.Marshal(createRequest)
 		newRequest, _ := http.NewRequest(http.MethodPost, "/transfers", bytes.NewBuffer(request))
-		newRequest.Header.Add("Request-Id", "request-id")
+		newRequest.Header.Add("Request-Id", server_http.KeyHeader)
 		newResponse := httptest.NewRecorder()
 
 		h.Make(newResponse, newRequest)
@@ -155,7 +155,7 @@ func TestMake(t *testing.T) {
 		createRequest := Request{transfer.AccountOriginID, transfer.AccountDestinationID, transfer.Amount}
 		request, _ := json.Marshal(createRequest)
 		newRequest, _ := http.NewRequest(http.MethodPost, "/transfers", bytes.NewBuffer(request))
-		newRequest.Header.Add("Request-Id", "request-id")
+		newRequest.Header.Add("Request-Id", server_http.KeyHeader)
 		newResponse := httptest.NewRecorder()
 
 		h.Make(newResponse, newRequest)

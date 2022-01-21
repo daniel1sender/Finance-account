@@ -19,7 +19,7 @@ func TestGetBalanceByID(t *testing.T) {
 		useCase := accounts_usecase.UseCaseMock{Balance: expectedBalance, Error: nil}
 		h := NewHandler(&useCase, log)
 		newRequest, _ := http.NewRequest(http.MethodGet, "accounts/{id}/balance", nil)
-		newRequest.Header.Add("Request-Id", "request-id")
+		newRequest.Header.Add("Request-Id", server_http.KeyHeader)
 		newResponse := httptest.NewRecorder()
 		h.GetBalanceByID(newResponse, newRequest)
 
@@ -73,7 +73,7 @@ func TestGetBalanceByID(t *testing.T) {
 			Error: accounts.ErrIDNotFound}
 		h := NewHandler(&useCase, log)
 		newRequest, _ := http.NewRequest(http.MethodGet, "accounts/{id}/balance", nil)
-		newRequest.Header.Add("Request-Id", "request-id")
+		newRequest.Header.Add("Request-Id", server_http.KeyHeader)
 		newResponse := httptest.NewRecorder()
 
 		h.GetBalanceByID(newResponse, newRequest)

@@ -19,7 +19,7 @@ func TestGet(t *testing.T) {
 		useCase := accounts.UseCaseMock{List: []entities.Account{account}}
 		h := NewHandler(&useCase, log)
 		newRequest, _ := http.NewRequest(http.MethodGet, "/accounts", nil)
-		newRequest.Header.Add("Request-Id", "request-id")
+		newRequest.Header.Add("Request-Id", server_http.KeyHeader)
 		newResponse := httptest.NewRecorder()
 		h.GetAll(newResponse, newRequest)
 		ExpectedCreateAt := account.CreatedAt.Format(server_http.DateLayout)
@@ -82,7 +82,7 @@ func TestGet(t *testing.T) {
 
 		useCase := accounts.UseCaseMock{List: []entities.Account{}}
 		newRequest, _ := http.NewRequest(http.MethodGet, "/accounts", nil)
-		newRequest.Header.Add("Request-Id", "request-id")
+		newRequest.Header.Add("Request-Id", server_http.KeyHeader)
 		newResponse := httptest.NewRecorder()
 		h := NewHandler(&useCase, log)
 		h.GetAll(newResponse, newRequest)

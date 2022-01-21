@@ -5,6 +5,7 @@ import "github.com/sirupsen/logrus"
 const (
 	JSONContentType = "application/json"
 	DateLayout      = "2006-01-02T15:04:05Z"
+	KeyHeader       = "request-id"
 )
 
 type Error struct {
