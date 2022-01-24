@@ -10,10 +10,11 @@ import (
 )
 
 func TestAccountUseCase_GetAll(t *testing.T) {
+	repository := accounts_repository.NewStorage(Db)
+	accountUsecase := NewUseCase(repository)
 
 	t.Run("should return a full list of accounts", func(t *testing.T) {
-		repository := accounts_repository.NewStorage(Db)
-		accountUsecase := NewUseCase(repository)
+
 		name := "John Doe"
 		cpf := "11111111030"
 		secret := "123"
@@ -39,8 +40,6 @@ func TestAccountUseCase_GetAll(t *testing.T) {
 	})
 
 	t.Run("should return an empty list", func(t *testing.T) {
-		repository := accounts_repository.NewStorage(Db)
-		accountUsecase := NewUseCase(repository)
 		DeleteAll(Db)
 
 		getAccounts, err := accountUsecase.GetAll()

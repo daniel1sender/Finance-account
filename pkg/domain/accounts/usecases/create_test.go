@@ -10,10 +10,10 @@ import (
 )
 
 func TestAccountUseCase_Create(t *testing.T) {
+	repository := accounts_repository.NewStorage(Db)
+	accountUsecase := NewUseCase(repository)
 
 	t.Run("should successfully create an account and return it", func(t *testing.T) {
-		repository := accounts_repository.NewStorage(Db)
-		accountUsecase := NewUseCase(repository)
 
 		name := "John Doe"
 		cpf := "11111111032"
@@ -47,9 +47,6 @@ func TestAccountUseCase_Create(t *testing.T) {
 	})
 
 	t.Run("should return an empty account and an error when trying to create account with already created cpf account", func(t *testing.T) {
-
-		repository := accounts_repository.NewStorage(Db)
-		accountUsecase := NewUseCase(repository)
 
 		name := "John Doe"
 		cpf := "12111111038"
