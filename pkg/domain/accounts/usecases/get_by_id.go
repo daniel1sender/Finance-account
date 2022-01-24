@@ -10,7 +10,7 @@ import (
 func (au AccountUseCase) GetByID(id string) (entities.Account, error) {
 	account, err := au.storage.GetByID(id)
 	if err != nil {
-		return entities.Account{}, fmt.Errorf("%v: %w", accounts.ErrIDNotFound, err)
+		return entities.Account{}, fmt.Errorf("%w: %v", accounts.ErrIDNotFound, err)
 	}
 	return account, err
 }
