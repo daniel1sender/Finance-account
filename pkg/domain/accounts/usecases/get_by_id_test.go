@@ -10,12 +10,10 @@ import (
 )
 
 func TestAccountUseCase_GetById(t *testing.T) {
+	repository := accounts_repository.NewStorage(Db)
+	accountUseCase := NewUseCase(repository)
 
 	t.Run("should return an account when the searched account is found", func(t *testing.T) {
-
-		repository := accounts_repository.NewStorage(Db)
-		accountUseCase := NewUseCase(repository)
-
 		name := "John Doe"
 		cpf := "11111111030"
 		secret := "123"
@@ -40,9 +38,6 @@ func TestAccountUseCase_GetById(t *testing.T) {
 	})
 
 	t.Run("should return an empty account and a error when account don't exist", func(t *testing.T) {
-
-		repository := accounts_repository.NewStorage(Db)
-		accountUseCase := NewUseCase(repository)
 
 		name := "John Doe"
 		cpf := "11111111030"
