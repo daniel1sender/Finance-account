@@ -2,8 +2,11 @@ package accounts
 
 import (
 	"encoding/json"
+	"errors"
+	"log"
 	"net/http"
 
+	"github.com/daniel1sender/Desafio-API/pkg/domain/accounts"
 	server_http "github.com/daniel1sender/Desafio-API/pkg/gateways/http"
 )
 
@@ -21,9 +24,15 @@ type GetResponse struct {
 func (h Handler) GetAll(w http.ResponseWriter, r *http.Request) {
 
 	accountsList, err := h.useCase.GetAll()
+	w.Header().Add("Content-Type", server_http.JSONContentType)
 	if len(accountsList) == 0 && err != nil {
-		w.Header().Add("Content-Type", server_http.JSONContentType)
-		w.WriteHeader(http.StatusNotFound)
+		log.Printf("get all request failed: %s", err)
+		switch{
+		case errors.Is(err, accounts.ErrAccountNotFound):
+			w.WriteHeader(http.StatusNotFound)
+		default:
+			w.WriteHeader(http.StatusInternalServerError)
+		}
 	}
 
 	getResponse := GetResponse{}
