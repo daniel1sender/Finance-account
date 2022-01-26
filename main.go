@@ -4,7 +4,6 @@ import (
 	"context"
 	"log"
 	"net/http"
-	"os"
 
 	"github.com/gorilla/mux"
 	"github.com/jackc/pgx/v4/pgxpool"
