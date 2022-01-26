@@ -57,7 +57,7 @@ func TestHandlerGet(t *testing.T) {
 
 	t.Run("should return 404 and an empty list of accounts when no account was created", func(t *testing.T) {
 
-		useCase := accounts.UseCaseMock{List: []entities.Account{}, Error: accounts.ErrEmptyList}
+		useCase := accounts.UseCaseMock{List: []entities.Account{}, Error: accounts.ErrAccountNotFound}
 		newRequest, _ := http.NewRequest(http.MethodGet, "/accounts", nil)
 		newResponse := httptest.NewRecorder()
 
@@ -80,6 +80,31 @@ func TestHandlerGet(t *testing.T) {
 			t.Errorf("expected '%s' but got '%s'", server_http.JSONContentType, newResponse.Header().Get("content-type"))
 		}
 
+	})
+
+	t.Run("should return 500 and an empty list of accounts when some error with database occur", func(t *testing.T) {
+		useCase := accounts.UseCaseMock{List: []entities.Account{}, Error: accounts.ErrEmptyList}
+		newRequest, _ := http.NewRequest(http.MethodGet, "/accounts", nil)
+		newResponse := httptest.NewRecorder()
+
+		h := NewHandler(&useCase)
+
+		h.GetAll(newResponse, newRequest)
+
+		var accountsList GetResponse
+		json.Unmarshal(newResponse.Body.Bytes(), &accountsList)
+
+		if newResponse.Code != http.StatusInternalServerError {
+			t.Errorf("expected '%d' but got '%d'", http.StatusInternalServerError, newResponse.Code)
+		}
+
+		if len(accountsList.List) != 0 {
+			t.Errorf("expected empty list of accounts but got '%v'", accountsList.List)
+		}
+
+		if newResponse.Header().Get("content-type") != server_http.JSONContentType {
+			t.Errorf("expected '%s' but got '%s'", server_http.JSONContentType, newResponse.Header().Get("content-type"))
+		}
 	})
 
 }
