@@ -33,7 +33,7 @@ func TestAccountUseCase_UpdateBalance(t *testing.T) {
 		}
 
 	})
-	
+
 	t.Run("should return an empty account an error when account don't exists", func(t *testing.T) {
 		name := "John Doe"
 		cpf := "11111111031"
@@ -48,7 +48,7 @@ func TestAccountUseCase_UpdateBalance(t *testing.T) {
 
 		err = accountUseCase.UpdateBalance(account.ID, 20.0)
 
-		if errors.Is(err, accounts_usecase.ErrAccountNotFound) {
+		if !errors.Is(err, accounts_usecase.ErrAccountNotFound) {
 			t.Errorf("expected '%s' but got '%s'", accounts_usecase.ErrAccountNotFound, err)
 		}
 
