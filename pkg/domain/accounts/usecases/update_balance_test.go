@@ -74,4 +74,5 @@ func TestAccountUseCase_UpdateBalance(t *testing.T) {
 		}
 
 	})
+	DeleteAll(Db)
 }
