@@ -72,6 +72,6 @@ func TestAccountUseCase_Create(t *testing.T) {
 		if createdAccount1 != (entities.Account{}) {
 			t.Errorf("expected %+v but got %+v", entities.Account{}, createdAccount1)
 		}
-
 	})
+	DeleteAll(Db)
 }
