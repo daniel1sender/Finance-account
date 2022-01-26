@@ -43,7 +43,7 @@ func TestHandlerGetBalanceByID(t *testing.T) {
 
 		expectedBalance := 0
 		useCase := accounts_usecase.UseCaseMock{Balance: expectedBalance,
-			Error: accounts_usecase.ErrIDNotFound}
+			Error: accounts_usecase.ErrAccountNotFound}
 		h := NewHandler(&useCase)
 
 		newRequest, _ := http.NewRequest(http.MethodGet, "accounts/{id}/balance", nil)
@@ -62,8 +62,8 @@ func TestHandlerGetBalanceByID(t *testing.T) {
 			t.Errorf("expected '%s' but got '%s'", server_http.JSONContentType, newResponse.Header().Get("content-type"))
 		}
 
-		if response.Reason != accounts_usecase.ErrIDNotFound.Error() {
-			t.Errorf("expected '%s' but got '%s'", accounts_usecase.ErrIDNotFound.Error(), response.Reason)
+		if response.Reason != accounts_usecase.ErrAccountNotFound.Error() {
+			t.Errorf("expected '%s' but got '%s'", accounts_usecase.ErrAccountNotFound.Error(), response.Reason)
 		}
 
 	})

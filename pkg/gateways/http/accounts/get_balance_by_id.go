@@ -24,8 +24,8 @@ func (h Handler) GetBalanceByID(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Printf("get by id request failed: %s", err)
 		switch {
-		case errors.Is(err, accounts.ErrIDNotFound):
-			response := server_http.Error{Reason: accounts.ErrIDNotFound.Error()}
+		case errors.Is(err, accounts.ErrAccountNotFound):
+			response := server_http.Error{Reason: accounts.ErrAccountNotFound.Error()}
 			w.WriteHeader(http.StatusNotFound)
 			json.NewEncoder(w).Encode(response)
 
