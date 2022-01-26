@@ -27,12 +27,17 @@ func (h Handler) GetAll(w http.ResponseWriter, r *http.Request) {
 	w.Header().Add("Content-Type", server_http.JSONContentType)
 	if len(accountsList) == 0 && err != nil {
 		log.Printf("get all request failed: %s", err)
-		switch{
+		switch {
 		case errors.Is(err, accounts.ErrAccountNotFound):
 			w.WriteHeader(http.StatusNotFound)
+			response := GetResponse{[]Account{}}
+			json.NewEncoder(w).Encode(response)
 		default:
 			w.WriteHeader(http.StatusInternalServerError)
+			response := GetResponse{[]Account{}}
+			json.NewEncoder(w).Encode(response)
 		}
+		return
 	}
 
 	getResponse := GetResponse{}
