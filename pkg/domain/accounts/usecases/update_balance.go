@@ -10,10 +10,11 @@ var (
 )
 
 func (au AccountUseCase) UpdateBalance(id string, balance int) error {
-	account, err := au.GetByID(id)
+	account, err := au.storage.GetByID(id)
 	if err != nil {
-		return fmt.Errorf("error getting account by id: %v", err)
+		return err
 	}
+	
 	if balance < 0 {
 		return fmt.Errorf("error updating balance account: %w", ErrBalanceLessZero)
 	}
@@ -21,7 +22,7 @@ func (au AccountUseCase) UpdateBalance(id string, balance int) error {
 	account.Balance = balance
 	err = au.storage.Upsert(account)
 	if err != nil {
-		return fmt.Errorf("error updating balance account: %w", err)
+		return  err
 	}
 
 	return nil
