@@ -9,7 +9,7 @@ import (
 func (au AccountUseCase) Create(name, cpf, secret string, balance int) (entities.Account, error) {
 
 	if err := au.storage.CheckCPF(cpf); err != nil {
-		return entities.Account{}, fmt.Errorf("%w", err)
+		return entities.Account{}, err
 	}
 
 	account, err := entities.NewAccount(name, cpf, secret, balance)
@@ -19,7 +19,7 @@ func (au AccountUseCase) Create(name, cpf, secret string, balance int) (entities
 
 	err = au.storage.Upsert(account)
 	if err != nil {
-		return entities.Account{}, fmt.Errorf("%w", err)
+		return entities.Account{}, err
 	}
 
 	return account, nil
