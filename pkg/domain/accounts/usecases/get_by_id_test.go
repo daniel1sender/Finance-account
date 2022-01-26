@@ -56,8 +56,8 @@ func TestAccountUseCase_GetById(t *testing.T) {
 			t.Errorf("expected empty account but got %+v", getAccountByID)
 		}
 
-		if !errors.Is(err, accounts_usecase.ErrAccountFound) {
-			t.Errorf("expected '%s' but got '%s'", accounts_usecase.ErrAccountFound, err)
+		if !errors.Is(err, accounts_usecase.ErrAccountNotFound) {
+			t.Errorf("expected '%s' but got '%s'", accounts_usecase.ErrAccountNotFound, err)
 		}
 
 	})

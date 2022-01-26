@@ -8,7 +8,7 @@ import (
 func (s AccountStorage) GetByID(id string) (entities.Account, error) {
 	account, ok := s.storage[id]
 	if !ok {
-		return entities.Account{}, accounts.ErrIDNotFound
+		return entities.Account{}, accounts.ErrAccountNotFound
 	}
 	return account, nil
 }

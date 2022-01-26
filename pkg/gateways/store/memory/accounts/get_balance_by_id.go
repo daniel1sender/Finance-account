@@ -11,5 +11,5 @@ func (s AccountStorage) GetBalanceByID(id string) (int, error) {
 			return balance, nil
 		}
 	}
-	return 0, accounts.ErrIDNotFound
+	return 0, accounts.ErrAccountNotFound
 }
