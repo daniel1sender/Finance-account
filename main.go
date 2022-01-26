@@ -31,7 +31,6 @@ func main() {
 
 	if err != nil {
 		log.Fatalf("Unable to connect to database: %v\n", err)
-		os.Exit(1)
 	}
 
 	// to close DB pool
