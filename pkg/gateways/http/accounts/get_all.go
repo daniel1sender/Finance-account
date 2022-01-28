@@ -22,8 +22,8 @@ type GetResponse struct {
 }
 
 func (h Handler) GetAll(w http.ResponseWriter, r *http.Request) {
-
-	accountsList, err := h.useCase.GetAll()
+	
+	accountsList, err := h.useCase.GetAll(r.Context())
 	w.Header().Add("Content-Type", server_http.JSONContentType)
 	if len(accountsList) == 0 && err != nil {
 		log.Printf("get all request failed: %s", err)
