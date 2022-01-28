@@ -7,9 +7,9 @@ import (
 	"github.com/jackc/pgx/v4"
 )
 
-func (ar AccountRepository) CheckCPF(cpf string) error {
+func (ar AccountRepository) CheckCPF(ctx context.Context, cpf string) error {
 	var CPFaccount string
-	err := ar.QueryRow(context.Background(), "SELECT cpf FROM accounts WHERE cpf = $1", cpf).Scan(&CPFaccount)
+	err := ar.QueryRow(ctx, "SELECT cpf FROM accounts WHERE cpf = $1", cpf).Scan(&CPFaccount)
 	if err == pgx.ErrNoRows {
 		return nil
 	} else if err != nil {
