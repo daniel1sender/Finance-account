@@ -24,8 +24,8 @@ const upsertStatement = `INSERT INTO accounts(
 	) ON CONFLICT (id) DO UPDATE SET balance = 
 	EXCLUDED.balance`
 
-func (ar AccountRepository) Upsert(account entities.Account) error {
-	if _, err := ar.Exec(context.Background(), upsertStatement, account.ID, account.Name, account.CPF, account.Secret, account.Balance, account.CreatedAt); err != nil {
+func (ar AccountRepository) Upsert(ctx context.Context, account entities.Account) error {
+	if _, err := ar.Exec(ctx, upsertStatement, account.ID, account.Name, account.CPF, account.Secret, account.Balance, account.CreatedAt); err != nil {
 		return fmt.Errorf("unable to insert the account due to: %v", err)
 	}
 	return nil
