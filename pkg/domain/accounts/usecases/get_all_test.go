@@ -1,6 +1,7 @@
 package usecases
 
 import (
+	"context"
 	"errors"
 	"testing"
 
@@ -12,6 +13,7 @@ import (
 func TestAccountUseCase_GetAll(t *testing.T) {
 	repository := accounts_repository.NewStorage(Db)
 	accountUsecase := NewUseCase(repository)
+	ctx := context.Background()
 
 	t.Run("should return a full list of accounts", func(t *testing.T) {
 
@@ -25,9 +27,9 @@ func TestAccountUseCase_GetAll(t *testing.T) {
 			t.Errorf("expected no error to create a new account but got '%s'", err)
 		}
 
-		repository.Upsert(account)
+		repository.Upsert(ctx, account)
 
-		getAccounts, err := accountUsecase.GetAll()
+		getAccounts, err := accountUsecase.GetAll(ctx)
 
 		if err != nil {
 			t.Errorf("expected null error but got %v", err)
@@ -42,7 +44,7 @@ func TestAccountUseCase_GetAll(t *testing.T) {
 	t.Run("should return an empty list", func(t *testing.T) {
 		DeleteAll(Db)
 
-		getAccounts, err := accountUsecase.GetAll()
+		getAccounts, err := accountUsecase.GetAll(ctx)
 
 		if !errors.Is(err, accounts.ErrEmptyList) {
 			t.Errorf("expected %v but got %v", accounts.ErrEmptyList, err)

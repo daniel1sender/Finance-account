@@ -1,6 +1,7 @@
 package usecases
 
 import (
+	"context"
 	"testing"
 
 	"github.com/daniel1sender/Desafio-API/pkg/domain/entities"
@@ -10,6 +11,7 @@ import (
 func TestAccountUseCase_GetBalanceByID(t *testing.T) {
 	repository := accounts_repository.NewStorage(Db)
 	accountUsecase := NewUseCase(repository)
+	ctx := context.Background()
 
 	t.Run("should return an account balance when id is found", func(t *testing.T) {
 		name := "John Doe"
@@ -21,9 +23,9 @@ func TestAccountUseCase_GetBalanceByID(t *testing.T) {
 		if err != nil {
 			t.Errorf("expected no error to create a new account but got '%s'", err)
 		}
-		repository.Upsert(account)
+		repository.Upsert(ctx, account)
 
-		getBalance, err := accountUsecase.GetBalanceByID(account.ID)
+		getBalance, err := accountUsecase.GetBalanceByID(ctx, account.ID)
 
 		if getBalance == 0 {
 			t.Error("expected balance account different from 0")
@@ -46,7 +48,7 @@ func TestAccountUseCase_GetBalanceByID(t *testing.T) {
 		}
 		DeleteAll(Db)
 
-		getBalance, err := accountUsecase.GetBalanceByID(account.ID)
+		getBalance, err := accountUsecase.GetBalanceByID(ctx, account.ID)
 
 		if getBalance != 0 {
 			t.Error("expected account balance equal zero")

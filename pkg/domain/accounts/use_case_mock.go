@@ -1,6 +1,8 @@
 package accounts
 
 import (
+	"context"
+
 	"github.com/daniel1sender/Desafio-API/pkg/domain/entities"
 )
 
@@ -11,22 +13,22 @@ type UseCaseMock struct {
 	List    []entities.Account
 }
 
-func (m *UseCaseMock) GetBalanceByID(id string) (int, error) {
+func (m *UseCaseMock) GetBalanceByID(ctx context.Context, id string) (int, error) {
 	return m.Balance, m.Error
 }
 
-func (m *UseCaseMock) Create(name, cpf, secret string, balance int) (entities.Account, error) {
+func (m *UseCaseMock) Create(ctx context.Context, name, cpf, secret string, balance int) (entities.Account, error) {
 	return m.Account, m.Error
 }
 
-func (m *UseCaseMock) GetByID(id string) (entities.Account, error) {
+func (m *UseCaseMock) GetByID(ctx context.Context, id string) (entities.Account, error) {
 	panic("not implemented")
 }
 
-func (m *UseCaseMock) GetAll() ([]entities.Account, error) {
+func (m *UseCaseMock) GetAll(ctx context.Context) ([]entities.Account, error) {
 	return m.List, m.Error
 }
 
-func (m *UseCaseMock) UpdateBalance(id string, balance int) error {
+func (m *UseCaseMock) UpdateBalance(ctx context.Context, id string, balance int) error {
 	panic("not implemented")
 }

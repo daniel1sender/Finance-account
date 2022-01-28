@@ -1,6 +1,7 @@
 package usecases
 
 import (
+	"context"
 	"errors"
 	"testing"
 
@@ -12,6 +13,7 @@ import (
 func TestAccountUseCase_UpdateBalance(t *testing.T) {
 	repository := accounts_repository.NewStorage(Db)
 	accountUseCase := NewUseCase(repository)
+	ctx := context.Background()
 
 	t.Run("should return an account and null error when account was updated", func(t *testing.T) {
 		name := "John Doe"
@@ -24,9 +26,9 @@ func TestAccountUseCase_UpdateBalance(t *testing.T) {
 			t.Errorf("expected no error to create a new account but got '%s'", err)
 		}
 
-		repository.Upsert(account)
+		repository.Upsert(ctx, account)
 
-		updateAccountError := accountUseCase.UpdateBalance(account.ID, 20.0)
+		updateAccountError := accountUseCase.UpdateBalance(ctx, account.ID, 20.0)
 
 		if updateAccountError != nil {
 			t.Errorf("expected no error but got '%s'", updateAccountError)
@@ -46,7 +48,7 @@ func TestAccountUseCase_UpdateBalance(t *testing.T) {
 		}
 		DeleteAll(Db)
 
-		err = accountUseCase.UpdateBalance(account.ID, 20.0)
+		err = accountUseCase.UpdateBalance(ctx, account.ID, 20.0)
 
 		if !errors.Is(err, accounts_usecase.ErrAccountNotFound) {
 			t.Errorf("expected '%s' but got '%s'", accounts_usecase.ErrAccountNotFound, err)
@@ -65,9 +67,9 @@ func TestAccountUseCase_UpdateBalance(t *testing.T) {
 			t.Errorf("expected no error to create a new account but got '%s'", err)
 		}
 
-		repository.Upsert(account)
+		repository.Upsert(ctx, account)
 
-		err = accountUseCase.UpdateBalance(account.ID, -10)
+		err = accountUseCase.UpdateBalance(ctx, account.ID, -10)
 
 		if !errors.Is(err, ErrBalanceLessZero) {
 			t.Errorf("expected '%s' but got '%s'", ErrBalanceLessZero, err)
