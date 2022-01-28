@@ -18,7 +18,7 @@ type ByIdResponse struct {
 func (h Handler) GetBalanceByID(w http.ResponseWriter, r *http.Request) {
 
 	accountID := mux.Vars(r)["id"]
-	balance, err := h.useCase.GetBalanceByID(accountID)
+	balance, err := h.useCase.GetBalanceByID(r.Context(), accountID)
 
 	w.Header().Add("Content-Type", server_http.JSONContentType)
 	if err != nil {

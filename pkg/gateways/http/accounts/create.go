@@ -39,11 +39,11 @@ func (h Handler) Create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	account, err := h.useCase.Create(createRequest.Name, createRequest.CPF, createRequest.Secret, createRequest.Balance)
+	account, err := h.useCase.Create(r.Context(), createRequest.Name, createRequest.CPF, createRequest.Secret, createRequest.Balance)
 	w.Header().Add("Content-Type", server_http.JSONContentType)
 	if err != nil {
 		log.Printf("create account request failed: %s\n", err.Error())
-		switch {
+		switch { 
 
 		case errors.Is(err, accounts.ErrExistingCPF):
 			response := server_http.Error{Reason: accounts.ErrExistingCPF.Error()}
