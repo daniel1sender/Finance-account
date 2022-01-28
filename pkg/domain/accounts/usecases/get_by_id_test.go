@@ -1,6 +1,7 @@
 package usecases
 
 import (
+	"context"
 	"errors"
 	"testing"
 
@@ -12,6 +13,7 @@ import (
 func TestAccountUseCase_GetById(t *testing.T) {
 	repository := accounts_repository.NewStorage(Db)
 	accountUseCase := NewUseCase(repository)
+	ctx := context.Background()
 
 	t.Run("should return an account when the searched account is found", func(t *testing.T) {
 		name := "John Doe"
@@ -24,8 +26,8 @@ func TestAccountUseCase_GetById(t *testing.T) {
 			t.Errorf("expected no error to create a new account but got '%s'", err)
 		}
 
-		repository.Upsert(account)
-		getAccountByID, err := accountUseCase.GetByID(account.ID)
+		repository.Upsert(ctx, account)
+		getAccountByID, err := accountUseCase.GetByID(ctx, account.ID)
 
 		if getAccountByID == (entities.Account{}) {
 			t.Errorf("expected an account but got %+v", getAccountByID)
@@ -50,7 +52,7 @@ func TestAccountUseCase_GetById(t *testing.T) {
 		}
 		DeleteAll(Db)
 
-		getAccountByID, err := accountUseCase.GetByID(account.ID)
+		getAccountByID, err := accountUseCase.GetByID(ctx, account.ID)
 
 		if getAccountByID != (entities.Account{}) {
 			t.Errorf("expected empty account but got %+v", getAccountByID)

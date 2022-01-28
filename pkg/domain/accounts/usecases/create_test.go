@@ -1,6 +1,7 @@
 package usecases
 
 import (
+	"context"
 	"errors"
 	"testing"
 
@@ -12,6 +13,7 @@ import (
 func TestAccountUseCase_Create(t *testing.T) {
 	repository := accounts_repository.NewStorage(Db)
 	accountUsecase := NewUseCase(repository)
+	ctx := context.Background()
 
 	t.Run("should successfully create an account and return it", func(t *testing.T) {
 
@@ -22,7 +24,7 @@ func TestAccountUseCase_Create(t *testing.T) {
 
 		account := entities.Account{Name: name, CPF: cpf, Secret: secret, Balance: balance}
 
-		createdAccount, err := accountUsecase.Create(account.Name, account.CPF, account.Secret, account.Balance)
+		createdAccount, err := accountUsecase.Create(ctx, account.Name, account.CPF, account.Secret, account.Balance)
 
 		if createdAccount == (entities.Account{}) {
 			t.Errorf("expected an account but got %+v", createdAccount)
@@ -53,7 +55,7 @@ func TestAccountUseCase_Create(t *testing.T) {
 		secret := "123"
 		balance := 10
 
-		createdAccount, err := accountUsecase.Create(name, cpf, secret, balance)
+		createdAccount, err := accountUsecase.Create(ctx, name, cpf, secret, balance)
 
 		if err != nil {
 			t.Errorf("expected no error but got '%s'", err)
@@ -63,7 +65,7 @@ func TestAccountUseCase_Create(t *testing.T) {
 			t.Errorf("expected %+v but got %+v", entities.Account{}, createdAccount)
 		}
 
-		createdAccount1, err1 := accountUsecase.Create(name, cpf, secret, balance)
+		createdAccount1, err1 := accountUsecase.Create(ctx, name, cpf, secret, balance)
 
 		if !errors.Is(err1, accounts_usecase.ErrExistingCPF) {
 			t.Errorf("expected '%s' but got '%s'", accounts_usecase.ErrExistingCPF, err1)
