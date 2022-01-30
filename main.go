@@ -32,7 +32,6 @@ func main() {
 		log.Fatalf("Unable to connect to database: %v\n", err)
 	}
 
-	// to close DB pool
 	defer dbPool.Close()
 
 	accountRepository := accounts.NewStorage(dbPool)
