@@ -29,6 +29,3 @@ func (m *UseCaseMock) GetAll(ctx context.Context) ([]entities.Account, error) {
 	return m.List, m.Error
 }
 
-func (m *UseCaseMock) UpdateBalance(ctx context.Context, id string, balance int) error {
-	panic("not implemented")
-}

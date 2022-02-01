@@ -1,17 +1,23 @@
 package transfers
 
 import (
+	"context"
+	"errors"
+
 	"github.com/daniel1sender/Desafio-API/pkg/domain/entities"
-	"github.com/daniel1sender/Desafio-API/pkg/gateways/store/memory/accounts"
-	"github.com/daniel1sender/Desafio-API/pkg/gateways/store/memory/transfers"
+	"github.com/daniel1sender/Desafio-API/pkg/domain/accounts"
+)
+
+var (
+	ErrBalanceLessZero = errors.New("balance account cannot be less than zero")
 )
 
 type TransferUseCase struct {
-	transferStorage transfers.TransferStorage
-	accountStorage  accounts.AccountStorage
+	transferStorage Repository
+	accountStorage  accounts.Repository
 }
 
-func NewUseCase(transferStorage transfers.TransferStorage, accountStorage accounts.AccountStorage) TransferUseCase {
+func NewUseCase(transferStorage Repository, accountStorage accounts.Repository) TransferUseCase {
 	return TransferUseCase{
 		transferStorage: transferStorage,
 		accountStorage:  accountStorage,
@@ -19,9 +25,10 @@ func NewUseCase(transferStorage transfers.TransferStorage, accountStorage accoun
 }
 
 type UseCase interface {
-	Make(originID, destinationID string, amount int) (entities.Transfer, error)
+	Make(ctx context.Context, originID, destinationID string, amount int) (entities.Transfer, error)
+	UpdateBalance(ctx context.Context, id string, balance int) error
 }
 
 type Repository interface {
-	UpdateByID(transfer entities.Transfer)error
+	UpdateByID(ctx context.Context, transfer entities.Transfer) error
 }
