@@ -8,6 +8,7 @@ import (
 	"testing"
 
 	"github.com/daniel1sender/Desafio-API/pkg/domain/accounts"
+
 	"github.com/daniel1sender/Desafio-API/pkg/domain/entities"
 	"github.com/daniel1sender/Desafio-API/pkg/domain/transfers"
 	server_http "github.com/daniel1sender/Desafio-API/pkg/gateways/http"
@@ -146,7 +147,7 @@ func TestHandlerMake(t *testing.T) {
 	t.Run("should return 400 and an error when transfer origin id is not found", func(t *testing.T) {
 
 		transfer := entities.Transfer{AccountOriginID: "0", AccountDestinationID: "1", Amount: 10}
-		useCase := transfers.UseCaseMock{Transfer: transfer, Error: transfers.ErrOriginIDNotFound}
+		useCase := transfers.UseCaseMock{Transfer: transfer, Error: transfers.ErrOriginAccountNotFound}
 		h := NewHandler(&useCase)
 
 		createRequest := Request{transfer.AccountOriginID, transfer.AccountDestinationID, transfer.Amount}
@@ -166,7 +167,7 @@ func TestHandlerMake(t *testing.T) {
 			t.Errorf("expected '%s' but got '%s'", server_http.JSONContentType, newResponse.Header().Get("content-type"))
 		}
 
-		if responseReason.Reason != transfers.ErrOriginIDNotFound.Error() {
+		if responseReason.Reason != transfers.ErrOriginAccountNotFound.Error() {
 			t.Errorf("expected '%s' but got '%s'", accounts.ErrAccountNotFound.Error(), responseReason.Reason)
 		}
 	})
@@ -174,7 +175,7 @@ func TestHandlerMake(t *testing.T) {
 	t.Run("should return 400 and an error when transfer destination id is not found", func(t *testing.T) {
 
 		transfer := entities.Transfer{AccountOriginID: "0", AccountDestinationID: "1", Amount: 10}
-		useCase := transfers.UseCaseMock{Transfer: transfer, Error: transfers.ErrDestinationIDNotFound}
+		useCase := transfers.UseCaseMock{Transfer: transfer, Error: transfers.ErrDestinationAccountNotFound}
 		h := NewHandler(&useCase)
 
 		createRequest := Request{transfer.AccountOriginID, transfer.AccountDestinationID, transfer.Amount}
@@ -194,7 +195,7 @@ func TestHandlerMake(t *testing.T) {
 			t.Errorf("expected '%s' but got '%s'", server_http.JSONContentType, newResponse.Header().Get("content-type"))
 		}
 
-		if responseReason.Reason != transfers.ErrDestinationIDNotFound.Error() {
+		if responseReason.Reason != transfers.ErrDestinationAccountNotFound.Error() {
 			t.Errorf("expected '%s' but got '%s'", accounts.ErrAccountNotFound.Error(), responseReason.Reason)
 		}
 	})
