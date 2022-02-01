@@ -26,7 +26,7 @@ type Response struct {
 }
 
 func (h Handler) Make(w http.ResponseWriter, r *http.Request) {
-
+	ctx := r.Context()
 	var createRequest Request
 	err := json.NewDecoder(r.Body).Decode(&createRequest)
 	if err != nil {
@@ -38,18 +38,18 @@ func (h Handler) Make(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	transfer, err := h.useCase.Make(createRequest.AccountOriginID, createRequest.AccountDestinationID, createRequest.Amount)
+	transfer, err := h.useCase.Make(ctx, createRequest.AccountOriginID, createRequest.AccountDestinationID, createRequest.Amount)
 	w.Header().Add("Content-Type", server_http.JSONContentType)
 	if err != nil {
 		log.Printf("create transfer request failed: %s\n", err.Error())
 		switch {
 
-		case errors.Is(err, transfers.ErrOriginIDNotFound):
+		case errors.Is(err, transfers.ErrOriginAccountNotFound):
 			response := server_http.Error{Reason: err.Error()}
 			w.WriteHeader(http.StatusBadRequest)
 			json.NewEncoder(w).Encode(&response)
 
-		case errors.Is(err, transfers.ErrDestinationIDNotFound):
+		case errors.Is(err, transfers.ErrDestinationAccountNotFound):
 			response := server_http.Error{Reason: err.Error()}
 			w.WriteHeader(http.StatusBadRequest)
 			json.NewEncoder(w).Encode(&response)
