@@ -7,10 +7,10 @@ import (
 	"net/http/httptest"
 	"testing"
 
+	"github.com/daniel1sender/Desafio-API/pkg/domain/accounts"
 	"github.com/daniel1sender/Desafio-API/pkg/domain/entities"
 	"github.com/daniel1sender/Desafio-API/pkg/domain/transfers"
 	server_http "github.com/daniel1sender/Desafio-API/pkg/gateways/http"
-	accounts_storage "github.com/daniel1sender/Desafio-API/pkg/gateways/store/accounts"
 )
 
 func TestHandlerMake(t *testing.T) {
@@ -167,7 +167,7 @@ func TestHandlerMake(t *testing.T) {
 		}
 
 		if responseReason.Reason != transfers.ErrOriginIDNotFound.Error() {
-			t.Errorf("expected '%s' but got '%s'", accounts_storage.ErrIDNotFound.Error(), responseReason.Reason)
+			t.Errorf("expected '%s' but got '%s'", accounts.ErrAccountNotFound.Error(), responseReason.Reason)
 		}
 	})
 
@@ -195,7 +195,7 @@ func TestHandlerMake(t *testing.T) {
 		}
 
 		if responseReason.Reason != transfers.ErrDestinationIDNotFound.Error() {
-			t.Errorf("expected '%s' but got '%s'", accounts_storage.ErrIDNotFound.Error(), responseReason.Reason)
+			t.Errorf("expected '%s' but got '%s'", accounts.ErrAccountNotFound.Error(), responseReason.Reason)
 		}
 	})
 

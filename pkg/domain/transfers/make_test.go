@@ -5,8 +5,8 @@ import (
 	"testing"
 
 	"github.com/daniel1sender/Desafio-API/pkg/domain/entities"
-	accounts_storage "github.com/daniel1sender/Desafio-API/pkg/gateways/store/accounts"
-	transfers_storage "github.com/daniel1sender/Desafio-API/pkg/gateways/store/transfers"
+	accounts_storage "github.com/daniel1sender/Desafio-API/pkg/gateways/store/memory/accounts"
+	transfers_storage "github.com/daniel1sender/Desafio-API/pkg/gateways/store/memory/transfers"
 )
 
 func TestAccountUseCase_Make(t *testing.T) {
@@ -21,8 +21,8 @@ func TestAccountUseCase_Make(t *testing.T) {
 		destinationID := "2"
 		originAccount := entities.Account{ID: originID, Balance: 20}
 		destinationAccount := entities.Account{ID: destinationID, Balance: 20}
-		accountStorage.Upsert(originID, originAccount)
-		accountStorage.Upsert(destinationID, destinationAccount)
+		accountStorage.Upsert(originAccount)
+		accountStorage.Upsert(destinationAccount)
 
 		makeTransfer, err := transferUsecase.Make(originID, destinationID, amount)
 
@@ -62,8 +62,8 @@ func TestAccountUseCase_Make(t *testing.T) {
 		destinationID := "2"
 		originAccount := entities.Account{ID: originID, Balance: 20}
 		destinationAccount := entities.Account{ID: destinationID, Balance: 20}
-		accountStorage.Upsert(originID, originAccount)
-		accountStorage.Upsert(destinationID, destinationAccount)
+		accountStorage.Upsert(originAccount)
+		accountStorage.Upsert(destinationAccount)
 
 		makeTransfer, err := transferUsecase.Make(originID, destinationID, amount)
 
@@ -86,9 +86,9 @@ func TestAccountUseCase_Make(t *testing.T) {
 		destinationID := "2"
 
 		originAccount := entities.Account{ID: originID, Balance: 0}
-		accountStorage.Upsert(originID, originAccount)
+		accountStorage.Upsert(originAccount)
 
-		makeTransfer, err := transferUsecase.Make(originID, destinationID, amount)
+		makeTransfer, err := transferUseCase.Make(originID, destinationID, amount)
 
 		if makeTransfer != (entities.Transfer{}) {
 			t.Errorf("expected an empty transfer but got '%+v'", makeTransfer)
@@ -129,7 +129,7 @@ func TestAccountUseCase_Make(t *testing.T) {
 		destinationID := "2"
 
 		originAccount := entities.Account{ID: originID, Balance: 20}
-		accountStorage.Upsert(originID, originAccount)
+		accountStorage.Upsert(originAccount)
 		makeTransfer, err := transferUsecase.Make(originID, destinationID, amount)
 
 		if makeTransfer != (entities.Transfer{}) {
