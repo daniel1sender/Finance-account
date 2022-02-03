@@ -45,7 +45,7 @@ func (h Handler) Create(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		w.Header().Add("Content-Type", server_http.JSONContentType)
 		response := server_http.Error{Reason: "invalid request body"}
-		log.WithError(err).Errorf("error decoding body: %s\n", err)
+		log.WithError(err).Errorf("error decoding body: %s", err)
 		w.WriteHeader(http.StatusBadRequest)
 		json.NewEncoder(w).Encode(response)
 		return
