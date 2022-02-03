@@ -29,16 +29,6 @@ type CreateResponse struct {
 func (h Handler) Create(w http.ResponseWriter, r *http.Request) {
 
 	log := h.logger
-	requestID := r.Header.Get("Request-Id")
-	if requestID == "" {
-		log.Error("no request id informed")
-		w.Header().Add("Content-Type", server_http.JSONContentType)
-		response := server_http.Error{Reason: "invalid request header"}
-		w.WriteHeader(http.StatusBadRequest)
-		json.NewEncoder(w).Encode(response)
-		return
-	}
-	log = log.WithField("request_id", requestID)
 
 	var createRequest CreateRequest
 	err := json.NewDecoder(r.Body).Decode(&createRequest)
