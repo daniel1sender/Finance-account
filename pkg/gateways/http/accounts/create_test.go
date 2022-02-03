@@ -11,15 +11,16 @@ import (
 	"github.com/daniel1sender/Desafio-API/pkg/domain/accounts"
 	"github.com/daniel1sender/Desafio-API/pkg/domain/entities"
 	server_http "github.com/daniel1sender/Desafio-API/pkg/gateways/http"
+	"github.com/sirupsen/logrus"
 )
 
 func TestHandlerCreate(t *testing.T) {
-
+	log := logrus.NewEntry(logrus.New())
 	t.Run("should return 201 and an account when it's been sucessfully created", func(t *testing.T) {
 
 		account := entities.Account{Name: "Jonh Doe", CPF: "12345678910", Secret: "123", Balance: 0, CreatedAt: time.Now()}
 		useCase := accounts.UseCaseMock{Account: account}
-		h := NewHandler(&useCase)
+		h := NewHandler(&useCase, log)
 
 		createRequest := CreateRequest{account.Name, account.CPF, account.Secret, account.Balance}
 		request, _ := json.Marshal(createRequest)
@@ -61,7 +62,7 @@ func TestHandlerCreate(t *testing.T) {
 	t.Run("should return 400 and an error when it failed to decode the request successfully", func(t *testing.T) {
 
 		useCase := accounts.UseCaseMock{}
-		h := NewHandler(&useCase)
+		h := NewHandler(&useCase, log)
 
 		b := []byte{}
 		newRequest, _ := http.NewRequest("POST", "/anyroute", bytes.NewReader(b))
@@ -90,7 +91,7 @@ func TestHandlerCreate(t *testing.T) {
 	t.Run("should return 400 and an error when an empty name is informed", func(t *testing.T) {
 
 		useCase := accounts.UseCaseMock{Error: entities.ErrInvalidName}
-		h := NewHandler(&useCase)
+		h := NewHandler(&useCase, log)
 
 		createRequest := CreateRequest{}
 		request, _ := json.Marshal(createRequest)
@@ -118,7 +119,7 @@ func TestHandlerCreate(t *testing.T) {
 	t.Run("should return 400 and an error when the cpf informed doesn't have eleven digits", func(t *testing.T) {
 
 		useCase := accounts.UseCaseMock{Error: entities.ErrInvalidCPF}
-		h := NewHandler(&useCase)
+		h := NewHandler(&useCase, log)
 
 		createRequest := CreateRequest{}
 		requestBody, _ := json.Marshal(createRequest)
@@ -147,7 +148,7 @@ func TestHandlerCreate(t *testing.T) {
 	t.Run("should return 409 and an error when cpf informed already exist", func(t *testing.T) {
 
 		useCase := accounts.UseCaseMock{Error: accounts.ErrExistingCPF}
-		h := NewHandler(&useCase)
+		h := NewHandler(&useCase, log)
 
 		createRequest := CreateRequest{}
 		requestBody, _ := json.Marshal(createRequest)
@@ -176,7 +177,7 @@ func TestHandlerCreate(t *testing.T) {
 	t.Run("should return 400 and an error when an empty secret is informed", func(t *testing.T) {
 
 		useCase := accounts.UseCaseMock{Error: entities.ErrEmptySecret}
-		h := NewHandler(&useCase)
+		h := NewHandler(&useCase, log)
 
 		createRequest := CreateRequest{}
 		requestBody, _ := json.Marshal(createRequest)
@@ -205,7 +206,7 @@ func TestHandlerCreate(t *testing.T) {
 	t.Run("should return 400 and an error when balance informed is less than zero", func(t *testing.T) {
 
 		useCase := accounts.UseCaseMock{Error: entities.ErrNegativeBalance}
-		h := NewHandler(&useCase)
+		h := NewHandler(&useCase, log)
 
 		createRequest := CreateRequest{}
 		requestBody, _ := json.Marshal(createRequest)
