@@ -12,10 +12,9 @@ import (
 	transfers_usecase "github.com/daniel1sender/Desafio-API/pkg/domain/transfers"
 	accounts_handler "github.com/daniel1sender/Desafio-API/pkg/gateways/http/accounts"
 	transfers_handler "github.com/daniel1sender/Desafio-API/pkg/gateways/http/transfers"
-	accounts_storage "github.com/daniel1sender/Desafio-API/pkg/gateways/store/memory/accounts"
-	transfers_storage "github.com/daniel1sender/Desafio-API/pkg/gateways/store/memory/transfers"
 	postgres "github.com/daniel1sender/Desafio-API/pkg/gateways/store/postgres"
 	"github.com/daniel1sender/Desafio-API/pkg/gateways/store/postgres/accounts"
+	"github.com/daniel1sender/Desafio-API/pkg/gateways/store/postgres/transfers"
 )
 
 const DatabaseURL = "postgres://postgres:1234@localhost:5432/desafio"
@@ -39,9 +38,8 @@ func main() {
 	accountUseCase := accounts_usecase.NewUseCase(accountRepository)
 	accountHandler := accounts_handler.NewHandler(accountUseCase)
 
-	accountsMemoryRepository := accounts_storage.NewStorage()
-	transferStorage := transfers_storage.NewStorage()
-	transferUseCase := transfers_usecase.NewUseCase(transferStorage, accountsMemoryRepository)
+	transferStorage := transfers.NewStorage(dbPool)
+	transferUseCase := transfers_usecase.NewUseCase(transferStorage, accountRepository)
 	transferHandler := transfers_handler.NewHandler(transferUseCase)
 
 	r := mux.NewRouter()
