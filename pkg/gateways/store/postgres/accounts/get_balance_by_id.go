@@ -8,9 +8,15 @@ import (
 	"github.com/jackc/pgx/v4"
 )
 
+const getBalanceByIDStatement = `SELECT 
+	balance 
+	FROM 
+	accounts 
+	WHERE id = $1`
+
 func (ar AccountRepository) GetBalanceByID(ctx context.Context, id string) (int, error) {
 	account := entities.Account{}
-	err := ar.QueryRow(ctx, "SELECT balance FROM accounts WHERE id = $1", id).Scan(&account.Balance)
+	err := ar.QueryRow(ctx, getBalanceByIDStatement, id).Scan(&account.Balance)
 	if err == pgx.ErrNoRows {
 		return 0, accounts.ErrAccountNotFound
 	} else if err != nil {
