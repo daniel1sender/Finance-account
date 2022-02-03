@@ -8,7 +8,15 @@ import (
 	"github.com/jackc/pgx/v4"
 )
 
-const GetByIDStatement = "SELECT id, name, cpf, secret, balance, created_at FROM accounts WHERE id = $1"
+const GetByIDStatement = `SELECT 
+	id, 
+	name, 
+	cpf, 
+	secret, 
+	balance, 
+	created_at 
+	FROM accounts 
+	WHERE id = $1`
 
 func (ar AccountRepository) GetByID(ctx context.Context, id string) (entities.Account, error) {
 	account := entities.Account{}
