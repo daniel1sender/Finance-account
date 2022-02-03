@@ -7,9 +7,14 @@ import (
 	"github.com/jackc/pgx/v4"
 )
 
+const checkCPFStatement = `SELECT 
+	cpf 
+	FROM accounts 
+	WHERE cpf = $1`
+
 func (ar AccountRepository) CheckCPF(ctx context.Context, cpf string) error {
 	var CPFaccount string
-	err := ar.QueryRow(ctx, "SELECT cpf FROM accounts WHERE cpf = $1", cpf).Scan(&CPFaccount)
+	err := ar.QueryRow(ctx, checkCPFStatement, cpf).Scan(&CPFaccount)
 	if err == pgx.ErrNoRows {
 		return nil
 	} else if err != nil {
