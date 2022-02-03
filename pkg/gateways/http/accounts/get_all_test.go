@@ -8,18 +8,19 @@ import (
 
 	"github.com/daniel1sender/Desafio-API/pkg/domain/accounts"
 	"github.com/daniel1sender/Desafio-API/pkg/domain/entities"
+	"github.com/sirupsen/logrus"
 
 	server_http "github.com/daniel1sender/Desafio-API/pkg/gateways/http"
 )
 
 func TestHandlerGet(t *testing.T) {
-
+	log := logrus.NewEntry(logrus.New())
 	t.Run("should return 200 and the list of accounts", func(t *testing.T) {
 
 		account := entities.Account{Name: "Jonh Doe", CPF: "12345678910", Secret: "123", Balance: 0}
 		useCase := accounts.UseCaseMock{List: []entities.Account{account}}
 
-		h := NewHandler(&useCase)
+		h := NewHandler(&useCase, log)
 
 		newRequest, _ := http.NewRequest(http.MethodGet, "/accounts", nil)
 		newResponse := httptest.NewRecorder()
@@ -61,7 +62,7 @@ func TestHandlerGet(t *testing.T) {
 		newRequest, _ := http.NewRequest(http.MethodGet, "/accounts", nil)
 		newResponse := httptest.NewRecorder()
 
-		h := NewHandler(&useCase)
+		h := NewHandler(&useCase, log)
 
 		h.GetAll(newResponse, newRequest)
 
@@ -87,7 +88,7 @@ func TestHandlerGet(t *testing.T) {
 		newRequest, _ := http.NewRequest(http.MethodGet, "/accounts", nil)
 		newResponse := httptest.NewRecorder()
 
-		h := NewHandler(&useCase)
+		h := NewHandler(&useCase, log)
 
 		h.GetAll(newResponse, newRequest)
 
