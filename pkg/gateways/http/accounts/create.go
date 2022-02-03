@@ -3,12 +3,12 @@ package accounts
 import (
 	"encoding/json"
 	"errors"
-	"log"
 	"net/http"
 
 	"github.com/daniel1sender/Desafio-API/pkg/domain/accounts"
 	"github.com/daniel1sender/Desafio-API/pkg/domain/entities"
 	server_http "github.com/daniel1sender/Desafio-API/pkg/gateways/http"
+	"github.com/sirupsen/logrus"
 )
 
 type CreateRequest struct {
@@ -28,12 +28,24 @@ type CreateResponse struct {
 
 func (h Handler) Create(w http.ResponseWriter, r *http.Request) {
 
+	log := h.logger
+	requestID := r.Header.Get("Request-Id")
+	if requestID == "" {
+		log.Error("no request id informed")
+		w.Header().Add("Content-Type", server_http.JSONContentType)
+		response := server_http.Error{Reason: "invalid request header"}
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(response)
+		return
+	}
+	log = log.WithField("request_id", requestID)
+
 	var createRequest CreateRequest
 	err := json.NewDecoder(r.Body).Decode(&createRequest)
 	if err != nil {
 		w.Header().Add("Content-Type", server_http.JSONContentType)
 		response := server_http.Error{Reason: "invalid request body"}
-		log.Printf("error decoding body: %s\n", err)
+		log.WithError(err).Errorf("error decoding body: %s\n", err)
 		w.WriteHeader(http.StatusBadRequest)
 		json.NewEncoder(w).Encode(response)
 		return
@@ -42,8 +54,8 @@ func (h Handler) Create(w http.ResponseWriter, r *http.Request) {
 	account, err := h.useCase.Create(r.Context(), createRequest.Name, createRequest.CPF, createRequest.Secret, createRequest.Balance)
 	w.Header().Add("Content-Type", server_http.JSONContentType)
 	if err != nil {
-		log.Printf("create account request failed: %s\n", err.Error())
-		switch { 
+		log.WithError(err).Error("create account request failed")
+		switch {
 
 		case errors.Is(err, accounts.ErrExistingCPF):
 			response := server_http.Error{Reason: accounts.ErrExistingCPF.Error()}
@@ -87,5 +99,8 @@ func (h Handler) Create(w http.ResponseWriter, r *http.Request) {
 	CreateResponse := CreateResponse{account.ID, account.Name, account.CPF, account.Balance, ExpectedCreateAt}
 	w.WriteHeader(http.StatusCreated)
 	_ = json.NewEncoder(w).Encode(CreateResponse)
+	log.WithFields(logrus.Fields{
+		"account_id": CreateResponse.ID,
+	}).Info("successfully account created")
 
 }
