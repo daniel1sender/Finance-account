@@ -9,11 +9,19 @@ import (
 	"github.com/jackc/pgx/v4"
 )
 
+const getAllStatement = `SELECT 
+	id,
+	name,
+	cpf,
+	secret,
+	balance,
+	created_at FROM accounts`
+
 func (ar AccountRepository) GetAll(ctx context.Context) ([]entities.Account, error) {
 	var users []entities.Account
 	var user entities.Account
 
-	rows, err := ar.Query(ctx, "SELECT id, name, cpf, secret, balance, created_at FROM accounts")
+	rows, err := ar.Query(ctx, getAllStatement)
 	if err == pgx.ErrNoRows {
 		return []entities.Account{}, accounts.ErrAccountNotFound
 	} else if err != nil {
