@@ -7,6 +7,7 @@ import (
 
 	"github.com/gorilla/mux"
 	"github.com/jackc/pgx/v4/pgxpool"
+	"github.com/sirupsen/logrus"
 
 	accounts_usecase "github.com/daniel1sender/Desafio-API/pkg/domain/accounts/usecases"
 	transfers_usecase "github.com/daniel1sender/Desafio-API/pkg/domain/transfers"
@@ -35,9 +36,13 @@ func main() {
 
 	defer dbPool.Close()
 
+	log := logrus.New()
+	log.SetFormatter(&logrus.JSONFormatter{})
+	entry := logrus.NewEntry(log)
+
 	accountRepository := accounts.NewStorage(dbPool)
 	accountUseCase := accounts_usecase.NewUseCase(accountRepository)
-	accountHandler := accounts_handler.NewHandler(accountUseCase)
+	accountHandler := accounts_handler.NewHandler(accountUseCase, entry)
 
 	accountsMemoryRepository := accounts_storage.NewStorage()
 	transferStorage := transfers_storage.NewStorage()
