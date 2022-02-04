@@ -19,7 +19,7 @@ func (tu TransferUseCase) Make(ctx context.Context, originID, destinationID stri
 
 	originAccountBalance, err := tu.accountStorage.GetBalanceByID(ctx, originID)
 	if errors.Is(err, accounts.ErrAccountNotFound) {
-		return entities.Transfer{}, ErrOriginAccountNotFound
+		return entities.Transfer{}, fmt.Errorf("%w: %v", ErrOriginAccountNotFound, accounts.ErrAccountNotFound)
 	}
 	if originAccountBalance < amount {
 		return entities.Transfer{}, ErrInsufficientFunds
@@ -27,7 +27,7 @@ func (tu TransferUseCase) Make(ctx context.Context, originID, destinationID stri
 
 	_, err = tu.accountStorage.GetByID(ctx, destinationID)
 	if errors.Is(err, accounts.ErrAccountNotFound) {
-		return entities.Transfer{}, ErrDestinationAccountNotFound
+		return entities.Transfer{}, fmt.Errorf("%w: %v", ErrDestinationAccountNotFound, accounts.ErrAccountNotFound)
 	}
 
 	transfer, err := entities.NewTransfer(originID, destinationID, amount)
@@ -37,17 +37,16 @@ func (tu TransferUseCase) Make(ctx context.Context, originID, destinationID stri
 
 	err = tu.transferStorage.UpdateByID(ctx, transfer)
 	if err != nil {
-		return entities.Transfer{}, err
+		return entities.Transfer{}, fmt.Errorf("error while inserting the transfer: %v", err)
 	}
 
 	err = tu.UpdateBalance(ctx, originID, -amount)
 	if err != nil {
-		return entities.Transfer{}, err
+		return entities.Transfer{}, fmt.Errorf("error while updating the balance of origin account: %v", err)
 	}
 	err = tu.UpdateBalance(ctx, destinationID, amount)
-
 	if err != nil {
-		return entities.Transfer{}, err
+		return entities.Transfer{}, fmt.Errorf("error while updating the balance of destination account: %v", err)
 	}
 
 	return transfer, nil
