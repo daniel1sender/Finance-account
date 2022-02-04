@@ -10,8 +10,7 @@ func (au TransferUseCase) UpdateBalance(ctx context.Context, id string, amount i
 		return err
 	}
 
-	balance := account.Balance + amount
-	account.Balance = balance
+	account.Balance += amount
 	err = au.accountStorage.Upsert(ctx, account)
 	if err != nil {
 		return err
