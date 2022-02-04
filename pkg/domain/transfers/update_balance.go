@@ -4,7 +4,7 @@ import (
 	"context"
 )
 
-func (au TransferUseCase) UpdateBalance(ctx context.Context, id string, amount int) error {
+func (au TransferUseCase) updateBalance(ctx context.Context, id string, amount int) error {
 	account, err := au.accountStorage.GetByID(ctx, id)
 	if err != nil {
 		return err

@@ -49,11 +49,11 @@ func (tu TransferUseCase) Make(ctx context.Context, originID, destinationID stri
 		return entities.Transfer{}, fmt.Errorf("error while inserting the transfer: %w", err)
 	}
 
-	err = tu.UpdateBalance(ctx, originID, -amount)
+	err = tu.updateBalance(ctx, originID, -amount)
 	if err != nil {
 		return entities.Transfer{}, fmt.Errorf("error while updating the balance of origin account: %w", err)
 	}
-	err = tu.UpdateBalance(ctx, destinationID, amount)
+	err = tu.updateBalance(ctx, destinationID, amount)
 	if err != nil {
 		return entities.Transfer{}, fmt.Errorf("error while updating the balance of destination account: %w", err)
 	}
