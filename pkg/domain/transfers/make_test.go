@@ -111,7 +111,6 @@ func TestAccountUseCase_Make(t *testing.T) {
 		secret := "123"
 		balance := 0
 
-
 		originAccount, err := entities.NewAccount(name, cpf1, secret, balance)
 		if err != nil {
 			t.Errorf("expected no error to create a new account but got '%s'", err)
@@ -186,7 +185,7 @@ func TestAccountUseCase_Make(t *testing.T) {
 		accountRepository.Upsert(ctx, originAccount)
 
 		makeTransfer, err := transferUsecase.Make(ctx, originAccount.ID, destinationAccount.ID, amount)
-		
+
 		if makeTransfer != (entities.Transfer{}) {
 			t.Errorf("expected a empty transfer but got '%+v'", makeTransfer)
 		}
