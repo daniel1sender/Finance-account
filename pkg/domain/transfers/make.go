@@ -44,7 +44,7 @@ func (tu TransferUseCase) Make(ctx context.Context, originID, destinationID stri
 		return entities.Transfer{}, fmt.Errorf("error while creating a transfer: %w", err)
 	}
 
-	err = tu.transferStorage.UpdateByID(ctx, transfer)
+	err = tu.transferStorage.Insert(ctx, transfer)
 	if err != nil {
 		return entities.Transfer{}, fmt.Errorf("error while inserting the transfer: %w", err)
 	}

@@ -30,5 +30,5 @@ type UseCase interface {
 }
 
 type Repository interface {
-	UpdateByID(ctx context.Context, transfer entities.Transfer) error
+	Insert(ctx context.Context, transfer entities.Transfer) error
 }
