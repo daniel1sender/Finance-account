@@ -18,16 +18,21 @@ var (
 func (tu TransferUseCase) Make(ctx context.Context, originID, destinationID string, amount int) (entities.Transfer, error) {
 
 	originAccountBalance, err := tu.accountStorage.GetBalanceByID(ctx, originID)
-	if errors.Is(err, accounts.ErrAccountNotFound) {
-		return entities.Transfer{}, fmt.Errorf("%w: %v", ErrOriginAccountNotFound, accounts.ErrAccountNotFound)
+	if err != nil {
+		if errors.Is(err, accounts.ErrAccountNotFound) {
+			return entities.Transfer{}, fmt.Errorf("%w: %s", ErrOriginAccountNotFound, accounts.ErrAccountNotFound.Error())
+		} else {
+			return entities.Transfer{}, fmt.Errorf("errro to get balance account: %s", err.Error())
+		}
 	}
+
 	if originAccountBalance < amount {
 		return entities.Transfer{}, ErrInsufficientFunds
 	}
 
 	_, err = tu.accountStorage.GetByID(ctx, destinationID)
 	if errors.Is(err, accounts.ErrAccountNotFound) {
-		return entities.Transfer{}, fmt.Errorf("%w: %v", ErrDestinationAccountNotFound, accounts.ErrAccountNotFound)
+		return entities.Transfer{}, fmt.Errorf("%w: %s", ErrDestinationAccountNotFound, accounts.ErrAccountNotFound.Error())
 	}
 
 	transfer, err := entities.NewTransfer(originID, destinationID, amount)
