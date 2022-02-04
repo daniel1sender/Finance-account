@@ -12,7 +12,7 @@ import (
 	"github.com/daniel1sender/Desafio-API/pkg/gateways/store/postgres/transfers"
 )
 
-func TestAccountUseCase_UpdateBalance(t *testing.T) {
+func TestAccountUseCase_updateBalance(t *testing.T) {
 	TransfersRespository := transfers.NewStorage(Db)
 	AccountsRespository := accounts.NewStorage(Db)
 	accountUseCase := NewUseCase(TransfersRespository, AccountsRespository)
@@ -31,7 +31,7 @@ func TestAccountUseCase_UpdateBalance(t *testing.T) {
 
 		AccountsRespository.Upsert(ctx, account)
 
-		updateAccountError := accountUseCase.UpdateBalance(ctx, account.ID, 20.0)
+		updateAccountError := accountUseCase.updateBalance(ctx, account.ID, 20.0)
 
 		if updateAccountError != nil {
 			t.Errorf("expected no error but got '%s'", updateAccountError)
@@ -51,7 +51,7 @@ func TestAccountUseCase_UpdateBalance(t *testing.T) {
 		}
 		usecases.DeleteAll(Db)
 
-		err = accountUseCase.UpdateBalance(ctx, account.ID, 20.0)
+		err = accountUseCase.updateBalance(ctx, account.ID, 20.0)
 
 		if !errors.Is(err, accounts_usecase.ErrAccountNotFound) {
 			t.Errorf("expected '%s' but got '%s'", accounts_usecase.ErrAccountNotFound, err)

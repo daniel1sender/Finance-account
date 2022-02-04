@@ -25,7 +25,6 @@ func NewUseCase(transferStorage Repository, accountStorage AccountRepository) Tr
 
 type UseCase interface {
 	Make(ctx context.Context, originID, destinationID string, amount int) (entities.Transfer, error)
-	UpdateBalance(ctx context.Context, id string, balance int) error
 }
 
 type Repository interface {
