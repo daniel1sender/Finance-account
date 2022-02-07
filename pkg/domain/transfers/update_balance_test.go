@@ -6,10 +6,10 @@ import (
 	"testing"
 
 	accounts_usecase "github.com/daniel1sender/Desafio-API/pkg/domain/accounts"
-	"github.com/daniel1sender/Desafio-API/pkg/domain/accounts/usecases"
 	"github.com/daniel1sender/Desafio-API/pkg/domain/entities"
 	"github.com/daniel1sender/Desafio-API/pkg/gateways/store/postgres/accounts"
 	"github.com/daniel1sender/Desafio-API/pkg/gateways/store/postgres/transfers"
+	"github.com/daniel1sender/Desafio-API/pkg/tests"
 )
 
 func TestAccountUseCase_updateBalance(t *testing.T) {
@@ -49,7 +49,7 @@ func TestAccountUseCase_updateBalance(t *testing.T) {
 		if err != nil {
 			t.Errorf("expected no error to create a new account but got '%s'", err)
 		}
-		usecases.DeleteAll(Db)
+		tests.DeleteAllAccounts(Db)
 
 		err = accountUseCase.updateBalance(ctx, account.ID, 20.0)
 
@@ -58,5 +58,5 @@ func TestAccountUseCase_updateBalance(t *testing.T) {
 		}
 
 	})
-	usecases.DeleteAll(Db)
+	tests.DeleteAllAccounts(Db)
 }

@@ -5,8 +5,8 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/daniel1sender/Desafio-API/pkg/domain/accounts/usecases"
 	"github.com/daniel1sender/Desafio-API/pkg/domain/entities"
+	"github.com/daniel1sender/Desafio-API/pkg/tests"
 
 	accounts_storage "github.com/daniel1sender/Desafio-API/pkg/gateways/store/postgres/accounts"
 	transfers_storage "github.com/daniel1sender/Desafio-API/pkg/gateways/store/postgres/transfers"
@@ -64,7 +64,7 @@ func TestAccountUseCase_Make(t *testing.T) {
 		if err != nil {
 			t.Errorf("expected no error but got '%s'", err)
 		}
-		usecases.DeleteAll(Db)
+		tests.DeleteAllAccounts(Db)
 	})
 
 	t.Run("should return an empty transfer and a error when amount is less or equal zero", func(*testing.T) {
@@ -98,7 +98,7 @@ func TestAccountUseCase_Make(t *testing.T) {
 		if !errors.Is(err, entities.ErrAmountLessOrEqualZero) {
 			t.Errorf("expected '%s' but got '%s'", entities.ErrAmountLessOrEqualZero, err)
 		}
-		usecases.DeleteAll(Db)
+		tests.DeleteAllAccounts(Db)
 	})
 
 	t.Run("should return an empty transfer and an error when the origin account doesn't have sufficient funds", func(t *testing.T) {
@@ -131,7 +131,7 @@ func TestAccountUseCase_Make(t *testing.T) {
 		if !errors.Is(err, ErrInsufficientFunds) {
 			t.Errorf("expected '%s' but got '%s'", ErrInsufficientFunds, err)
 		}
-		usecases.DeleteAll(Db)
+		tests.DeleteAllAccounts(Db)
 	})
 
 	t.Run("should return an empty transfer and an error when the transfer origin account id is not found", func(t *testing.T) {
@@ -195,5 +195,5 @@ func TestAccountUseCase_Make(t *testing.T) {
 		}
 
 	})
-	usecases.DeleteAll(Db)
+	tests.DeleteAllAccounts(Db)
 }
