@@ -13,9 +13,9 @@ import (
 )
 
 func TestTranferUseCase_updateBalance(t *testing.T) {
-	TransfersRespository := transfers.NewStorage(Db)
-	AccountsRespository := accounts.NewStorage(Db)
-	accountUseCase := NewUseCase(TransfersRespository, AccountsRespository)
+	transfersRespository := transfers.NewStorage(Db)
+	accountsRespository := accounts.NewStorage(Db)
+	accountUseCase := NewUseCase(transfersRespository, accountsRespository)
 	ctx := context.Background()
 
 	t.Run("should return an account and null error when account was updated", func(t *testing.T) {
@@ -29,7 +29,7 @@ func TestTranferUseCase_updateBalance(t *testing.T) {
 			t.Errorf("expected no error to create a new account but got '%s'", err)
 		}
 
-		AccountsRespository.Upsert(ctx, account)
+		accountsRespository.Upsert(ctx, account)
 
 		updateAccountError := accountUseCase.updateBalance(ctx, account.ID, 20.0)
 
