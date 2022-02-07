@@ -196,4 +196,5 @@ func TestAccountUseCase_Make(t *testing.T) {
 
 	})
 	tests.DeleteAllAccounts(Db)
+	tests.DeleteAllTransfers(Db)
 }

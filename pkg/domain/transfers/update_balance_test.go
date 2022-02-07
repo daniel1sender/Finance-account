@@ -59,4 +59,5 @@ func TestTranferUseCase_updateBalance(t *testing.T) {
 
 	})
 	tests.DeleteAllAccounts(Db)
+	tests.DeleteAllTransfers(Db)
 }
