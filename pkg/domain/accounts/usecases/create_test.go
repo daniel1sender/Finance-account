@@ -8,6 +8,7 @@ import (
 	accounts_usecase "github.com/daniel1sender/Desafio-API/pkg/domain/accounts"
 	"github.com/daniel1sender/Desafio-API/pkg/domain/entities"
 	accounts_repository "github.com/daniel1sender/Desafio-API/pkg/gateways/store/postgres/accounts"
+	"github.com/daniel1sender/Desafio-API/pkg/tests"
 )
 
 func TestAccountUseCase_Create(t *testing.T) {
@@ -75,5 +76,5 @@ func TestAccountUseCase_Create(t *testing.T) {
 			t.Errorf("expected %+v but got %+v", entities.Account{}, createdAccount1)
 		}
 	})
-	DeleteAll(Db)
+	tests.DeleteAllAccounts(Db)
 }

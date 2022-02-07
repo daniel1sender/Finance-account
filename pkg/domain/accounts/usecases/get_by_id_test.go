@@ -8,6 +8,7 @@ import (
 	accounts_usecase "github.com/daniel1sender/Desafio-API/pkg/domain/accounts"
 	"github.com/daniel1sender/Desafio-API/pkg/domain/entities"
 	accounts_repository "github.com/daniel1sender/Desafio-API/pkg/gateways/store/postgres/accounts"
+	"github.com/daniel1sender/Desafio-API/pkg/tests"
 )
 
 func TestAccountUseCase_GetById(t *testing.T) {
@@ -50,7 +51,7 @@ func TestAccountUseCase_GetById(t *testing.T) {
 		if err != nil {
 			t.Errorf("expected no error to create a new account but got '%s'", err)
 		}
-		DeleteAll(Db)
+		tests.DeleteAllAccounts(Db)
 
 		getAccountByID, err := accountUseCase.GetByID(ctx, account.ID)
 
