@@ -8,6 +8,7 @@ import (
 	"github.com/daniel1sender/Desafio-API/pkg/domain/accounts"
 	"github.com/daniel1sender/Desafio-API/pkg/domain/entities"
 	accounts_repository "github.com/daniel1sender/Desafio-API/pkg/gateways/store/postgres/accounts"
+	"github.com/daniel1sender/Desafio-API/pkg/tests"
 )
 
 func TestAccountUseCase_GetAll(t *testing.T) {
@@ -42,7 +43,7 @@ func TestAccountUseCase_GetAll(t *testing.T) {
 	})
 
 	t.Run("should return an empty list", func(t *testing.T) {
-		DeleteAll(Db)
+		tests.DeleteAllAccounts(Db)
 
 		getAccounts, err := accountUsecase.GetAll(ctx)
 
