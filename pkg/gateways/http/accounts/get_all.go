@@ -52,7 +52,7 @@ func (h Handler) GetAll(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	_ = json.NewEncoder(w).Encode(responseGet)
 	log.WithFields(logrus.Fields{
-		"accounts_count": len(accountsList),
+		"number_of_accounts_listed": len(accountsList),
 	}).Info("accounts listed successfully")
 
 }
