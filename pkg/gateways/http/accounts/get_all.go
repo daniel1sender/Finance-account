@@ -3,11 +3,11 @@ package accounts
 import (
 	"encoding/json"
 	"errors"
-	"log"
 	"net/http"
 
 	"github.com/daniel1sender/Desafio-API/pkg/domain/accounts"
 	server_http "github.com/daniel1sender/Desafio-API/pkg/gateways/http"
+	"github.com/sirupsen/logrus"
 )
 
 type Account struct {
@@ -22,11 +22,12 @@ type GetResponse struct {
 }
 
 func (h Handler) GetAll(w http.ResponseWriter, r *http.Request) {
-	
+
+	log := h.logger
 	accountsList, err := h.useCase.GetAll(r.Context())
 	w.Header().Add("Content-Type", server_http.JSONContentType)
 	if len(accountsList) == 0 && err != nil {
-		log.Printf("get all request failed: %s", err)
+		log.WithError(err).Error("listing all accounts request failed")
 		switch {
 		case errors.Is(err, accounts.ErrAccountNotFound):
 			w.WriteHeader(http.StatusNotFound)
@@ -50,5 +51,8 @@ func (h Handler) GetAll(w http.ResponseWriter, r *http.Request) {
 	responseGet := GetResponse{getResponse.List}
 	w.WriteHeader(http.StatusOK)
 	_ = json.NewEncoder(w).Encode(responseGet)
+	log.WithFields(logrus.Fields{
+		"number_of_accounts_listed": len(accountsList),
+	}).Info("accounts listed successfully")
 
 }
