@@ -12,7 +12,7 @@ import (
 	"github.com/daniel1sender/Desafio-API/pkg/tests"
 )
 
-func TestTranferUseCase_updateBalance(t *testing.T) {
+func TestTranferUseCase_UpdateBalance(t *testing.T) {
 	transfersRespository := transfers.NewStorage(Db)
 	accountsRespository := accounts.NewStorage(Db)
 	accountUseCase := NewUseCase(transfersRespository, accountsRespository)

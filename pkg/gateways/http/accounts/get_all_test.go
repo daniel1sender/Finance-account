@@ -13,7 +13,7 @@ import (
 	server_http "github.com/daniel1sender/Desafio-API/pkg/gateways/http"
 )
 
-func TestHandlerGet(t *testing.T) {
+func TestHandlerGetAll(t *testing.T) {
 	log := logrus.NewEntry(logrus.New())
 	t.Run("should return 200 and the list of accounts", func(t *testing.T) {
 
