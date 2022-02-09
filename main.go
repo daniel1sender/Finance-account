@@ -45,7 +45,7 @@ func main() {
 
 	transferStorage := transfers.NewStorage(dbPool)
 	transferUseCase := transfers_usecase.NewUseCase(transferStorage, accountRepository)
-	transferHandler := transfers_handler.NewHandler(transferUseCase)
+	transferHandler := transfers_handler.NewHandler(transferUseCase, entry)
 
 	r := mux.NewRouter()
 	r.HandleFunc("/accounts", accountHandler.Create).Methods(http.MethodPost)
