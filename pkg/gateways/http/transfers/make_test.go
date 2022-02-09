@@ -8,6 +8,7 @@ import (
 	"testing"
 
 	"github.com/daniel1sender/Desafio-API/pkg/domain/accounts"
+	"github.com/sirupsen/logrus"
 
 	"github.com/daniel1sender/Desafio-API/pkg/domain/entities"
 	"github.com/daniel1sender/Desafio-API/pkg/domain/transfers"
@@ -15,12 +16,12 @@ import (
 )
 
 func TestHandlerMake(t *testing.T) {
-
+	log := logrus.NewEntry(logrus.New())
 	t.Run("should return 201 and a transfer when it's been sucessfully created", func(t *testing.T) {
 
 		transfer := entities.Transfer{AccountOriginID: "1", AccountDestinationID: "0", Amount: 10}
 		useCase := transfers.UseCaseMock{Transfer: transfer}
-		h := NewHandler(&useCase)
+		h := NewHandler(&useCase, log)
 
 		createRequest := Request{transfer.AccountOriginID, transfer.AccountDestinationID, transfer.Amount}
 		request, _ := json.Marshal(createRequest)
@@ -63,7 +64,7 @@ func TestHandlerMake(t *testing.T) {
 	t.Run("should return 400 and an error when it failed to decode the request", func(t *testing.T) {
 
 		useCase := transfers.UseCaseMock{}
-		h := NewHandler(&useCase)
+		h := NewHandler(&useCase, log)
 		b := []byte{}
 		newRequest, _ := http.NewRequest(http.MethodPost, "transfers", bytes.NewBuffer(b))
 		newResponse := httptest.NewRecorder()
@@ -91,7 +92,7 @@ func TestHandlerMake(t *testing.T) {
 
 		transfer := entities.Transfer{AccountOriginID: "1", AccountDestinationID: "0", Amount: -10}
 		useCase := transfers.UseCaseMock{Transfer: transfer, Error: entities.ErrAmountLessOrEqualZero}
-		h := NewHandler(&useCase)
+		h := NewHandler(&useCase, log)
 
 		createRequest := Request{transfer.AccountOriginID, transfer.AccountDestinationID, transfer.Amount}
 		request, _ := json.Marshal(createRequest)
@@ -120,7 +121,7 @@ func TestHandlerMake(t *testing.T) {
 
 		transfer := entities.Transfer{AccountOriginID: "0", AccountDestinationID: "0", Amount: 10}
 		useCase := transfers.UseCaseMock{Transfer: transfer, Error: entities.ErrSameAccountTransfer}
-		h := NewHandler(&useCase)
+		h := NewHandler(&useCase, log)
 
 		createRequest := Request{transfer.AccountOriginID, transfer.AccountDestinationID, transfer.Amount}
 		request, _ := json.Marshal(createRequest)
@@ -148,7 +149,7 @@ func TestHandlerMake(t *testing.T) {
 
 		transfer := entities.Transfer{AccountOriginID: "0", AccountDestinationID: "1", Amount: 10}
 		useCase := transfers.UseCaseMock{Transfer: transfer, Error: transfers.ErrOriginAccountNotFound}
-		h := NewHandler(&useCase)
+		h := NewHandler(&useCase, log)
 
 		createRequest := Request{transfer.AccountOriginID, transfer.AccountDestinationID, transfer.Amount}
 		request, _ := json.Marshal(createRequest)
@@ -176,7 +177,7 @@ func TestHandlerMake(t *testing.T) {
 
 		transfer := entities.Transfer{AccountOriginID: "0", AccountDestinationID: "1", Amount: 10}
 		useCase := transfers.UseCaseMock{Transfer: transfer, Error: transfers.ErrDestinationAccountNotFound}
-		h := NewHandler(&useCase)
+		h := NewHandler(&useCase, log)
 
 		createRequest := Request{transfer.AccountOriginID, transfer.AccountDestinationID, transfer.Amount}
 		request, _ := json.Marshal(createRequest)
@@ -204,7 +205,7 @@ func TestHandlerMake(t *testing.T) {
 
 		transfer := entities.Transfer{AccountOriginID: "0", AccountDestinationID: "1", Amount: 10}
 		useCase := transfers.UseCaseMock{Transfer: transfer, Error: transfers.ErrInsufficientFunds}
-		h := NewHandler(&useCase)
+		h := NewHandler(&useCase, log)
 
 		createRequest := Request{transfer.AccountOriginID, transfer.AccountDestinationID, transfer.Amount}
 		request, _ := json.Marshal(createRequest)
