@@ -43,6 +43,5 @@ func (h Handler) GetBalanceByID(w http.ResponseWriter, r *http.Request) {
 	_ = json.NewEncoder(w).Encode(balanceResponse)
 	log.WithFields(logrus.Fields{
 		"account_id": accountID,
-		"account_balance": balance,
 	}).Info("account balance found successfully")
 }
