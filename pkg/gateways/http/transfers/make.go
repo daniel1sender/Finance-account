@@ -84,6 +84,6 @@ func (h Handler) Make(w http.ResponseWriter, r *http.Request) {
 	_ = json.NewEncoder(w).Encode(response)
 	log.WithFields(logrus.Fields{
 		"origin_account_id":      transfer.AccountOriginID,
-		"destination_account_id": transfer.AccountOriginID,
+		"destination_account_id": transfer.AccountDestinationID,
 	}).Info("transfer successful")
 }
