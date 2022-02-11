@@ -2,11 +2,11 @@ package main
 
 import (
 	"context"
-	"log"
 	"net/http"
 
 	"github.com/gorilla/mux"
 	"github.com/jackc/pgx/v4/pgxpool"
+	"github.com/kelseyhightower/envconfig"
 	"github.com/sirupsen/logrus"
 
 	accounts_usecase "github.com/daniel1sender/Desafio-API/pkg/domain/accounts/usecases"
@@ -20,24 +20,34 @@ import (
 
 const DatabaseURL = "postgres://postgres:1234@localhost:5432/desafio"
 
-func main() {
+type Specification struct {
+	DatabaseURL string `envconfig:"DB_URL"`
+	Port        string `envconfig:"API_PORT"`
+}
 
-	err := postgres.RunMigrations(DatabaseURL)
+func main() {
+	log := logrus.New()
+	log.SetFormatter(&logrus.JSONFormatter{})
+	entry := logrus.NewEntry(log)
+
+	var s Specification
+	err := envconfig.Process("", &s)
+	if err != nil {
+		log.Fatal(err.Error())
+	}
+
+	err = postgres.RunMigrations(s.DatabaseURL)
 	if err != nil {
 		log.Fatalf("error to run migrations: %v", err)
 	}
 
-	dbPool, err := pgxpool.Connect(context.Background(), DatabaseURL)
+	dbPool, err := pgxpool.Connect(context.Background(), s.DatabaseURL)
 
 	if err != nil {
 		log.Fatalf("Unable to connect to database: %v\n", err)
 	}
 
 	defer dbPool.Close()
-
-	log := logrus.New()
-	log.SetFormatter(&logrus.JSONFormatter{})
-	entry := logrus.NewEntry(log)
 
 	accountRepository := accounts.NewStorage(dbPool)
 	accountUseCase := accounts_usecase.NewUseCase(accountRepository)
@@ -53,7 +63,7 @@ func main() {
 	r.HandleFunc("/accounts/{id}/balance", accountHandler.GetBalanceByID).Methods(http.MethodGet)
 	r.HandleFunc("/transfers", transferHandler.Make).Methods(http.MethodPost)
 
-	if err := http.ListenAndServe(":3000", r); err != nil {
+	if err := http.ListenAndServe(s.Port, r); err != nil {
 		log.Fatalf("failed to listen and serve: %s", err)
 	}
 }
