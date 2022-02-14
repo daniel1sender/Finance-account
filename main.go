@@ -20,7 +20,7 @@ import (
 
 const DatabaseURL = "postgres://postgres:1234@localhost:5432/desafio"
 
-type Specification struct {
+type Config struct {
 	DatabaseURL string `envconfig:"DB_URL"`
 	Port        string `envconfig:"API_PORT"`
 }
@@ -29,8 +29,7 @@ func main() {
 	log := logrus.New()
 	log.SetFormatter(&logrus.JSONFormatter{})
 	entry := logrus.NewEntry(log)
-
-	var s Specification
+	var s Config
 	err := envconfig.Process("", &s)
 	if err != nil {
 		log.Fatal(err.Error())
