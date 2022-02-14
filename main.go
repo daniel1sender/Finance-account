@@ -17,9 +17,10 @@ import (
 	"github.com/daniel1sender/Desafio-API/pkg/gateways/store/postgres/accounts"
 	"github.com/daniel1sender/Desafio-API/pkg/gateways/store/postgres/transfers"
 )
+
 type Config struct {
-	DatabaseURL string `envconfig:"DB_URL"`
-	Port        string `envconfig:"API_PORT"`
+	DatabaseURL string `envconfig:"DB_URL" required:"true"`
+	Port        string `envconfig:"API_PORT" required:"true" default:":3000"`
 }
 
 func main() {
@@ -29,7 +30,7 @@ func main() {
 	var s Config
 	err := envconfig.Process("", &s)
 	if err != nil {
-		log.Fatal(err.Error())
+		log.WithError(err).Fatal("error while processing environment variables")
 	}
 
 	err = postgres.RunMigrations(s.DatabaseURL)
