@@ -27,18 +27,18 @@ func main() {
 	log := logrus.New()
 	log.SetFormatter(&logrus.JSONFormatter{})
 	entry := logrus.NewEntry(log)
-	var s Config
-	err := envconfig.Process("", &s)
+	var apiconfig Config
+	err := envconfig.Process("", &apiconfig)
 	if err != nil {
 		log.WithError(err).Fatal("error while processing environment variables")
 	}
 
-	err = postgres.RunMigrations(s.DatabaseURL)
+	err = postgres.RunMigrations(apiconfig.DatabaseURL)
 	if err != nil {
 		log.Fatalf("error to run migrations: %v", err)
 	}
 
-	dbPool, err := pgxpool.Connect(context.Background(), s.DatabaseURL)
+	dbPool, err := pgxpool.Connect(context.Background(), apiconfig.DatabaseURL)
 	if err != nil {
 		log.Fatalf("Unable to connect to database: %v\n", err)
 	}
@@ -59,7 +59,7 @@ func main() {
 	r.HandleFunc("/accounts/{id}/balance", accountHandler.GetBalanceByID).Methods(http.MethodGet)
 	r.HandleFunc("/transfers", transferHandler.Make).Methods(http.MethodPost)
 
-	if err := http.ListenAndServe(s.Port, r); err != nil {
+	if err := http.ListenAndServe(apiconfig.Port, r); err != nil {
 		log.Fatalf("failed to listen and serve: %s", err)
 	}
 }
