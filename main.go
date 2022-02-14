@@ -17,9 +17,6 @@ import (
 	"github.com/daniel1sender/Desafio-API/pkg/gateways/store/postgres/accounts"
 	"github.com/daniel1sender/Desafio-API/pkg/gateways/store/postgres/transfers"
 )
-
-const DatabaseURL = "postgres://postgres:1234@localhost:5432/desafio"
-
 type Config struct {
 	DatabaseURL string `envconfig:"DB_URL"`
 	Port        string `envconfig:"API_PORT"`
@@ -41,7 +38,6 @@ func main() {
 	}
 
 	dbPool, err := pgxpool.Connect(context.Background(), s.DatabaseURL)
-
 	if err != nil {
 		log.Fatalf("Unable to connect to database: %v\n", err)
 	}
