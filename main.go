@@ -30,7 +30,7 @@ func main() {
 	var apiConfig Config
 	err := envconfig.Process("", &apiConfig)
 	if err != nil {
-		log.WithError(err).Fatal("error while processing environment variables")
+		entry.WithError(err).Fatal("error while processing environment variables")
 	}
 
 	err = postgres.RunMigrations(apiConfig.DatabaseURL)
