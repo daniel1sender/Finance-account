@@ -24,13 +24,13 @@ type Config struct {
 }
 
 func main() {
-	log := logrus.New()
-	log.SetFormatter(&logrus.JSONFormatter{})
-	entry := logrus.NewEntry(log)
+	logger := logrus.New()
+	logger.SetFormatter(&logrus.JSONFormatter{})
+	log := logrus.NewEntry(logger)
 	var apiConfig Config
 	err := envconfig.Process("", &apiConfig)
 	if err != nil {
-		entry.WithError(err).Fatal("error while processing environment variables")
+		log.WithError(err).Fatal("error while processing environment variables")
 	}
 
 	err = postgres.RunMigrations(apiConfig.DatabaseURL)
@@ -47,11 +47,11 @@ func main() {
 
 	accountRepository := accounts.NewStorage(dbPool)
 	accountUseCase := accounts_usecase.NewUseCase(accountRepository)
-	accountHandler := accounts_handler.NewHandler(accountUseCase, entry)
+	accountHandler := accounts_handler.NewHandler(accountUseCase, log)
 
 	transferStorage := transfers.NewStorage(dbPool)
 	transferUseCase := transfers_usecase.NewUseCase(transferStorage, accountRepository)
-	transferHandler := transfers_handler.NewHandler(transferUseCase, entry)
+	transferHandler := transfers_handler.NewHandler(transferUseCase, log)
 
 	r := mux.NewRouter()
 	r.HandleFunc("/accounts", accountHandler.Create).Methods(http.MethodPost)
