@@ -35,12 +35,12 @@ func main() {
 
 	err = postgres.RunMigrations(apiConfig.DatabaseURL)
 	if err != nil {
-		log.Fatalf("error to run migrations: %v", err)
+		log.WithError(err).Fatal("error while running migrations")
 	}
 
 	dbPool, err := pgxpool.Connect(context.Background(), apiConfig.DatabaseURL)
 	if err != nil {
-		log.Fatalf("Unable to connect to database: %v\n", err)
+		log.WithError(err).Fatal("error while connecting with the database")
 	}
 
 	defer dbPool.Close()
@@ -60,6 +60,6 @@ func main() {
 	r.HandleFunc("/transfers", transferHandler.Make).Methods(http.MethodPost)
 
 	if err := http.ListenAndServe(apiConfig.Port, r); err != nil {
-		log.Fatalf("failed to listen and serve: %s", err)
+		log.WithError(err).Fatal("failed to listen and serve")
 	}
 }
