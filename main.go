@@ -55,6 +55,7 @@ func main() {
 	if err != nil {
 		log.WithError(err).Fatal("error while connecting with the database")
 	}
+	log.Info("connection with the database established successfully")
 
 	defer dbPool.Close()
 
