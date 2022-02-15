@@ -44,6 +44,8 @@ func main() {
 		log.WithError(err).Fatal("error while processing environment variables")
 	}
 
+	log.WithFields(logrus.Fields{"DB_URL": apiConfig.DatabaseURL, "API_PORT": apiConfig.Port}).Info("environment variables processed sucessfully")
+
 	err = postgres.RunMigrations(apiConfig.DatabaseURL)
 	if err != nil {
 		log.WithError(err).Fatal("error while running migrations")
