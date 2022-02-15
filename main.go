@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"net/http"
+	"os"
 
 	"github.com/gorilla/mux"
 	"github.com/jackc/pgx/v4/pgxpool"
@@ -27,6 +28,16 @@ func main() {
 	logger := logrus.New()
 	logger.SetFormatter(&logrus.JSONFormatter{})
 	log := logrus.NewEntry(logger)
+
+	keysVariables := []string{"DB_URL", "API_PORT"}
+	valuesVariables := []string{"postgres://postgres:1234@localhost:5432/desafio", ":3000"}
+	for i := 0; i < len(keysVariables); i++ {
+		err := os.Setenv(keysVariables[i], valuesVariables[i])
+		if err != nil {
+			log.WithError(err).Fatal("error while setting environment variables")
+		}
+	}
+
 	var apiConfig Config
 	err := envconfig.Process("", &apiConfig)
 	if err != nil {
