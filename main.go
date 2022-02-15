@@ -63,7 +63,9 @@ func main() {
 	r.HandleFunc("/accounts/{id}/balance", accountHandler.GetBalanceByID).Methods(http.MethodGet)
 	r.HandleFunc("/transfers", transferHandler.Make).Methods(http.MethodPost)
 
-	if err := http.ListenAndServe(apiConfig.Port, r); err != nil {
+	log.Infof("server is running on port %s", apiConfig.Port)
+	err = http.ListenAndServe(apiConfig.Port, r)
+	if err != nil {
 		log.WithError(err).Fatal("failed to listen and serve")
 	}
 }
