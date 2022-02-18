@@ -1,0 +1,35 @@
+version: '3'
+services:
+  app:
+    build:
+      dockerfile: dockerfile
+      context: .
+    ports: 
+      - 3000:3000
+    depends_on: 
+      - db
+    environment: 
+     - DB_URL=postgres://postgres:1234@db:5432/desafio?sslmode=disable
+     - API_PORT=:3000
+    volumes:
+      - data:/app/data
+    networks:
+      - aplication
+  db: 
+    image: postgres
+    ports:
+      - 5431:5432
+    environment:
+      - POSTGRES_DB=desafio
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=1234
+    volumes:
+      - data:/var/lib/postgresql/data
+    networks:
+      - aplication
+networks:
+  aplication:
+    driver: bridge
+volumes:
+    data:
+    
