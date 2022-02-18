@@ -2,7 +2,12 @@ package main
 
 import (
 	"context"
+	"errors"
 	"net/http"
+	"os"
+	"os/signal"
+	"syscall"
+	"time"
 
 	"github.com/gorilla/mux"
 	"github.com/jackc/pgx/v4/pgxpool"
@@ -63,9 +68,33 @@ func main() {
 	r.HandleFunc("/accounts/{id}/balance", accountHandler.GetBalanceByID).Methods(http.MethodGet)
 	r.HandleFunc("/transfers", transferHandler.Make).Methods(http.MethodPost)
 
+	const writeTime = 60 * time.Second
+	const readTime = 60 * time.Second
+
+	server := &http.Server{
+		Handler:      r,
+		WriteTimeout: writeTime,
+		ReadTimeout:  readTime,
+		Addr:         apiConfig.Port,
+	}
+
+	sigs := make(chan os.Signal, 1)
+	signal.Notify(sigs, os.Interrupt, syscall.SIGTERM)
+	done := make(chan bool, 1)
+
+	go func() {
+		<-sigs
+		ctx, cancel := context.WithTimeout(context.Background(), writeTime)
+		defer cancel()
+		err := server.Shutdown(ctx)
+		if err != nil {
+			log.WithError(err).Error("error while shut down the application")
+		}
+		done <- true
+	}()
 	log.Infof("server is running on port %s", apiConfig.Port)
-	err = http.ListenAndServe(apiConfig.Port, r)
-	if err != nil {
+	if err := server.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
 		log.WithError(err).Fatal("failed to listen and serve")
 	}
+	<-done
 }
