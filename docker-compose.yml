@@ -11,8 +11,6 @@ services:
     environment: 
      - DB_URL=postgres://postgres:1234@db:5432/desafio?sslmode=disable
      - API_PORT=:3000
-    volumes:
-      - data:/app/data
     networks:
       - aplication
   db: 
