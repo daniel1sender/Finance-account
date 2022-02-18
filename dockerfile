@@ -6,5 +6,6 @@ WORKDIR /app
 COPY go.mod go.sum ./
 RUN go mod download
 
-COPY . .
+COPY . /app/
 RUN go build -o desafio
+CMD ./desafio
