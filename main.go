@@ -96,6 +96,6 @@ func main() {
 	if err := server.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
 		log.WithError(err).Fatal("failed to listen and serve")
 	}
-	log.Info("the server was successfully shut down")
 	<-done
+	log.Info("the server was successfully shut down")
 }
