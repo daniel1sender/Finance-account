@@ -3,24 +3,22 @@ package entities
 import (
 	"time"
 
-	jwt "github.com/dgrijalva/jwt-go"
+	"github.com/google/uuid"
 )
 
 type Claims struct {
-	*jwt.StandardClaims
-	origin_account_id string
-	authorization     bool
+	id          string
+	sub         string
+	expTime     int64
+	createdTime int64
 }
 
 func NewClaim(id string) Claims {
 	claim := Claims{
-		StandardClaims: &jwt.StandardClaims{
-			ExpiresAt: time.Now().Add(time.Minute * 1).Unix(),
-			IssuedAt:  time.Now().UTC().Unix(),
-			Issuer:    "github.com/daniel1sender/Desafio-API",
-		},
-		origin_account_id: id,
-		authorization:     true,
+		id:          uuid.NewString(),
+		sub:         id,
+		expTime:     time.Now().Add(time.Minute * 1).Unix(),
+		createdTime: time.Now().UTC().Unix(),
 	}
 	return claim
 }
