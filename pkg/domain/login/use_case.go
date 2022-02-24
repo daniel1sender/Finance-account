@@ -8,6 +8,7 @@ import (
 
 type LoginUseCase struct {
 	AccountStorage AccountRepository
+	tokenSecret    string
 }
 
 type UseCase interface {
@@ -18,8 +19,9 @@ type AccountRepository interface {
 	GetByCPF(ctx context.Context, cpf string) (entities.Account, error)
 }
 
-func NewUseCase(AccountStorage AccountRepository) LoginUseCase {
+func NewUseCase(accountStorage AccountRepository, tokenSecret string) LoginUseCase {
 	return LoginUseCase{
-		AccountStorage: AccountStorage,
+		AccountStorage: accountStorage,
+		tokenSecret:    tokenSecret,
 	}
 }
