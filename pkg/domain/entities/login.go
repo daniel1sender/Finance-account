@@ -7,18 +7,17 @@ import (
 )
 
 type Claims struct {
-	id          string
-	sub         string
-	expTime     int64
-	createdTime int64
+	TokenID   string
+	Sub         string
+	ExpTime     time.Time
+	CreatedTime time.Time
 }
 
 func NewClaim(id string) Claims {
-	claim := Claims{
-		id:          uuid.NewString(),
-		sub:         id,
-		expTime:     time.Now().Add(time.Minute * 1).Unix(),
-		createdTime: time.Now().UTC().Unix(),
+	return Claims{
+		TokenID:   uuid.NewString(),
+		Sub:         id,
+		ExpTime:     time.Now().Add(time.Minute * 1),
+		CreatedTime: time.Now().UTC(),
 	}
-	return claim
 }
