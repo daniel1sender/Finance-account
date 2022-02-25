@@ -16,7 +16,7 @@ func (l LoginUseCase) Auth(ctx context.Context, cpf, secret string) (string, err
 	}
 	err = bcrypt.CompareHashAndPassword([]byte(account.Secret), []byte(secret))
 	if err != nil {
-		return "", fmt.Errorf("error while validate secret: %w", err)
+		return "", fmt.Errorf("error while validating secret: %w", err)
 	}
 
 	tokenJWT, err := GenerateJWT(account.ID, l.tokenSecret)
