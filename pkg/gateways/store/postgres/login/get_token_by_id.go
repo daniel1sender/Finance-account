@@ -17,7 +17,7 @@ func (l LoginRepository) GetTokenByID(ctx context.Context, tokenID string) (stri
 	if err == pgx.ErrNoRows {
 		return "", ErrTokenNotFound
 	} else if err != nil {
-		return "0", err
+		return "", err
 	}
 
 	return token, nil
