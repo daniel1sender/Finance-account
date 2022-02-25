@@ -9,14 +9,16 @@ import (
 	accounts_usecases "github.com/daniel1sender/Desafio-API/pkg/domain/accounts"
 	"github.com/daniel1sender/Desafio-API/pkg/domain/entities"
 	"github.com/daniel1sender/Desafio-API/pkg/gateways/store/postgres/accounts"
+	"github.com/daniel1sender/Desafio-API/pkg/gateways/store/postgres/login"
 	"github.com/golang-jwt/jwt/v4"
 )
 
 func TestLoginUseCase_Auth(t *testing.T) {
 	ctx := context.Background()
 	accountRepository := accounts.NewStorage(Db)
+	loginRepository := login.NewStorage(Db)
 	tokenSecret := "123"
-	useCase := LoginUseCase{accountRepository, tokenSecret}
+	useCase := LoginUseCase{loginRepository, accountRepository, tokenSecret}
 	t.Run("should return a signed token", func(t *testing.T) {
 		name := "Jonh Doe"
 		cpf := "01481623559"
@@ -29,7 +31,7 @@ func TestLoginUseCase_Auth(t *testing.T) {
 		accountRepository.Upsert(ctx, account)
 		tokenString, err := useCase.Auth(ctx, account.CPF, secret)
 		if err != nil {
-			t.Errorf("expected no error but got '%v'", err)
+			t.Errorf("expected no error but got '%s'", err.Error())
 		}
 		if len(tokenString) == 0 {
 			t.Error("got empty token")

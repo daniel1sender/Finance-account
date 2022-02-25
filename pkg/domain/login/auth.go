@@ -19,14 +19,24 @@ func (l LoginUseCase) Auth(ctx context.Context, cpf, secret string) (string, err
 		return "", fmt.Errorf("error while validate secret: %w", err)
 	}
 
-	token, err := GenerateJWT(account.ID, l.tokenSecret)
+	tokenJWT, err := GenerateJWT(account.ID, l.tokenSecret)
 	if err != nil {
 		return "", fmt.Errorf("error while generating token: %w", err)
+	}
+
+	token, err := tokenJWT.SignedString([]byte(l.tokenSecret))
+	if err != nil {
+		return "", fmt.Errorf("error while getting the signed token: %w", err)
+	}
+
+	err = l.LoginStorage.Insert(ctx, token, l.tokenSecret)
+	if err != nil {
+		return "", fmt.Errorf("error while inserting token: %w", err)
 	}
 	return token, nil
 }
 
-func GenerateJWT(accountID string, tokenSecret string) (string, error) {
+func GenerateJWT(accountID string, tokenSecret string) (*jwt.Token, error) {
 	claim := entities.NewClaim(accountID)
 	claims := jwt.RegisteredClaims{
 		Subject:   accountID,
@@ -35,9 +45,6 @@ func GenerateJWT(accountID string, tokenSecret string) (string, error) {
 		ID:        claim.TokenID,
 	}
 	tokenJWT := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	token, err := tokenJWT.SignedString([]byte(tokenSecret))
-	if err != nil {
-		return "", fmt.Errorf("error while getting the signed token: %w", err)
-	}
-	return token, nil
+
+	return tokenJWT, nil
 }
