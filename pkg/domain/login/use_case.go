@@ -7,6 +7,7 @@ import (
 )
 
 type LoginUseCase struct {
+	LoginStorage   Repository
 	AccountStorage AccountRepository
 	tokenSecret    string
 }
@@ -19,9 +20,15 @@ type AccountRepository interface {
 	GetByCPF(ctx context.Context, cpf string) (entities.Account, error)
 }
 
-func NewUseCase(accountStorage AccountRepository, tokenSecret string) LoginUseCase {
+func NewUseCase(loginStorage Repository, accountStorage AccountRepository, tokenSecret string) LoginUseCase {
 	return LoginUseCase{
+		LoginStorage:   loginStorage,
 		AccountStorage: accountStorage,
 		tokenSecret:    tokenSecret,
 	}
+}
+
+type Repository interface {
+	GetTokenByID(ctx context.Context, tokenID string) (string, error)
+	Insert(ctx context.Context, token, tokenSecret string) error
 }
