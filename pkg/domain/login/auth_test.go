@@ -20,14 +20,14 @@ func TestLoginUseCase_Auth(t *testing.T) {
 	t.Run("should return a signed token", func(t *testing.T) {
 		name := "Jonh Doe"
 		cpf := "01481623559"
-		secret := "123"
+		accountSecret := "123"
 		balance := 10
-		account, err := entities.NewAccount(name, cpf, secret, balance)
+		account, err := entities.NewAccount(name, cpf, accountSecret, balance)
 		if err != nil {
 			t.Errorf("expected no error while creating a new account but got '%s'", err)
 		}
 		accountRepository.Upsert(ctx, account)
-		tokenString, err := useCase.Auth(ctx, account.CPF, secret)
+		tokenString, err := useCase.Auth(ctx, account.CPF, accountSecret)
 		if err != nil {
 			t.Errorf("expected no error but got '%v'", err)
 		}
@@ -40,13 +40,13 @@ func TestLoginUseCase_Auth(t *testing.T) {
 	t.Run("should return an empty token and an error when account is not found", func(t *testing.T) {
 		name := "Jonh Doe"
 		cpf := "01481623550"
-		secret := "123"
+		accountSecret := "123"
 		balance := 10
-		account, err := entities.NewAccount(name, cpf, secret, balance)
+		account, err := entities.NewAccount(name, cpf, accountSecret, balance)
 		if err != nil {
 			t.Errorf("expected no error while creating a new account but got '%s'", err)
 		}
-		tokenString, err := useCase.Auth(ctx, account.CPF, secret)
+		tokenString, err := useCase.Auth(ctx, account.CPF, accountSecret)
 		if !errors.Is(err, accounts_usecases.ErrAccountNotFound) {
 			t.Errorf("expected no error but got '%v'", err)
 		}
