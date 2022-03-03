@@ -9,12 +9,12 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-func (l LoginUseCase) Auth(ctx context.Context, cpf, secret string) (string, error) {
+func (l LoginUseCase) Auth(ctx context.Context, cpf, accountSecret string) (string, error) {
 	account, err := l.AccountStorage.GetByCPF(ctx, cpf)
 	if err != nil {
 		return "", fmt.Errorf("error while getting account by cpf: %w", err)
 	}
-	err = bcrypt.CompareHashAndPassword([]byte(account.Secret), []byte(secret))
+	err = bcrypt.CompareHashAndPassword([]byte(account.Secret), []byte(accountSecret))
 	if err != nil {
 		return "", fmt.Errorf("error while validate secret: %w", err)
 	}
