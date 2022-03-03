@@ -26,8 +26,9 @@ func TestLoginUseCase_Auth(t *testing.T) {
 		if err != nil {
 			t.Errorf("expected no error while creating a new account but got '%s'", err)
 		}
+		duration := "1m"
 		accountRepository.Upsert(ctx, account)
-		tokenString, err := useCase.Auth(ctx, account.CPF, accountSecret)
+		tokenString, err := useCase.Auth(ctx, account.CPF, accountSecret, duration)
 		if err != nil {
 			t.Errorf("expected no error but got '%v'", err)
 		}
@@ -46,7 +47,8 @@ func TestLoginUseCase_Auth(t *testing.T) {
 		if err != nil {
 			t.Errorf("expected no error while creating a new account but got '%s'", err)
 		}
-		tokenString, err := useCase.Auth(ctx, account.CPF, accountSecret)
+		duration := "1m"
+		tokenString, err := useCase.Auth(ctx, account.CPF, accountSecret, duration)
 		if !errors.Is(err, accounts_usecases.ErrAccountNotFound) {
 			t.Errorf("expected no error but got '%v'", err)
 		}
