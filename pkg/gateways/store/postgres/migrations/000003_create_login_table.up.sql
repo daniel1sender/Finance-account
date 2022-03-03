@@ -1,3 +1,4 @@
+/*migration up of table tokens*/
 CREATE TABLE IF NOT EXISTS tokens(
     id UUID PRIMARY KEY,
     sub TEXT UNIQUE NOT NULL,

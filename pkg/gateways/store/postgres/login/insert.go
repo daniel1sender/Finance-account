@@ -18,6 +18,7 @@ const insertStatement = `INSERT INTO tokens(
 	$3,
 	$4)`
 
+//Insertion method of table tokens. This method inserts token id (id), account id (sub), expire time (exp_time), and the creating time of token (created_at)
 func (l LoginRepository) Insert(ctx context.Context, token, tokenSecret string) error {
 	tokenParsed, err := jwt.ParseWithClaims(token, &jwt.RegisteredClaims{}, func(token *jwt.Token) (interface{}, error) {
 		return []byte(tokenSecret), nil

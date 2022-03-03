@@ -10,7 +10,7 @@ import (
 var (
 	ErrTokenNotFound = errors.New("token not found")
 )
-
+//at moment is an unsed method
 func (l LoginRepository) GetTokenByID(ctx context.Context, tokenID string) (string, error) {
 	var token string
 	err := l.QueryRow(ctx, "SELECT token FROM tokens WHERE id = $1", tokenID).Scan(&token)
