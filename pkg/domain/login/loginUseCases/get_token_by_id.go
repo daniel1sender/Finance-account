@@ -1,4 +1,4 @@
-package login
+package loginUseCases
 
 import "context"
 
