@@ -11,31 +11,34 @@ import (
 
 	"github.com/gorilla/mux"
 	"github.com/jackc/pgx/v4/pgxpool"
-	"github.com/kelseyhightower/envconfig"
 	"github.com/sirupsen/logrus"
 
+	"github.com/daniel1sender/Desafio-API/pkg/config"
 	accounts_usecase "github.com/daniel1sender/Desafio-API/pkg/domain/accounts/usecases"
+	login_usecase "github.com/daniel1sender/Desafio-API/pkg/domain/login"
 	transfers_usecase "github.com/daniel1sender/Desafio-API/pkg/domain/transfers"
 	accounts_handler "github.com/daniel1sender/Desafio-API/pkg/gateways/http/accounts"
+	login_handler "github.com/daniel1sender/Desafio-API/pkg/gateways/http/login"
 	transfers_handler "github.com/daniel1sender/Desafio-API/pkg/gateways/http/transfers"
 	postgres "github.com/daniel1sender/Desafio-API/pkg/gateways/store/postgres"
 	"github.com/daniel1sender/Desafio-API/pkg/gateways/store/postgres/accounts"
+	"github.com/daniel1sender/Desafio-API/pkg/gateways/store/postgres/login"
 	"github.com/daniel1sender/Desafio-API/pkg/gateways/store/postgres/transfers"
 )
 
+/*
 type Config struct {
 	DatabaseURL string `envconfig:"DB_URL" required:"true"`
 	Port        string `envconfig:"API_PORT" required:"true" default:":3000"`
 	TokenSecret string `envconfig:"TOKEN_SECRET" required:"true"`
-}
+} */
 
 func main() {
 	logger := logrus.New()
 	logger.SetFormatter(&logrus.JSONFormatter{})
 	log := logrus.NewEntry(logger)
 
-	var apiConfig Config
-	err := envconfig.Process("", &apiConfig)
+	apiConfig, err := config.GetConfig()
 	if err != nil {
 		log.WithError(err).Fatal("error while processing environment variables")
 	}
@@ -59,15 +62,21 @@ func main() {
 	accountUseCase := accounts_usecase.NewUseCase(accountRepository)
 	accountHandler := accounts_handler.NewHandler(accountUseCase, log)
 
+	loginStorage := login.NewStorage(dbPool)
+	loginUseCase := login_usecase.NewUseCase(loginStorage, accountRepository, apiConfig.TokenSecret)
+	loginHandler := login_handler.NewHandler(loginUseCase, log)
+
 	transferStorage := transfers.NewStorage(dbPool)
 	transferUseCase := transfers_usecase.NewUseCase(transferStorage, accountRepository)
-	transferHandler := transfers_handler.NewHandler(transferUseCase, log)
+	transferHandler := transfers_handler.NewHandler(transferUseCase, loginUseCase, log)
 
 	r := mux.NewRouter()
 	r.HandleFunc("/accounts", accountHandler.Create).Methods(http.MethodPost)
 	r.HandleFunc("/accounts", accountHandler.GetAll).Methods(http.MethodGet)
 	r.HandleFunc("/accounts/{id}/balance", accountHandler.GetBalanceByID).Methods(http.MethodGet)
 	r.HandleFunc("/transfers", transferHandler.Make).Methods(http.MethodPost)
+	r.HandleFunc("/transfers/{id}", transferHandler.GetByID).Methods(http.MethodGet)
+	r.HandleFunc("/login", loginHandler.Login).Methods(http.MethodPost)
 
 	const writeTime = 60 * time.Second
 	const readTime = 60 * time.Second

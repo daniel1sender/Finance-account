@@ -13,7 +13,9 @@ type LoginUseCase struct {
 }
 
 type UseCase interface {
-	Auth(ctx context.Context, cpf, secret string) (string, error)
+	Auth(ctx context.Context, cpf, secret string) (string, string, error)
+	CheckToken(ctx context.Context, token string) error
+	GetTokenByID(ctx context.Context, id string) (string, error)
 }
 
 type AccountRepository interface {
@@ -29,6 +31,7 @@ func NewUseCase(loginStorage Repository, accountStorage AccountRepository, token
 }
 
 type Repository interface {
-	GetTokenByID(ctx context.Context, tokenID string) (string, error)
+	CheckToken(ctx context.Context, token string) error
 	Insert(ctx context.Context, token, tokenSecret string) error
+	GetTokenByID(ctx context.Context, id string) (string, error)
 }

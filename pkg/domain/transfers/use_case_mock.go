@@ -15,6 +15,10 @@ func (m *UseCaseMock) Make(ctx context.Context, originID, destinationID string, 
 	return m.Transfer, m.Error
 }
 
-func (m *UseCaseMock)UpdateBalance(ctx context.Context, id string, balance int)error{
+func (m *UseCaseMock) UpdateBalance(ctx context.Context, id string, balance int) error {
+	panic("not implemented")
+}
+
+func (m *UseCaseMock) GetByID(ctx context.Context, accountID, token, tokenSecret string) ([]entities.Transfer, error) {
 	panic("not implemented")
 }

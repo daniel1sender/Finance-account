@@ -2,23 +2,18 @@ package login
 
 import (
 	"context"
-	"errors"
 
+	"github.com/daniel1sender/Desafio-API/pkg/domain/accounts"
 	"github.com/jackc/pgx/v4"
 )
 
-var (
-	ErrTokenNotFound = errors.New("token not found")
-)
-//at moment is an unsed method
-func (l LoginRepository) GetTokenByID(ctx context.Context, tokenID string) (string, error) {
+func (l LoginRepository) GetTokenByID(ctx context.Context, id string) (string, error) {
 	var token string
-	err := l.QueryRow(ctx, "SELECT token FROM tokens WHERE id = $1", tokenID).Scan(&token)
+	err := l.QueryRow(ctx, "SELECT token FROM tokens WHERE sub = $1", id).Scan(&token)
 	if err == pgx.ErrNoRows {
-		return "", ErrTokenNotFound
+		return "", accounts.ErrAccountNotFound
 	} else if err != nil {
 		return "", err
 	}
-
 	return token, nil
 }

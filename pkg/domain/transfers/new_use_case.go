@@ -25,10 +25,12 @@ func NewUseCase(transferStorage Repository, accountStorage AccountRepository) Tr
 
 type UseCase interface {
 	Make(ctx context.Context, originID, destinationID string, amount int) (entities.Transfer, error)
+	GetByID(ctx context.Context, accountID, token, tokenSecret string) ([]entities.Transfer, error)
 }
 
 type Repository interface {
 	Insert(ctx context.Context, transfer entities.Transfer) error
+	GetByID(ctx context.Context, accountID string) ([]entities.Transfer, error)
 }
 
 type AccountRepository interface {

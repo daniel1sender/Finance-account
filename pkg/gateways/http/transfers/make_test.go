@@ -7,7 +7,9 @@ import (
 	"net/http/httptest"
 	"testing"
 
+	"github.com/daniel1sender/Desafio-API/pkg/config"
 	"github.com/daniel1sender/Desafio-API/pkg/domain/accounts"
+	"github.com/daniel1sender/Desafio-API/pkg/domain/login"
 	"github.com/sirupsen/logrus"
 
 	"github.com/daniel1sender/Desafio-API/pkg/domain/entities"
@@ -17,13 +19,19 @@ import (
 
 func TestHandlerMake(t *testing.T) {
 	log := logrus.NewEntry(logrus.New())
+	config, _ := config.GetConfig()
+	originAccount, _ := entities.NewAccount("Jonh Doe", "12345678910", "123", 10)
+	destinationAccount, _ := entities.NewAccount("Jonh Doe", "12345678910", "123", 10)
+	transfer := entities.Transfer{AccountOriginID: originAccount.ID, AccountDestinationID: destinationAccount.ID, Amount: 10}
+	tokenJWT, _ := login.GenerateJWT(transfer.AccountOriginID, config.TokenSecret)
+	token, _ := tokenJWT.SignedString([]byte(config.TokenSecret))
+	loginUseCase := login.LoginUseCaseMock{Token: token, AccountID: transfer.AccountOriginID, TokenSecret: config.TokenSecret}
+
 	t.Run("should return 201 and a transfer when it's been sucessfully created", func(t *testing.T) {
 
-		transfer := entities.Transfer{AccountOriginID: "1", AccountDestinationID: "0", Amount: 10}
 		useCase := transfers.UseCaseMock{Transfer: transfer}
-		h := NewHandler(&useCase, log)
-
-		createRequest := Request{transfer.AccountOriginID, transfer.AccountDestinationID, transfer.Amount}
+		h := NewHandler(&useCase, &loginUseCase, log)
+		createRequest := Request{transfer.AccountOriginID, loginUseCase.Token, transfer.AccountDestinationID, transfer.Amount}
 		request, _ := json.Marshal(createRequest)
 		newRequest, _ := http.NewRequest(http.MethodPost, "/transfers", bytes.NewReader(request))
 		newResponse := httptest.NewRecorder()
@@ -64,7 +72,7 @@ func TestHandlerMake(t *testing.T) {
 	t.Run("should return 400 and an error when it failed to decode the request", func(t *testing.T) {
 
 		useCase := transfers.UseCaseMock{}
-		h := NewHandler(&useCase, log)
+		h := NewHandler(&useCase, &loginUseCase, log)
 		b := []byte{}
 		newRequest, _ := http.NewRequest(http.MethodPost, "transfers", bytes.NewBuffer(b))
 		newResponse := httptest.NewRecorder()
@@ -90,11 +98,11 @@ func TestHandlerMake(t *testing.T) {
 
 	t.Run("should return 400 and an error when amount is less or equal zero", func(t *testing.T) {
 
-		transfer := entities.Transfer{AccountOriginID: "1", AccountDestinationID: "0", Amount: -10}
+		transfer := entities.Transfer{AccountOriginID: originAccount.ID, AccountDestinationID: destinationAccount.ID, Amount: -10}
 		useCase := transfers.UseCaseMock{Transfer: transfer, Error: entities.ErrAmountLessOrEqualZero}
-		h := NewHandler(&useCase, log)
+		h := NewHandler(&useCase, &loginUseCase, log)
 
-		createRequest := Request{transfer.AccountOriginID, transfer.AccountDestinationID, transfer.Amount}
+		createRequest := Request{transfer.AccountOriginID, loginUseCase.Token, transfer.AccountDestinationID, transfer.Amount}
 		request, _ := json.Marshal(createRequest)
 		newRequest, _ := http.NewRequest(http.MethodPost, "/transfers", bytes.NewBuffer(request))
 		newResponse := httptest.NewRecorder()
@@ -119,11 +127,11 @@ func TestHandlerMake(t *testing.T) {
 
 	t.Run("should return 400 and an error when the transfer is to the same account", func(t *testing.T) {
 
-		transfer := entities.Transfer{AccountOriginID: "0", AccountDestinationID: "0", Amount: 10}
+		transfer := entities.Transfer{AccountOriginID: originAccount.ID, AccountDestinationID: originAccount.ID, Amount: 10}
 		useCase := transfers.UseCaseMock{Transfer: transfer, Error: entities.ErrSameAccountTransfer}
-		h := NewHandler(&useCase, log)
+		h := NewHandler(&useCase, &loginUseCase, log)
 
-		createRequest := Request{transfer.AccountOriginID, transfer.AccountDestinationID, transfer.Amount}
+		createRequest := Request{transfer.AccountOriginID, loginUseCase.Token, transfer.AccountDestinationID, transfer.Amount}
 		request, _ := json.Marshal(createRequest)
 		newRequest, _ := http.NewRequest(http.MethodPost, "/transfers", bytes.NewBuffer(request))
 		newResponse := httptest.NewRecorder()
@@ -147,11 +155,11 @@ func TestHandlerMake(t *testing.T) {
 
 	t.Run("should return 400 and an error when transfer origin id is not found", func(t *testing.T) {
 
-		transfer := entities.Transfer{AccountOriginID: "0", AccountDestinationID: "1", Amount: 10}
+		transfer := entities.Transfer{AccountOriginID: originAccount.ID, AccountDestinationID: destinationAccount.ID, Amount: 10}
 		useCase := transfers.UseCaseMock{Transfer: transfer, Error: transfers.ErrOriginAccountNotFound}
-		h := NewHandler(&useCase, log)
+		h := NewHandler(&useCase, &loginUseCase, log)
 
-		createRequest := Request{transfer.AccountOriginID, transfer.AccountDestinationID, transfer.Amount}
+		createRequest := Request{transfer.AccountOriginID, loginUseCase.Token, transfer.AccountDestinationID, transfer.Amount}
 		request, _ := json.Marshal(createRequest)
 		newRequest, _ := http.NewRequest(http.MethodPost, "/transfers", bytes.NewBuffer(request))
 		newResponse := httptest.NewRecorder()
@@ -175,11 +183,11 @@ func TestHandlerMake(t *testing.T) {
 
 	t.Run("should return 400 and an error when transfer destination id is not found", func(t *testing.T) {
 
-		transfer := entities.Transfer{AccountOriginID: "0", AccountDestinationID: "1", Amount: 10}
+		transfer := entities.Transfer{AccountOriginID: originAccount.ID, AccountDestinationID: destinationAccount.ID, Amount: 10}
 		useCase := transfers.UseCaseMock{Transfer: transfer, Error: transfers.ErrDestinationAccountNotFound}
-		h := NewHandler(&useCase, log)
+		h := NewHandler(&useCase, &loginUseCase, log)
 
-		createRequest := Request{transfer.AccountOriginID, transfer.AccountDestinationID, transfer.Amount}
+		createRequest := Request{transfer.AccountOriginID, loginUseCase.Token, transfer.AccountDestinationID, transfer.Amount}
 		request, _ := json.Marshal(createRequest)
 		newRequest, _ := http.NewRequest(http.MethodPost, "/transfers", bytes.NewBuffer(request))
 		newResponse := httptest.NewRecorder()
@@ -203,11 +211,11 @@ func TestHandlerMake(t *testing.T) {
 
 	t.Run("should return 400 and error when origin account doesn't have sufficient funds", func(t *testing.T) {
 
-		transfer := entities.Transfer{AccountOriginID: "0", AccountDestinationID: "1", Amount: 10}
+		transfer := entities.Transfer{AccountOriginID: originAccount.ID, AccountDestinationID: destinationAccount.ID, Amount: 10}
 		useCase := transfers.UseCaseMock{Transfer: transfer, Error: transfers.ErrInsufficientFunds}
-		h := NewHandler(&useCase, log)
+		h := NewHandler(&useCase, &loginUseCase, log)
 
-		createRequest := Request{transfer.AccountOriginID, transfer.AccountDestinationID, transfer.Amount}
+		createRequest := Request{transfer.AccountOriginID, loginUseCase.Token, transfer.AccountDestinationID, transfer.Amount}
 		request, _ := json.Marshal(createRequest)
 		newRequest, _ := http.NewRequest(http.MethodPost, "/transfers", bytes.NewBuffer(request))
 		newResponse := httptest.NewRecorder()

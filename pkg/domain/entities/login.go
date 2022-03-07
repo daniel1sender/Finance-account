@@ -7,7 +7,7 @@ import (
 )
 
 type Claims struct {
-	TokenID   string
+	TokenID     string
 	Sub         string
 	ExpTime     time.Time
 	CreatedTime time.Time
@@ -15,9 +15,9 @@ type Claims struct {
 
 func NewClaim(id string) Claims {
 	return Claims{
-		TokenID:   uuid.NewString(),
+		TokenID:     uuid.NewString(),
 		Sub:         id,
-		ExpTime:     time.Now().Add(time.Minute * 1),
+		ExpTime:     time.Now().Add(time.Minute * 20),
 		CreatedTime: time.Now().UTC(),
 	}
 }

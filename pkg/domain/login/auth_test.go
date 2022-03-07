@@ -4,13 +4,11 @@ import (
 	"context"
 	"errors"
 	"testing"
-	"time"
 
 	accounts_usecases "github.com/daniel1sender/Desafio-API/pkg/domain/accounts"
 	"github.com/daniel1sender/Desafio-API/pkg/domain/entities"
 	"github.com/daniel1sender/Desafio-API/pkg/gateways/store/postgres/accounts"
 	"github.com/daniel1sender/Desafio-API/pkg/gateways/store/postgres/login"
-	"github.com/golang-jwt/jwt/v4"
 )
 
 func TestLoginUseCase_Auth(t *testing.T) {
@@ -29,14 +27,17 @@ func TestLoginUseCase_Auth(t *testing.T) {
 			t.Errorf("expected no error while creating a new account but got '%s'", err)
 		}
 		accountRepository.Upsert(ctx, account)
-		tokenString, err := useCase.Auth(ctx, account.CPF, secret)
+		tokenString, accountID, err := useCase.Auth(ctx, account.CPF, secret)
 		if err != nil {
 			t.Errorf("expected no error but got '%s'", err.Error())
 		}
 		if len(tokenString) == 0 {
 			t.Error("got empty token")
 		}
-		validateToken(t, tokenString, account.ID, tokenSecret)
+		err = ValidateToken(tokenString, accountID, tokenSecret)
+		if err != nil {
+			t.Errorf("expected no error while validanting token but got %v", err)
+		}
 	})
 
 	t.Run("should return an empty token and an error when account is not found", func(t *testing.T) {
@@ -48,7 +49,7 @@ func TestLoginUseCase_Auth(t *testing.T) {
 		if err != nil {
 			t.Errorf("expected no error while creating a new account but got '%s'", err)
 		}
-		tokenString, err := useCase.Auth(ctx, account.CPF, secret)
+		tokenString, _, err := useCase.Auth(ctx, account.CPF, secret)
 		if !errors.Is(err, accounts_usecases.ErrAccountNotFound) {
 			t.Errorf("expected no error but got '%v'", err)
 		}
@@ -58,7 +59,7 @@ func TestLoginUseCase_Auth(t *testing.T) {
 	})
 }
 
-func validateToken(t *testing.T, tokenString string, accountID string, tokenSecret string) {
+/* func validateToken(t *testing.T, tokenString string, accountID string, tokenSecret string) {
 	t.Helper()
 	token, err := jwt.ParseWithClaims(tokenString, &jwt.RegisteredClaims{}, func(token *jwt.Token) (interface{}, error) {
 		return []byte(tokenSecret), nil
@@ -79,4 +80,4 @@ func validateToken(t *testing.T, tokenString string, accountID string, tokenSecr
 	if !claims.VerifyIssuedAt(time.Now(), true) {
 		t.Error("expected non-zero 'issued at' time")
 	}
-}
+} */

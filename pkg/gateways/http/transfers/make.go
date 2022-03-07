@@ -5,7 +5,9 @@ import (
 	"errors"
 	"net/http"
 
+	"github.com/daniel1sender/Desafio-API/pkg/config"
 	"github.com/daniel1sender/Desafio-API/pkg/domain/entities"
+	"github.com/daniel1sender/Desafio-API/pkg/domain/login"
 	"github.com/daniel1sender/Desafio-API/pkg/domain/transfers"
 	server_http "github.com/daniel1sender/Desafio-API/pkg/gateways/http"
 	"github.com/sirupsen/logrus"
@@ -13,6 +15,7 @@ import (
 
 type Request struct {
 	AccountOriginID      string `json:"account_origin_id"`
+	Token                string `json:"token"`
 	AccountDestinationID string `json:"account_destination_id"`
 	Amount               int    `json:"amount"`
 }
@@ -26,7 +29,6 @@ type Response struct {
 }
 
 func (h Handler) Make(w http.ResponseWriter, r *http.Request) {
-	ctx := r.Context()
 	log := h.logger
 	var createRequest Request
 	err := json.NewDecoder(r.Body).Decode(&createRequest)
@@ -39,7 +41,37 @@ func (h Handler) Make(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	transfer, err := h.useCase.Make(ctx, createRequest.AccountOriginID, createRequest.AccountDestinationID, createRequest.Amount)
+	config, err := config.GetConfig()
+	if err != nil {
+		w.Header().Add("Content-Type", server_http.JSONContentType)
+		response := server_http.Error{Reason: "unable to get environment variables"}
+		log.WithError(err).Error("unable to get environment variables")
+		w.WriteHeader(http.StatusNotFound)
+		json.NewEncoder(w).Encode(response)
+		return
+	}
+
+	err = h.loginUseCase.CheckToken(r.Context(), createRequest.Token)
+	if err != nil {
+		w.Header().Add("Content-Type", server_http.JSONContentType)
+		response := server_http.Error{Reason: "token not found"}
+		log.WithError(err).Error("error while searching for token")
+		w.WriteHeader(http.StatusNotFound)
+		json.NewEncoder(w).Encode(response)
+		return
+	}
+
+	err = login.ValidateToken(createRequest.Token, createRequest.AccountOriginID, config.TokenSecret)
+	if err != nil {
+		w.Header().Add("Content-Type", server_http.JSONContentType)
+		response := server_http.Error{Reason: "unable to validate token"}
+		w.WriteHeader(http.StatusNotFound)
+		json.NewEncoder(w).Encode(response)
+		log.WithError(err).Error("error while validating token")
+		return
+	}
+
+	transfer, err := h.useCase.Make(r.Context(), createRequest.AccountOriginID, createRequest.AccountDestinationID, createRequest.Amount)
 	w.Header().Add("Content-Type", server_http.JSONContentType)
 	if err != nil {
 		log.WithError(err).Error("create transfer request failed")

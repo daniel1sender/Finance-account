@@ -11,12 +11,14 @@ const insertStatement = `INSERT INTO tokens(
 	id,
 	sub,
 	exp_time,
-	created_at
+	created_at,
+	token
 	) VALUES (
 	$1, 
 	$2, 
 	$3,
-	$4)`
+	$4,
+	$5)`
 
 //Insertion method of table tokens. This method inserts token id (id), account id (sub), expire time (exp_time), and the creating time of token (created_at)
 func (l LoginRepository) Insert(ctx context.Context, token, tokenSecret string) error {
@@ -27,7 +29,7 @@ func (l LoginRepository) Insert(ctx context.Context, token, tokenSecret string) 
 		return fmt.Errorf("error while parsing token occurred: %w", err)
 	}
 	claims := tokenParsed.Claims.(*jwt.RegisteredClaims)
-	if _, err := l.Exec(ctx, insertStatement, claims.ID, claims.Subject, claims.ExpiresAt.Time, claims.IssuedAt.Time); err != nil {
+	if _, err := l.Exec(ctx, insertStatement, claims.ID, claims.Subject, claims.ExpiresAt.Time, claims.IssuedAt.Time, token); err != nil {
 		return fmt.Errorf("unable to insert the token due to: %v", err)
 	}
 	return nil
