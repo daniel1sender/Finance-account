@@ -11,9 +11,9 @@ import (
 
 	"github.com/gorilla/mux"
 	"github.com/jackc/pgx/v4/pgxpool"
-	"github.com/kelseyhightower/envconfig"
 	"github.com/sirupsen/logrus"
 
+	"github.com/daniel1sender/Desafio-API/pkg/config"
 	accounts_usecase "github.com/daniel1sender/Desafio-API/pkg/domain/accounts/usecases"
 	transfers_usecase "github.com/daniel1sender/Desafio-API/pkg/domain/transfers"
 	accounts_handler "github.com/daniel1sender/Desafio-API/pkg/gateways/http/accounts"
@@ -33,8 +33,7 @@ func main() {
 	logger.SetFormatter(&logrus.JSONFormatter{})
 	log := logrus.NewEntry(logger)
 
-	var apiConfig Config
-	err := envconfig.Process("", &apiConfig)
+	apiConfig, err := config.GetConfig()
 	if err != nil {
 		log.WithError(err).Fatal("error while processing environment variables")
 	}
