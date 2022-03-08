@@ -31,9 +31,6 @@ func TestLoginUseCase_Auth(t *testing.T) {
 		if err != nil {
 			t.Errorf("expected no error but got '%s'", err.Error())
 		}
-		if len(tokenString) == 0 {
-			t.Error("got empty token")
-		}
 		err = ValidateToken(tokenString, accountID, tokenSecret)
 		if err != nil {
 			t.Errorf("expected no error while validanting token but got %v", err)
