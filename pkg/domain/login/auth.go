@@ -33,10 +33,10 @@ func (l LoginUseCase) Auth(ctx context.Context, cpf, accountSecret string, durat
 }
 
 func GenerateJWT(accountID, tokenSecret string, expTime time.Duration) (string, error) {
-	claim := entities.NewClaim(accountID)
+	claim := entities.NewClaim(accountID, expTime)
 	claims := jwt.RegisteredClaims{
 		Subject:   accountID,
-		ExpiresAt: jwt.NewNumericDate(claim.ExpTime.Add(expTime)),
+		ExpiresAt: jwt.NewNumericDate(claim.ExpTime),
 		IssuedAt:  jwt.NewNumericDate(claim.CreatedTime),
 		ID:        claim.TokenID,
 	}

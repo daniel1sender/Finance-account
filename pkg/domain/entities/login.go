@@ -13,11 +13,11 @@ type Claims struct {
 	CreatedTime time.Time
 }
 
-func NewClaim(accountID string) Claims {
+func NewClaim(accountID string, expTime time.Duration) Claims {
 	return Claims{
 		TokenID:     uuid.NewString(),
 		Sub:         accountID,
-		ExpTime:     time.Now().UTC(),
+		ExpTime:     time.Now().Add(expTime),
 		CreatedTime: time.Now().UTC(),
 	}
 }
