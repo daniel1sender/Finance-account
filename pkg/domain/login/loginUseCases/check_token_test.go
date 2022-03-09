@@ -8,6 +8,7 @@ import (
 
 	"github.com/daniel1sender/Desafio-API/pkg/config"
 	"github.com/daniel1sender/Desafio-API/pkg/domain/entities"
+	login_usecase "github.com/daniel1sender/Desafio-API/pkg/domain/login"
 	"github.com/daniel1sender/Desafio-API/pkg/gateways/store/postgres/accounts"
 	"github.com/daniel1sender/Desafio-API/pkg/gateways/store/postgres/login"
 	"github.com/daniel1sender/Desafio-API/pkg/tests"
@@ -38,8 +39,8 @@ func TestLoginUseCase_CheckToken(t *testing.T) {
 
 	t.Run("should return an error when token is not found", func(t *testing.T) {
 		err := useCase.CheckToken(ctx, "token")
-		if !errors.Is(err, login.ErrTokenNotFound) {
-			t.Errorf("expected %v but got %v", login.ErrTokenNotFound, err)
+		if !errors.Is(err, login_usecase.ErrTokenNotFound) {
+			t.Errorf("expected %v but got %v", login_usecase.ErrTokenNotFound, err)
 		}
 	})
 	tests.DeleteAllTokens(Db)

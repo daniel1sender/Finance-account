@@ -29,7 +29,7 @@ func (l LoginRepository) Insert(ctx context.Context, token, tokenSecret string) 
 	}
 	claims := tokenParsed.Claims.(*jwt.RegisteredClaims)
 	if _, err := l.Exec(ctx, insertStatement, claims.ID, claims.Subject, claims.ExpiresAt.Time, claims.IssuedAt.Time, token); err != nil {
-		return fmt.Errorf("unable to insert the token due to: %v", err)
+		return fmt.Errorf("unable to insert the token due to: %w", err)
 	}
 	return nil
 }
