@@ -50,7 +50,7 @@ func TestLoginUseCase_Auth(t *testing.T) {
 		duration := "1m"
 		tokenString, err := useCase.Auth(ctx, account.CPF, accountSecret, duration)
 		if !errors.Is(err, accounts_usecases.ErrAccountNotFound) {
-			t.Errorf("expected no error but got '%v'", err)
+			t.Errorf("expected '%v' but got '%v'", accounts_usecases.ErrAccountNotFound, err)
 		}
 		if len(tokenString) != 0 {
 			t.Error("got empty token")
