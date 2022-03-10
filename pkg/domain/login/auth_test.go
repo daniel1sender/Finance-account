@@ -2,7 +2,6 @@ package login
 
 import (
 	"context"
-	"errors"
 	"testing"
 	"time"
 
@@ -10,6 +9,7 @@ import (
 	"github.com/daniel1sender/Desafio-API/pkg/domain/entities"
 	"github.com/daniel1sender/Desafio-API/pkg/gateways/store/postgres/accounts"
 	"github.com/golang-jwt/jwt/v4"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestLoginUseCase_Auth(t *testing.T) {
@@ -17,21 +17,20 @@ func TestLoginUseCase_Auth(t *testing.T) {
 	accountRepository := accounts.NewStorage(Db)
 	tokenSecret := "123"
 	useCase := LoginUseCase{accountRepository, tokenSecret}
+	assert := assert.New(t)
 	t.Run("should return a signed token", func(t *testing.T) {
 		name := "Jonh Doe"
 		cpf := "01481623559"
 		accountSecret := "123"
 		balance := 10
 		account, err := entities.NewAccount(name, cpf, accountSecret, balance)
-		if err != nil {
-			t.Errorf("expected no error while creating a new account but got '%s'", err)
-		}
+		assert.Nilf(err, "expected no error while creating a new account but got '%s'", err)
+
 		duration := "1m"
 		accountRepository.Upsert(ctx, account)
 		tokenString, err := useCase.Auth(ctx, account.CPF, accountSecret, duration)
-		if err != nil {
-			t.Errorf("expected no error but got '%v'", err)
-		}
+		assert.Nilf(err, "expected no error but got '%v'", err)
+
 		if len(tokenString) == 0 {
 			t.Error("got empty token")
 		}
@@ -44,14 +43,12 @@ func TestLoginUseCase_Auth(t *testing.T) {
 		accountSecret := "123"
 		balance := 10
 		account, err := entities.NewAccount(name, cpf, accountSecret, balance)
-		if err != nil {
-			t.Errorf("expected no error while creating a new account but got '%s'", err)
-		}
+		assert.Nilf(err, "expected no error while creating a new account but got '%s'", err)
+
 		duration := "1m"
 		tokenString, err := useCase.Auth(ctx, account.CPF, accountSecret, duration)
-		if !errors.Is(err, accounts_usecases.ErrAccountNotFound) {
-			t.Errorf("expected '%v' but got '%v'", accounts_usecases.ErrAccountNotFound, err)
-		}
+		assert.NotEqualf(err, accounts_usecases.ErrAccountNotFound, "expected '%v' but got '%v'", accounts_usecases.ErrAccountNotFound, err)
+
 		if len(tokenString) != 0 {
 			t.Error("got empty token")
 		}
@@ -67,12 +64,8 @@ func validateToken(t *testing.T, tokenString string, accountID string, tokenSecr
 		t.Errorf("expected no error but got '%v'", err)
 	}
 	claims := token.Claims.(*jwt.RegisteredClaims)
-	if claims.Subject != accountID {
-		t.Errorf("expected '%s' but got '%s'", accountID, claims.Subject)
-	}
-	if claims.ID == "" {
-		t.Error("expected not empty id")
-	}
+	assert.Equalf(t, claims.Subject, accountID, "expected '%s' but got '%s'", accountID, claims.Subject)
+	assert.NotEqual(t, claims.ID, "", "expected not empty id")
 	if !claims.VerifyExpiresAt(time.Now(), true) {
 		t.Error("expected non-zero 'expires at' time")
 	}
