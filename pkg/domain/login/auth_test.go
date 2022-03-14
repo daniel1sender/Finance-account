@@ -23,17 +23,12 @@ func TestLoginUseCase_Auth(t *testing.T) {
 		cpf := "01481623559"
 		accountSecret := "123"
 		balance := 10
-		account, err := entities.NewAccount(name, cpf, accountSecret, balance)
-		assert.Nilf(err, "expected no error while creating a new account but got '%s'", err)
-
+		account, _ := entities.NewAccount(name, cpf, accountSecret, balance)
 		duration := "1m"
 		accountRepository.Upsert(ctx, account)
 		tokenString, err := useCase.Auth(ctx, account.CPF, accountSecret, duration)
-		assert.Nilf(err, "expected no error but got '%v'", err)
-
-		if len(tokenString) == 0 {
-			t.Error("got empty token")
-		}
+		assert.NoError(err)
+		assert.NotEmpty(tokenString, "got empty token")
 		validateToken(t, tokenString, account.ID, tokenSecret)
 	})
 
@@ -42,16 +37,11 @@ func TestLoginUseCase_Auth(t *testing.T) {
 		cpf := "01481623550"
 		accountSecret := "123"
 		balance := 10
-		account, err := entities.NewAccount(name, cpf, accountSecret, balance)
-		assert.Nilf(err, "expected no error while creating a new account but got '%s'", err)
-
+		account, _ := entities.NewAccount(name, cpf, accountSecret, balance)
 		duration := "1m"
 		tokenString, err := useCase.Auth(ctx, account.CPF, accountSecret, duration)
 		assert.NotEqualf(err, accounts_usecases.ErrAccountNotFound, "expected '%v' but got '%v'", accounts_usecases.ErrAccountNotFound, err)
-
-		if len(tokenString) != 0 {
-			t.Error("got empty token")
-		}
+		assert.Empty(tokenString, "got a non-empty token")
 	})
 }
 
@@ -61,7 +51,7 @@ func validateToken(t *testing.T, tokenString string, accountID string, tokenSecr
 		return []byte(tokenSecret), nil
 	})
 	if err != nil {
-		t.Errorf("expected no error but got '%v'", err)
+		t.Fatalf("expected no error but got '%v'", err)
 	}
 	claims := token.Claims.(*jwt.RegisteredClaims)
 	assert.Equalf(t, claims.Subject, accountID, "expected '%s' but got '%s'", accountID, claims.Subject)
