@@ -17,7 +17,7 @@ func (l LoginUseCase) Auth(ctx context.Context, cpf, accountSecret string, durat
 	}
 	err = bcrypt.CompareHashAndPassword([]byte(account.Secret), []byte(accountSecret))
 	if err != nil {
-		return "", fmt.Errorf("error while validate secret: %w", err)
+		return "", fmt.Errorf("error while validating secret: %w", err)
 	}
 
 	expTime, err := time.ParseDuration(duration)

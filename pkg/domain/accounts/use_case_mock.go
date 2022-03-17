@@ -28,4 +28,3 @@ func (m *UseCaseMock) GetByID(ctx context.Context, id string) (entities.Account,
 func (m *UseCaseMock) GetAll(ctx context.Context) ([]entities.Account, error) {
 	return m.List, m.Error
 }
-
