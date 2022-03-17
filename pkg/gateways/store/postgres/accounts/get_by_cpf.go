@@ -14,9 +14,9 @@ func (ar AccountRepository) GetByCPF(ctx context.Context, cpf string) (entities.
 	account := entities.Account{}
 	err := ar.QueryRow(ctx, getByCPFStatement, cpf).Scan(&account.ID, &account.Name, &account.CPF, &account.Secret, &account.Balance, &account.CreatedAt)
 	if err == pgx.ErrNoRows {
-		return entities.Account{}, accounts.ErrAccountNotFound
+		return account, accounts.ErrAccountNotFound
 	} else if err != nil {
-		return entities.Account{}, err
+		return account, err
 	}
 
 	return account, nil
