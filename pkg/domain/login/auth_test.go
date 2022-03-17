@@ -18,6 +18,7 @@ func TestLoginUseCase_Auth(t *testing.T) {
 	tokenSecret := "123"
 	useCase := LoginUseCase{accountRepository, tokenSecret}
 	assert := assert.New(t)
+
 	t.Run("should return a signed token", func(t *testing.T) {
 		name := "Jonh Doe"
 		cpf := "01481623559"
@@ -56,6 +57,7 @@ func validateToken(t *testing.T, tokenString string, accountID string, tokenSecr
 	claims := token.Claims.(*jwt.RegisteredClaims)
 	assert.Equalf(t, claims.Subject, accountID, "expected '%s' but got '%s'", accountID, claims.Subject)
 	assert.NotEqual(t, claims.ID, "", "expected not empty id")
+
 	if !claims.VerifyExpiresAt(time.Now(), true) {
 		t.Error("expected non-zero 'expires at' time")
 	}

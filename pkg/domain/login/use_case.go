@@ -2,6 +2,7 @@ package login
 
 import (
 	"context"
+	"github.com/daniel1sender/Desafio-API/pkg/domain/entities"
 )
 
 type LoginUseCase struct {
