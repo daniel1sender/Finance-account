@@ -2,6 +2,7 @@ package login
 
 import (
 	"context"
+	"errors"
 	"testing"
 	"time"
 
@@ -29,8 +30,8 @@ func TestLoginUseCase_Auth(t *testing.T) {
 		duration := "1m"
 		accountRepository.Upsert(ctx, account)
 		tokenString, err := useCase.Auth(ctx, account.CPF, accountSecret, duration)
-		assert.NoError(err)
-		assert.NotEmpty(tokenString, "got empty token")
+		assert.Nil(err)
+		assert.NotEmpty(tokenString)
 		validateToken(t, tokenString, account.ID, tokenSecret)
 		tests.DeleteAllAccounts(Db)
 	})
@@ -43,8 +44,8 @@ func TestLoginUseCase_Auth(t *testing.T) {
 		account, _ := entities.NewAccount(name, cpf, accountSecret, balance)
 		duration := "1m"
 		tokenString, err := useCase.Auth(ctx, account.CPF, accountSecret, duration)
-		assert.NotEqualf(err, accounts_usecases.ErrAccountNotFound, "expected '%v' but got '%v'", accounts_usecases.ErrAccountNotFound, err)
-		assert.Empty(tokenString, "got a non-empty token")
+		assert.True(errors.Is(err, accounts_usecases.ErrAccountNotFound))
+		assert.Empty(tokenString)
 		tests.DeleteAllAccounts(Db)
 	})
 }
@@ -58,9 +59,8 @@ func validateToken(t *testing.T, tokenString string, accountID string, tokenSecr
 		t.Fatalf("expected no error but got '%v'", err)
 	}
 	claims := token.Claims.(*jwt.RegisteredClaims)
-	assert.Equalf(t, claims.Subject, accountID, "expected '%s' but got '%s'", accountID, claims.Subject)
-	assert.NotEqual(t, claims.ID, "", "expected not empty id")
-
+	assert.Equal(t, accountID, claims.Subject)
+	assert.NotEmpty(t, claims.ID)
 	if !claims.VerifyExpiresAt(time.Now(), true) {
 		t.Error("expected non-zero 'expires at' time")
 	}
