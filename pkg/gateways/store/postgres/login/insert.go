@@ -3,7 +3,8 @@ package login
 import (
 	"context"
 	"fmt"
-	"time"
+
+	"github.com/daniel1sender/Desafio-API/pkg/domain/entities"
 )
 
 const insertStatement = `INSERT INTO tokens(
@@ -19,8 +20,8 @@ const insertStatement = `INSERT INTO tokens(
 	$4,
 	$5)`
 
-func (l LoginRepository) Insert(ctx context.Context, tokenID, accountID, token string, expiresAt, createdAt time.Time) error {
-	if _, err := l.Exec(ctx, insertStatement, tokenID, accountID, expiresAt, createdAt, token); err != nil {
+func (l LoginRepository) Insert(ctx context.Context, claims entities.Claims, token string) error {
+	if _, err := l.Exec(ctx, insertStatement, claims.TokenID, claims.Sub, claims.ExpTime, claims.CreatedTime, token); err != nil {
 		return fmt.Errorf("unable to insert the token due to: %w", err)
 	}
 	return nil
