@@ -2,6 +2,11 @@ package login
 
 import (
 	"context"
+	"errors"
+)
+
+var (
+	ErrTokenNotFound = errors.New("token not found")
 )
 
 type LoginUseCase struct {
