@@ -9,3 +9,9 @@ import (
 type AccountRepository interface {
 	GetByCPF(ctx context.Context, cpf string) (entities.Account, error)
 }
+
+type LoginRepository interface {
+	CheckToken(ctx context.Context, token string) error
+	GetTokenByID(ctx context.Context, tokenID string) (string, error)
+	Insert(ctx context.Context, claims entities.Claims, token string) error
+}
