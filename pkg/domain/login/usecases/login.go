@@ -10,7 +10,7 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-func (l LoginUseCase) Auth(ctx context.Context, cpf, accountSecret string, duration string) (string, error) {
+func (l LoginUseCase) Login(ctx context.Context, cpf, accountSecret string, duration string) (string, error) {
 	account, err := l.AccountStorage.GetByCPF(ctx, cpf)
 	if err != nil {
 		return "", fmt.Errorf("error while getting account by cpf: %w", err)
@@ -25,31 +25,32 @@ func (l LoginUseCase) Auth(ctx context.Context, cpf, accountSecret string, durat
 		return "", fmt.Errorf("error while parsing duration time")
 	}
 
-	token, claims, err := GenerateJWT(account.ID, l.tokenSecret, expTime)
+	claim := entities.NewClaim(account.ID, expTime)
+	claims := jwt.RegisteredClaims{
+		Subject:   account.ID,
+		ExpiresAt: jwt.NewNumericDate(claim.ExpTime),
+		IssuedAt:  jwt.NewNumericDate(claim.CreatedTime),
+		ID:        claim.TokenID,
+	}
+
+	token, err := GenerateJWT(claims, l.tokenSecret)
 	if err != nil {
 		return "", fmt.Errorf("error while generating token: %w", err)
 	}
 
-	err = l.LoginRepository.Insert(ctx, claims, token)
-	if err != nil{
+	err = l.LoginRepository.Insert(ctx, claim, token)
+	if err != nil {
 		return "", err
 	}
 
 	return token, nil
 }
 
-func GenerateJWT(accountID, tokenSecret string, expTime time.Duration) (string, entities.Claims, error) {
-	claim := entities.NewClaim(accountID, expTime)
-	claims := jwt.RegisteredClaims{
-		Subject:   accountID,
-		ExpiresAt: jwt.NewNumericDate(claim.ExpTime),
-		IssuedAt:  jwt.NewNumericDate(claim.CreatedTime),
-		ID:        claim.TokenID,
-	}
+func GenerateJWT(claims jwt.RegisteredClaims, tokenSecret string) (string, error) {
 	tokenJWT := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	token, err := tokenJWT.SignedString([]byte(tokenSecret))
 	if err != nil {
-		return "", entities.Claims{}, fmt.Errorf("error while getting the signed token: %w", err)
+		return "", fmt.Errorf("error while getting the signed token: %w", err)
 	}
-	return token, claim, nil
+	return token, nil
 }
