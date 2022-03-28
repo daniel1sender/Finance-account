@@ -10,7 +10,7 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-func (l LoginUseCase) Login(ctx context.Context, cpf, accountSecret string, duration string) (string, error) {
+func (l LoginUseCase) Login(ctx context.Context, cpf, accountSecret string) (string, error) {
 	account, err := l.AccountStorage.GetByCPF(ctx, cpf)
 	if err != nil {
 		return "", fmt.Errorf("error while getting account by cpf: %w", err)
@@ -20,7 +20,7 @@ func (l LoginUseCase) Login(ctx context.Context, cpf, accountSecret string, dura
 		return "", fmt.Errorf("error while validating secret: %w", err)
 	}
 
-	expTime, err := time.ParseDuration(duration)
+	expTime, err := time.ParseDuration(l.expTime)
 	if err != nil {
 		return "", fmt.Errorf("error while parsing duration time")
 	}

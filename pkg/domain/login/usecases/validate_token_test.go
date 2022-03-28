@@ -18,14 +18,14 @@ func TestLoginUsecase_ValidateToken(t *testing.T) {
 	accountRepository := accounts.NewStorage(Db)
 	loginRepository := login.NewStorage(Db)
 	tokenSecret := "123"
-	useCase := LoginUseCase{accountRepository, loginRepository, tokenSecret}
+	duration := "1m"
+	useCase := LoginUseCase{accountRepository, loginRepository, tokenSecret, duration}
 	name := "Jonh Doe"
 	cpf := "01481623559"
 	accountSecret := "123"
 	balance := 10
 	account, _ := entities.NewAccount(name, cpf, accountSecret, balance)
-	duration := "1m"
-	expTime, _ := time.ParseDuration(duration)
+	expTime, _ := time.ParseDuration(useCase.expTime)
 	claim := entities.NewClaim(account.ID, expTime)
 	claims := jwt.RegisteredClaims{
 		Subject:   account.ID,
