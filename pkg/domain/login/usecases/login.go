@@ -26,14 +26,8 @@ func (l LoginUseCase) Login(ctx context.Context, cpf, accountSecret string) (str
 	}
 
 	claim := entities.NewClaim(account.ID, expTime)
-	claims := jwt.RegisteredClaims{
-		Subject:   account.ID,
-		ExpiresAt: jwt.NewNumericDate(claim.ExpTime),
-		IssuedAt:  jwt.NewNumericDate(claim.CreatedTime),
-		ID:        claim.TokenID,
-	}
 
-	token, err := GenerateJWT(claims, l.tokenSecret)
+	token, err := GenerateJWT(claim, l.tokenSecret)
 	if err != nil {
 		return "", fmt.Errorf("error while generating token: %w", err)
 	}
@@ -46,8 +40,14 @@ func (l LoginUseCase) Login(ctx context.Context, cpf, accountSecret string) (str
 	return token, nil
 }
 
-func GenerateJWT(claims jwt.RegisteredClaims, tokenSecret string) (string, error) {
-	tokenJWT := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+func GenerateJWT(claims entities.Claims, tokenSecret string) (string, error) {
+	claim := jwt.RegisteredClaims{
+		Subject:   claims.Sub,
+		ExpiresAt: jwt.NewNumericDate(claims.ExpTime),
+		IssuedAt:  jwt.NewNumericDate(claims.CreatedTime),
+		ID:        claims.TokenID,
+	}
+	tokenJWT := jwt.NewWithClaims(jwt.SigningMethodHS256, claim)
 	token, err := tokenJWT.SignedString([]byte(tokenSecret))
 	if err != nil {
 		return "", fmt.Errorf("error while getting the signed token: %w", err)

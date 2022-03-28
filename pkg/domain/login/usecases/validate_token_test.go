@@ -9,7 +9,6 @@ import (
 	"github.com/daniel1sender/Desafio-API/pkg/gateways/store/postgres/accounts"
 	"github.com/daniel1sender/Desafio-API/pkg/gateways/store/postgres/login"
 	"github.com/daniel1sender/Desafio-API/pkg/tests"
-	jwt "github.com/golang-jwt/jwt/v4"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -26,17 +25,11 @@ func TestLoginUsecase_ValidateToken(t *testing.T) {
 	balance := 10
 	account, _ := entities.NewAccount(name, cpf, accountSecret, balance)
 	expTime, _ := time.ParseDuration(useCase.expTime)
-	claim := entities.NewClaim(account.ID, expTime)
-	claims := jwt.RegisteredClaims{
-		Subject:   account.ID,
-		ExpiresAt: jwt.NewNumericDate(claim.ExpTime),
-		IssuedAt:  jwt.NewNumericDate(claim.CreatedTime),
-		ID:        claim.TokenID,
-	}
+	claims := entities.NewClaim(account.ID, expTime)
 	tokenString, _ := GenerateJWT(claims, tokenSecret)
 
 	t.Run("should return a token succesfully", func(t *testing.T) {
-		loginRepository.Insert(ctx, claim, tokenString)
+		loginRepository.Insert(ctx, claims, tokenString)
 		token, err := useCase.ValidateToken(ctx, tokenString)
 		assert.NoError(t, err)
 		assert.NotEmpty(t, token)
@@ -53,12 +46,6 @@ func TestLoginUsecase_ValidateToken(t *testing.T) {
 		duration := "1ms"
 		expTime, _ := time.ParseDuration(duration)
 		claim := entities.NewClaim(account.ID, expTime)
-		claims := jwt.RegisteredClaims{
-			Subject:   account.ID,
-			ExpiresAt: jwt.NewNumericDate(claim.ExpTime),
-			IssuedAt:  jwt.NewNumericDate(claim.CreatedTime),
-			ID:        claim.TokenID,
-		}
 		tokenString, _ := GenerateJWT(claims, tokenSecret)
 		loginRepository.Insert(ctx, claim, tokenString)
 		token, err := useCase.ValidateToken(ctx, tokenString)
