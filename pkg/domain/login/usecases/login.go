@@ -40,7 +40,7 @@ func (l LoginUseCase) Login(ctx context.Context, cpf, accountSecret string) (str
 
 	err = l.LoginRepository.Insert(ctx, claim, token)
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("error while inserting token: %w", err)
 	}
 
 	return token, nil
