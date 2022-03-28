@@ -20,7 +20,8 @@ func TestLoginUseCase_Login(t *testing.T) {
 	accountRepository := accounts.NewStorage(Db)
 	loginRepository := login.NewStorage(Db)
 	tokenSecret := "123"
-	useCase := LoginUseCase{accountRepository, loginRepository, tokenSecret}
+	expTime := "1m"
+	useCase := LoginUseCase{accountRepository, loginRepository, tokenSecret, expTime}
 	assert := assert.New(t)
 
 	t.Run("should return a signed token", func(t *testing.T) {
@@ -29,9 +30,8 @@ func TestLoginUseCase_Login(t *testing.T) {
 		accountSecret := "123"
 		balance := 10
 		account, _ := entities.NewAccount(name, cpf, accountSecret, balance)
-		duration := "1m"
 		accountRepository.Upsert(ctx, account)
-		tokenString, err := useCase.Login(ctx, account.CPF, accountSecret, duration)
+		tokenString, err := useCase.Login(ctx, account.CPF, accountSecret)
 		assert.Nil(err)
 		assert.NotEmpty(tokenString)
 		validateToken(t, tokenString, account.ID, tokenSecret)
@@ -44,8 +44,7 @@ func TestLoginUseCase_Login(t *testing.T) {
 		accountSecret := "123"
 		balance := 10
 		account, _ := entities.NewAccount(name, cpf, accountSecret, balance)
-		duration := "1m"
-		tokenString, err := useCase.Login(ctx, account.CPF, accountSecret, duration)
+		tokenString, err := useCase.Login(ctx, account.CPF, accountSecret)
 		assert.True(errors.Is(err, accounts_usecases.ErrAccountNotFound))
 		assert.Empty(tokenString)
 		tests.DeleteAllAccounts(Db)
