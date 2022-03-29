@@ -2,14 +2,10 @@ package usecases
 
 import (
 	"context"
-	"errors"
 	"fmt"
 
 	"github.com/daniel1sender/Desafio-API/pkg/domain/entities"
-)
-
-var (
-	ErrInvalidToken = errors.New("invalid token found")
+	"github.com/daniel1sender/Desafio-API/pkg/domain/login"
 )
 
 func (l LoginUseCase) ValidateToken(ctx context.Context, tokenString string) (entities.Claims, error) {
@@ -22,7 +18,7 @@ func (l LoginUseCase) ValidateToken(ctx context.Context, tokenString string) (en
 		return entities.Claims{}, fmt.Errorf("error while getting token: %w", err)
 	}
 	if tokenString != token {
-		return entities.Claims{}, fmt.Errorf("error while comparing token :%w", ErrInvalidToken)
+		return entities.Claims{}, fmt.Errorf("error while comparing token :%w", login.ErrInvalidToken)
 	}
 	return claim, nil
 }
