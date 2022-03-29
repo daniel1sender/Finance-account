@@ -20,8 +20,8 @@ func TestLoginUseCase_Login(t *testing.T) {
 	accountRepository := accounts.NewStorage(Db)
 	loginRepository := login.NewStorage(Db)
 	tokenSecret := "123"
-	expTime := "1m"
-	useCase := LoginUseCase{accountRepository, loginRepository, tokenSecret, expTime}
+	duration := "1m"
+	useCase, _ := NewUseCase(accountRepository, loginRepository, tokenSecret, duration)
 	assert := assert.New(t)
 
 	t.Run("should return a signed token", func(t *testing.T) {

@@ -3,7 +3,6 @@ package usecases
 import (
 	"context"
 	"fmt"
-	"time"
 
 	"github.com/daniel1sender/Desafio-API/pkg/domain/entities"
 	jwt "github.com/golang-jwt/jwt/v4"
@@ -20,12 +19,7 @@ func (l LoginUseCase) Login(ctx context.Context, cpf, accountSecret string) (str
 		return "", fmt.Errorf("error while validating secret: %w", err)
 	}
 
-	expTime, err := time.ParseDuration(l.expTime)
-	if err != nil {
-		return "", fmt.Errorf("error while parsing duration time")
-	}
-
-	claim := entities.NewClaim(account.ID, expTime)
+	claim := entities.NewClaim(account.ID, l.expTime)
 
 	token, err := GenerateJWT(claim, l.tokenSecret)
 	if err != nil {
