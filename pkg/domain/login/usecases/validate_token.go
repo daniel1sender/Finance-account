@@ -18,7 +18,7 @@ func (l LoginUseCase) ValidateToken(ctx context.Context, tokenString string) (en
 		return entities.Claims{}, fmt.Errorf("error while getting token: %w", err)
 	}
 	if tokenString != token {
-		return entities.Claims{}, fmt.Errorf("error while comparing token :%w", login.ErrInvalidToken)
+		return entities.Claims{}, fmt.Errorf("error while comparing token: %w", login.ErrInvalidToken)
 	}
 	return claim, nil
 }

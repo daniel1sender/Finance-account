@@ -27,7 +27,7 @@ func TestLoginUsecase_ValidateToken(t *testing.T) {
 	newClaims := entities.NewClaim(account.ID, useCase.expTime)
 	tokenString, _ := GenerateJWT(newClaims, tokenSecret)
 
-	t.Run("should return a claim succesfully", func(t *testing.T) {
+	t.Run("should return a claim successfully", func(t *testing.T) {
 		loginRepository.Insert(ctx, newClaims, tokenString)
 		claim, err := useCase.ValidateToken(ctx, tokenString)
 		assert.NotEmpty(t, claim.TokenID)
