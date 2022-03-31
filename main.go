@@ -15,11 +15,14 @@ import (
 
 	"github.com/daniel1sender/Desafio-API/pkg/config"
 	accounts_usecase "github.com/daniel1sender/Desafio-API/pkg/domain/accounts/usecases"
+	login_usecase "github.com/daniel1sender/Desafio-API/pkg/domain/login/usecases"
 	transfers_usecase "github.com/daniel1sender/Desafio-API/pkg/domain/transfers"
 	accounts_handler "github.com/daniel1sender/Desafio-API/pkg/gateways/http/accounts"
+	login_handler "github.com/daniel1sender/Desafio-API/pkg/gateways/http/login"
 	transfers_handler "github.com/daniel1sender/Desafio-API/pkg/gateways/http/transfers"
 	postgres "github.com/daniel1sender/Desafio-API/pkg/gateways/store/postgres"
 	"github.com/daniel1sender/Desafio-API/pkg/gateways/store/postgres/accounts"
+	"github.com/daniel1sender/Desafio-API/pkg/gateways/store/postgres/login"
 	"github.com/daniel1sender/Desafio-API/pkg/gateways/store/postgres/transfers"
 )
 
@@ -56,11 +59,19 @@ func main() {
 	transferUseCase := transfers_usecase.NewUseCase(transferStorage, accountRepository)
 	transferHandler := transfers_handler.NewHandler(transferUseCase, log)
 
+	loginStorage := login.NewStorage(dbPool)
+	loginUseCase, err := login_usecase.NewUseCase(accountRepository, loginStorage, apiConfig.TokenSecret, apiConfig.ExpTime)
+	if err != nil {
+		log.WithError(err).Fatal("error while parsing duration")
+	}
+	loginHandler := login_handler.NewHandler(loginUseCase, log)
+
 	r := mux.NewRouter()
 	r.HandleFunc("/accounts", accountHandler.Create).Methods(http.MethodPost)
 	r.HandleFunc("/accounts", accountHandler.GetAll).Methods(http.MethodGet)
 	r.HandleFunc("/accounts/{id}/balance", accountHandler.GetBalanceByID).Methods(http.MethodGet)
 	r.HandleFunc("/transfers", transferHandler.Make).Methods(http.MethodPost)
+	r.HandleFunc("/login", loginHandler.Login).Methods(http.MethodPost)
 
 	const writeTime = 60 * time.Second
 	const readTime = 60 * time.Second
