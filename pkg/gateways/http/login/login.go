@@ -67,7 +67,5 @@ func (h Handler) Login(w http.ResponseWriter, r *http.Request) {
 	response := Response{Token: token}
 	w.WriteHeader(http.StatusCreated)
 	_ = json.NewEncoder(w).Encode(response)
-	log.WithFields(logrus.Fields{
-		"token": response.Token,
-	}).Info("token created successfully")
+	log.Info("token created successfully")
 }
