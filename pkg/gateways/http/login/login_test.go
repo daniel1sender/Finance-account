@@ -31,7 +31,7 @@ func TestHandlerLogin(t *testing.T) {
 		handler.Login(newResponse, newRequest)
 		var response Response
 		json.Unmarshal(newResponse.Body.Bytes(), &response)
-		
+
 		if newResponse.Code != http.StatusCreated {
 			t.Errorf("expected '%d' but got '%d'", http.StatusCreated, newResponse.Code)
 		}
@@ -153,9 +153,9 @@ func TestHandlerLogin(t *testing.T) {
 		}
 	})
 
-	t.Run("should return 500 and an error when an unexpected error occourred", func(t *testing.T){
-		ErrUnexpectedError := errors.New("unexpected error")
-		useCase := login.UseCaseMock{Error: ErrUnexpectedError}
+	t.Run("should return 500 and an error when an unexpected error occourred", func(t *testing.T) {
+		unexpectedError := errors.New("unexpected error")
+		useCase := login.UseCaseMock{Error: unexpectedError}
 		handler := NewHandler(&useCase, log)
 		requestBody := Request{"12345678910", "123"}
 		request, _ := json.Marshal(requestBody)
