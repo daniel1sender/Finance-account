@@ -44,7 +44,7 @@ func (h Handler) Login(w http.ResponseWriter, r *http.Request) {
 		log.WithError(err).Error("login request failed")
 		switch {
 		case errors.Is(err, accounts.ErrAccountNotFound):
-			response := server_http.Error{Reason: login.ErrInvalidCredetials.Error()}
+			response := server_http.Error{Reason: login.ErrInvalidCredentials.Error()}
 			w.WriteHeader(http.StatusNotFound)
 			json.NewEncoder(w).Encode(response)
 		case errors.Is(err, login.ErrEmptySecret):
