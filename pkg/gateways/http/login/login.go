@@ -56,7 +56,7 @@ func (h Handler) Login(w http.ResponseWriter, r *http.Request) {
 			w.WriteHeader(http.StatusBadRequest)
 			json.NewEncoder(w).Encode(response)
 		case errors.Is(err, login.ErrInvalidSecret):
-			response := server_http.Error{Reason: login.ErrInvalidSecret.Error()}
+			response := server_http.Error{Reason: login.ErrInvalidCredentials.Error()}
 			w.WriteHeader(http.StatusBadRequest)
 			json.NewEncoder(w).Encode(response)
 		default:
