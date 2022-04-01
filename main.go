@@ -62,7 +62,7 @@ func main() {
 	loginStorage := login.NewStorage(dbPool)
 	loginUseCase, err := login_usecase.NewUseCase(accountRepository, loginStorage, apiConfig.TokenSecret, apiConfig.ExpTime)
 	if err != nil {
-		log.WithError(err).Fatal("error while parsing duration")
+		log.WithError(err).Error("error while parsing duration")
 	}
 	loginHandler := login_handler.NewHandler(loginUseCase, log)
 
