@@ -32,12 +32,8 @@ func TestHandlerLogin(t *testing.T) {
 		var response Response
 		json.Unmarshal(newResponse.Body.Bytes(), &response)
 
-		if newResponse.Code != http.StatusCreated {
-			t.Errorf("expected '%d' but got '%d'", http.StatusCreated, newResponse.Code)
-		}
-		if newResponse.Header().Get("content-type") != server_http.JSONContentType {
-			t.Errorf("expected '%s' but got '%s'", server_http.JSONContentType, newResponse.Header().Get("content-type"))
-		}
+		assert.Equal(t, newResponse.Code, http.StatusCreated)
+		assert.Equal(t, newResponse.Header().Get("content-type"), server_http.JSONContentType)
 		assert.NotEmpty(t, response.Token)
 		assert.Equal(t, response.Token, useCase.Token)
 	})
@@ -53,16 +49,10 @@ func TestHandlerLogin(t *testing.T) {
 		var response server_http.Error
 		json.Unmarshal(newResponse.Body.Bytes(), &response)
 
-		if newResponse.Code != http.StatusBadRequest {
-			t.Errorf("expected status '%d' but got '%d'", http.StatusBadRequest, newResponse.Code)
-		}
-		if newResponse.Header().Get("content-type") != server_http.JSONContentType {
-			t.Errorf("expected '%s' but got '%s'", server_http.JSONContentType, newResponse.Header().Get("content-type"))
-		}
+		assert.Equal(t, newResponse.Code, http.StatusBadRequest)
+		assert.Equal(t, newResponse.Header().Get("content-type"), server_http.JSONContentType)
 		expected := "invalid request body"
-		if response.Reason != expected {
-			t.Errorf("expected '%s' but got '%s'", expected, response.Reason)
-		}
+		assert.Equal(t, response.Reason, expected)
 	})
 
 	t.Run("should return 404 and an error when account is not found", func(t *testing.T) {
@@ -76,15 +66,9 @@ func TestHandlerLogin(t *testing.T) {
 		var response server_http.Error
 		json.Unmarshal(newResponse.Body.Bytes(), &response)
 
-		if newResponse.Code != http.StatusForbidden {
-			t.Errorf("expected '%d' but got '%d'", http.StatusForbidden, newResponse.Code)
-		}
-		if newResponse.Header().Get("content-type") != server_http.JSONContentType {
-			t.Errorf("expected '%s' but got '%s'", server_http.JSONContentType, newResponse.Header().Get("content-type"))
-		}
-		if response.Reason != login.ErrInvalidCredentials.Error() {
-			t.Errorf("expected '%s' but got '%s'", login.ErrInvalidCredentials.Error(), response.Reason)
-		}
+		assert.Equal(t, newResponse.Code, http.StatusForbidden)
+		assert.Equal(t, newResponse.Header().Get("content-type"), server_http.JSONContentType)
+		assert.Equal(t, response.Reason, login.ErrInvalidCredentials.Error())
 	})
 
 	t.Run("should return 400 and an error when an empty secret is informed", func(t *testing.T) {
@@ -98,15 +82,9 @@ func TestHandlerLogin(t *testing.T) {
 		var response server_http.Error
 		json.Unmarshal(newResponse.Body.Bytes(), &response)
 
-		if newResponse.Code != http.StatusBadRequest {
-			t.Errorf("expected '%d' but got '%d'", http.StatusNotFound, newResponse.Code)
-		}
-		if newResponse.Header().Get("content-type") != server_http.JSONContentType {
-			t.Errorf("expected '%s' but got '%s'", server_http.JSONContentType, newResponse.Header().Get("content-type"))
-		}
-		if response.Reason != login.ErrEmptySecret.Error() {
-			t.Errorf("expected '%s' but got '%s'", login.ErrEmptySecret.Error(), response.Reason)
-		}
+		assert.Equal(t, newResponse.Code, http.StatusBadRequest)
+		assert.Equal(t, newResponse.Header().Get("content-type"), server_http.JSONContentType)
+		assert.Equal(t, response.Reason, login.ErrEmptySecret.Error())
 	})
 
 	t.Run("should return 400 and an error when the cpf informed doesn't have eleven digits", func(t *testing.T) {
@@ -120,15 +98,9 @@ func TestHandlerLogin(t *testing.T) {
 		var response server_http.Error
 		json.Unmarshal(newResponse.Body.Bytes(), &response)
 
-		if newResponse.Code != http.StatusBadRequest {
-			t.Errorf("expected '%d' but got '%d'", http.StatusNotFound, newResponse.Code)
-		}
-		if newResponse.Header().Get("content-type") != server_http.JSONContentType {
-			t.Errorf("expected '%s' but got '%s'", server_http.JSONContentType, newResponse.Header().Get("content-type"))
-		}
-		if response.Reason != login.ErrInvalidCPF.Error() {
-			t.Errorf("expected '%s' but got '%s'", login.ErrInvalidCPF.Error(), response.Reason)
-		}
+		assert.Equal(t, newResponse.Code, http.StatusBadRequest)
+		assert.Equal(t, newResponse.Header().Get("content-type"), server_http.JSONContentType)
+		assert.Equal(t, response.Reason, login.ErrInvalidCPF.Error())
 	})
 
 	t.Run("should return 400 and an error when secret informed is invalid", func(t *testing.T) {
@@ -142,15 +114,9 @@ func TestHandlerLogin(t *testing.T) {
 		var response server_http.Error
 		json.Unmarshal(newResponse.Body.Bytes(), &response)
 
-		if newResponse.Code != http.StatusForbidden {
-			t.Errorf("expected '%d' but got '%d'", http.StatusForbidden, newResponse.Code)
-		}
-		if newResponse.Header().Get("content-type") != server_http.JSONContentType {
-			t.Errorf("expected '%s' but got '%s'", server_http.JSONContentType, newResponse.Header().Get("content-type"))
-		}
-		if response.Reason != login.ErrInvalidCredentials.Error() {
-			t.Errorf("expected '%s' but got '%s'", login.ErrInvalidCredentials.Error(), response.Reason)
-		}
+		assert.Equal(t, newResponse.Code, http.StatusForbidden)
+		assert.Equal(t, newResponse.Header().Get("content-type"), server_http.JSONContentType)
+		assert.Equal(t, response.Reason, login.ErrInvalidCredentials.Error())
 	})
 
 	t.Run("should return 500 and an error when an unexpected error occourred", func(t *testing.T) {
@@ -165,15 +131,9 @@ func TestHandlerLogin(t *testing.T) {
 		var response server_http.Error
 		json.Unmarshal(newResponse.Body.Bytes(), &response)
 
-		if newResponse.Code != http.StatusInternalServerError {
-			t.Errorf("expected '%d' but got '%d'", http.StatusInternalServerError, newResponse.Code)
-		}
-		if newResponse.Header().Get("content-type") != server_http.JSONContentType {
-			t.Errorf("expected '%s' but got '%s'", server_http.JSONContentType, newResponse.Header().Get("content-type"))
-		}
+		assert.Equal(t, newResponse.Code, http.StatusInternalServerError)
+		assert.Equal(t, newResponse.Header().Get("content-type"), server_http.JSONContentType)
 		expectedReason := "internal server error"
-		if response.Reason != expectedReason {
-			t.Errorf("expected '%s' but got '%s'", expectedReason, response.Reason)
-		}
+		assert.Equal(t, response.Reason, expectedReason)
 	})
 }
