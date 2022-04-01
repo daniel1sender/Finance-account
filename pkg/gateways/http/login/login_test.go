@@ -17,6 +17,7 @@ import (
 
 func TestHandlerLogin(t *testing.T) {
 	log := logrus.NewEntry(logrus.New())
+
 	t.Run("should return 201 and the token created", func(t *testing.T) {
 		useCase := login.UseCaseMock{
 			Token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjM2Q3OGU2My1mYWQ5LTQ1ZTgtODI0OC1iOGNjMDc4ZDFiZGYiLCJleHAiOjE2NDg2Nzc5MDYsImlhdCI6MTY0ODY3NzYwNiwianRpIjoiZDNhNDYxMDctMDQzNi00ZmViLTk4YmItZGEzMTQzZmFiYWQyIn0.cN2-NOvwMwvEIKxBBVV-toJkmohkRDwppzCQs7XOqpA",
@@ -30,6 +31,7 @@ func TestHandlerLogin(t *testing.T) {
 		handler.Login(newResponse, newRequest)
 		var response Response
 		json.Unmarshal(newResponse.Body.Bytes(), &response)
+		
 		if newResponse.Code != http.StatusCreated {
 			t.Errorf("expected '%d' but got '%d'", http.StatusCreated, newResponse.Code)
 		}
@@ -39,6 +41,7 @@ func TestHandlerLogin(t *testing.T) {
 		assert.NotEmpty(t, response.Token)
 		assert.Equal(t, response.Token, useCase.Token)
 	})
+
 	t.Run("should return 400 and an error when it failed to decode the request successfully", func(t *testing.T) {
 
 		useCase := login.UseCaseMock{}
@@ -49,6 +52,7 @@ func TestHandlerLogin(t *testing.T) {
 		h.Login(newResponse, newRequest)
 		var response server_http.Error
 		json.Unmarshal(newResponse.Body.Bytes(), &response)
+
 		if newResponse.Code != http.StatusBadRequest {
 			t.Errorf("expected status '%d' but got '%d'", http.StatusBadRequest, newResponse.Code)
 		}
@@ -60,6 +64,7 @@ func TestHandlerLogin(t *testing.T) {
 			t.Errorf("expected '%s' but got '%s'", expected, response.Reason)
 		}
 	})
+
 	t.Run("should return 404 and an error when account is not found", func(t *testing.T) {
 		useCase := login.UseCaseMock{Error: accounts.ErrAccountNotFound}
 		handler := NewHandler(&useCase, log)
@@ -70,6 +75,7 @@ func TestHandlerLogin(t *testing.T) {
 		handler.Login(newResponse, newRequest)
 		var response server_http.Error
 		json.Unmarshal(newResponse.Body.Bytes(), &response)
+
 		if newResponse.Code != http.StatusNotFound {
 			t.Errorf("expected '%d' but got '%d'", http.StatusNotFound, newResponse.Code)
 		}
@@ -80,6 +86,7 @@ func TestHandlerLogin(t *testing.T) {
 			t.Errorf("expected '%s' but got '%s'", login.ErrInvalidCredetials.Error(), response.Reason)
 		}
 	})
+
 	t.Run("should return 400 and an error when an empty secret is informed", func(t *testing.T) {
 		useCase := login.UseCaseMock{Error: login.ErrEmptySecret}
 		handler := NewHandler(&useCase, log)
@@ -90,6 +97,7 @@ func TestHandlerLogin(t *testing.T) {
 		handler.Login(newResponse, newRequest)
 		var response server_http.Error
 		json.Unmarshal(newResponse.Body.Bytes(), &response)
+
 		if newResponse.Code != http.StatusBadRequest {
 			t.Errorf("expected '%d' but got '%d'", http.StatusNotFound, newResponse.Code)
 		}
@@ -100,6 +108,7 @@ func TestHandlerLogin(t *testing.T) {
 			t.Errorf("expected '%s' but got '%s'", login.ErrEmptySecret.Error(), response.Reason)
 		}
 	})
+
 	t.Run("should return 400 and an error when the cpf informed doesn't have eleven digits", func(t *testing.T) {
 		useCase := login.UseCaseMock{Error: login.ErrInvalidCPF}
 		handler := NewHandler(&useCase, log)
@@ -110,6 +119,7 @@ func TestHandlerLogin(t *testing.T) {
 		handler.Login(newResponse, newRequest)
 		var response server_http.Error
 		json.Unmarshal(newResponse.Body.Bytes(), &response)
+
 		if newResponse.Code != http.StatusBadRequest {
 			t.Errorf("expected '%d' but got '%d'", http.StatusNotFound, newResponse.Code)
 		}
@@ -120,6 +130,7 @@ func TestHandlerLogin(t *testing.T) {
 			t.Errorf("expected '%s' but got '%s'", login.ErrInvalidCPF.Error(), response.Reason)
 		}
 	})
+
 	t.Run("should return 400 and an error when secret informed is invalid", func(t *testing.T) {
 		useCase := login.UseCaseMock{Error: login.ErrInvalidSecret}
 		handler := NewHandler(&useCase, log)
@@ -130,6 +141,7 @@ func TestHandlerLogin(t *testing.T) {
 		handler.Login(newResponse, newRequest)
 		var response server_http.Error
 		json.Unmarshal(newResponse.Body.Bytes(), &response)
+
 		if newResponse.Code != http.StatusBadRequest {
 			t.Errorf("expected '%d' but got '%d'", http.StatusNotFound, newResponse.Code)
 		}
@@ -140,6 +152,7 @@ func TestHandlerLogin(t *testing.T) {
 			t.Errorf("expected '%s' but got '%s'", login.ErrInvalidSecret.Error(), response.Reason)
 		}
 	})
+
 	t.Run("should return 500 and an error when an unexpected error occourred", func(t *testing.T){
 		ErrUnexpectedError := errors.New("unexpected error")
 		useCase := login.UseCaseMock{Error: ErrUnexpectedError}

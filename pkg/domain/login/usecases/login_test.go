@@ -31,6 +31,7 @@ func TestLoginUseCase_Login(t *testing.T) {
 		balance := 10
 		account, _ := entities.NewAccount(name, cpf, accountSecret, balance)
 		accountRepository.Upsert(ctx, account)
+
 		tokenString, err := useCase.Login(ctx, account.CPF, accountSecret)
 		assert.Nil(err)
 		assert.NotEmpty(tokenString)
@@ -44,6 +45,7 @@ func TestLoginUseCase_Login(t *testing.T) {
 		accountSecret := "123"
 		balance := 10
 		account, _ := entities.NewAccount(name, cpf, accountSecret, balance)
+		
 		tokenString, err := useCase.Login(ctx, account.CPF, accountSecret)
 		assert.True(errors.Is(err, accounts_usecases.ErrAccountNotFound))
 		assert.Empty(tokenString)

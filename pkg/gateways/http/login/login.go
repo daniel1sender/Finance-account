@@ -26,6 +26,7 @@ func (h Handler) Login(w http.ResponseWriter, r *http.Request) {
 		"route":  r.URL.Path,
 		"method": r.Method,
 	}).Info("login attempt realized")
+
 	var request Request
 	err := json.NewDecoder(r.Body).Decode(&request)
 	if err != nil {
@@ -36,6 +37,7 @@ func (h Handler) Login(w http.ResponseWriter, r *http.Request) {
 		json.NewEncoder(w).Encode(response)
 		return
 	}
+
 	w.Header().Add("Content-Type", server_http.JSONContentType)
 	token, err := h.UseCase.Login(r.Context(), request.Cpf, request.Secret)
 	if err != nil {
@@ -64,6 +66,7 @@ func (h Handler) Login(w http.ResponseWriter, r *http.Request) {
 		}
 		return
 	}
+	
 	response := Response{Token: token}
 	w.WriteHeader(http.StatusCreated)
 	_ = json.NewEncoder(w).Encode(response)
