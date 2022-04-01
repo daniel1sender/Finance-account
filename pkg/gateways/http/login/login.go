@@ -22,6 +22,10 @@ type Response struct {
 
 func (h Handler) Login(w http.ResponseWriter, r *http.Request) {
 	log := h.logger
+	log.WithFields(logrus.Fields{
+		"route":  r.URL.Path,
+		"method": r.Method,
+	}).Info("login attempt realized")
 	var request Request
 	err := json.NewDecoder(r.Body).Decode(&request)
 	if err != nil {
