@@ -75,8 +75,8 @@ func TestHandlerLogin(t *testing.T) {
 		if newResponse.Header().Get("content-type") != server_http.JSONContentType {
 			t.Errorf("expected '%s' but got '%s'", server_http.JSONContentType, newResponse.Header().Get("content-type"))
 		}
-		if response.Reason != accounts.ErrAccountNotFound.Error() {
-			t.Errorf("expected '%s' but got '%s'", accounts.ErrAccountNotFound.Error(), response.Reason)
+		if response.Reason != login.ErrInvalidCredetials.Error() {
+			t.Errorf("expected '%s' but got '%s'", login.ErrInvalidCredetials.Error(), response.Reason)
 		}
 	})
 	t.Run("should return 400 and an error when an empty secret is informed", func(t *testing.T) {
