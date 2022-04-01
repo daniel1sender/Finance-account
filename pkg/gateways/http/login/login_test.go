@@ -3,6 +3,7 @@ package login
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -137,6 +138,29 @@ func TestHandlerLogin(t *testing.T) {
 		}
 		if response.Reason != login.ErrInvalidSecret.Error() {
 			t.Errorf("expected '%s' but got '%s'", login.ErrInvalidSecret.Error(), response.Reason)
+		}
+	})
+	t.Run("should return 500 and an error when an unexpected error occourred", func(t *testing.T){
+		ErrUnexpectedError := errors.New("unexpected error")
+		useCase := login.UseCaseMock{Error: ErrUnexpectedError}
+		handler := NewHandler(&useCase, log)
+		requestBody := Request{"12345678910", "123"}
+		request, _ := json.Marshal(requestBody)
+		newRequest, _ := http.NewRequest("POST", "/anyroute", bytes.NewReader(request))
+		newResponse := httptest.NewRecorder()
+		handler.Login(newResponse, newRequest)
+		var response server_http.Error
+		json.Unmarshal(newResponse.Body.Bytes(), &response)
+
+		if newResponse.Code != http.StatusInternalServerError {
+			t.Errorf("expected '%d' but got '%d'", http.StatusInternalServerError, newResponse.Code)
+		}
+		if newResponse.Header().Get("content-type") != server_http.JSONContentType {
+			t.Errorf("expected '%s' but got '%s'", server_http.JSONContentType, newResponse.Header().Get("content-type"))
+		}
+		expectedReason := "internal server error"
+		if response.Reason != expectedReason {
+			t.Errorf("expected '%s' but got '%s'", expectedReason, response.Reason)
 		}
 	})
 }
