@@ -11,7 +11,7 @@ var (
 	ErrEmptySecret   = errors.New("secret informed is blanc")
 	ErrInvalidCPF    = errors.New("cpf informed is invalid")
 	ErrInvalidSecret = errors.New("secret informed is incorrect")
-	ErrInvalidCredetials= errors.New("invalid credentials")
+	ErrInvalidCredentials= errors.New("invalid credentials")
 )
 
 type UseCase interface {

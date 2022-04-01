@@ -82,8 +82,8 @@ func TestHandlerLogin(t *testing.T) {
 		if newResponse.Header().Get("content-type") != server_http.JSONContentType {
 			t.Errorf("expected '%s' but got '%s'", server_http.JSONContentType, newResponse.Header().Get("content-type"))
 		}
-		if response.Reason != login.ErrInvalidCredetials.Error() {
-			t.Errorf("expected '%s' but got '%s'", login.ErrInvalidCredetials.Error(), response.Reason)
+		if response.Reason != login.ErrInvalidCredentials.Error() {
+			t.Errorf("expected '%s' but got '%s'", login.ErrInvalidCredentials.Error(), response.Reason)
 		}
 	})
 
