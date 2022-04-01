@@ -76,8 +76,8 @@ func TestHandlerLogin(t *testing.T) {
 		var response server_http.Error
 		json.Unmarshal(newResponse.Body.Bytes(), &response)
 
-		if newResponse.Code != http.StatusNotFound {
-			t.Errorf("expected '%d' but got '%d'", http.StatusNotFound, newResponse.Code)
+		if newResponse.Code != http.StatusForbidden {
+			t.Errorf("expected '%d' but got '%d'", http.StatusForbidden, newResponse.Code)
 		}
 		if newResponse.Header().Get("content-type") != server_http.JSONContentType {
 			t.Errorf("expected '%s' but got '%s'", server_http.JSONContentType, newResponse.Header().Get("content-type"))
@@ -142,8 +142,8 @@ func TestHandlerLogin(t *testing.T) {
 		var response server_http.Error
 		json.Unmarshal(newResponse.Body.Bytes(), &response)
 
-		if newResponse.Code != http.StatusBadRequest {
-			t.Errorf("expected '%d' but got '%d'", http.StatusNotFound, newResponse.Code)
+		if newResponse.Code != http.StatusForbidden {
+			t.Errorf("expected '%d' but got '%d'", http.StatusForbidden, newResponse.Code)
 		}
 		if newResponse.Header().Get("content-type") != server_http.JSONContentType {
 			t.Errorf("expected '%s' but got '%s'", server_http.JSONContentType, newResponse.Header().Get("content-type"))

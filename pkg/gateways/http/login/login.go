@@ -43,9 +43,9 @@ func (h Handler) Login(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.WithError(err).Error("login request failed")
 		switch {
-		case errors.Is(err, accounts.ErrAccountNotFound):
+		case errors.Is(err, accounts.ErrAccountNotFound), errors.Is(err, login.ErrInvalidSecret):
 			response := server_http.Error{Reason: login.ErrInvalidCredentials.Error()}
-			w.WriteHeader(http.StatusNotFound)
+			w.WriteHeader(http.StatusForbidden)
 			json.NewEncoder(w).Encode(response)
 		case errors.Is(err, login.ErrEmptySecret):
 			response := server_http.Error{Reason: login.ErrEmptySecret.Error()}
@@ -55,10 +55,6 @@ func (h Handler) Login(w http.ResponseWriter, r *http.Request) {
 			response := server_http.Error{Reason: login.ErrInvalidCPF.Error()}
 			w.WriteHeader(http.StatusBadRequest)
 			json.NewEncoder(w).Encode(response)
-		case errors.Is(err, login.ErrInvalidSecret):
-			response := server_http.Error{Reason: login.ErrInvalidCredentials.Error()}
-			w.WriteHeader(http.StatusBadRequest)
-			json.NewEncoder(w).Encode(response)
 		default:
 			response := server_http.Error{Reason: "internal server error"}
 			w.WriteHeader(http.StatusInternalServerError)
@@ -66,7 +62,7 @@ func (h Handler) Login(w http.ResponseWriter, r *http.Request) {
 		}
 		return
 	}
-	
+
 	response := Response{Token: token}
 	w.WriteHeader(http.StatusCreated)
 	_ = json.NewEncoder(w).Encode(response)
