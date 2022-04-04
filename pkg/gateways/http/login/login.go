@@ -32,7 +32,7 @@ func (h Handler) Login(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		w.Header().Add("Content-Type", server_http.JSONContentType)
 		response := server_http.Error{Reason: "invalid request body"}
-		log.WithError(err).Error("error decoding body")
+		log.WithError(err).Error("error while decoding the body")
 		w.WriteHeader(http.StatusBadRequest)
 		json.NewEncoder(w).Encode(response)
 		return
@@ -66,5 +66,5 @@ func (h Handler) Login(w http.ResponseWriter, r *http.Request) {
 	response := Response{Token: token}
 	w.WriteHeader(http.StatusCreated)
 	_ = json.NewEncoder(w).Encode(response)
-	log.Info("token created successfully")
+	log.Info("token was created successfully")
 }
