@@ -12,30 +12,30 @@ import (
 
 func (l LoginUseCase) Login(ctx context.Context, cpf, accountSecret string) (string, error) {
 	if len(accountSecret) == 0 {
-		return "", fmt.Errorf("error while validating secret informed: %w", login.ErrEmptySecret)
+		return "", fmt.Errorf("error while validating the secret informed: %w", login.ErrEmptySecret)
 	}
 	if len(cpf) != 11 {
-		return "", fmt.Errorf("error while validanting cpf informed: %w", login.ErrInvalidCPF)
+		return "", fmt.Errorf("error while validating the cpf informed: %w", login.ErrInvalidCPF)
 	}
 	account, err := l.AccountStorage.GetByCPF(ctx, cpf)
 	if err != nil {
-		return "", fmt.Errorf("error while getting account by cpf: %w", err)
+		return "", fmt.Errorf("error while getting the account by cpf: %w", err)
 	}
 	err = bcrypt.CompareHashAndPassword([]byte(account.Secret), []byte(accountSecret))
 	if err != nil {
-		return "", fmt.Errorf("error while comparing secret informed with stored: %w", login.ErrInvalidSecret)
+		return "", fmt.Errorf("error while comparing the secret informed with stored: %w", login.ErrInvalidSecret)
 	}
 
 	claim := entities.NewClaim(account.ID, l.expTime)
 
 	token, err := GenerateJWT(claim, l.tokenSecret)
 	if err != nil {
-		return "", fmt.Errorf("error while generating token: %w", err)
+		return "", fmt.Errorf("error while generating the token: %w", err)
 	}
 
 	err = l.LoginRepository.Insert(ctx, claim, token)
 	if err != nil {
-		return "", fmt.Errorf("error while inserting token: %w", err)
+		return "", fmt.Errorf("error while inserting the token: %w", err)
 	}
 
 	return token, nil
