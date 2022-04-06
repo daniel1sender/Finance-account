@@ -8,3 +8,7 @@ const (
 type Error struct {
 	Reason string `json:"reason"`
 }
+
+type AuthContextKey string
+
+var ContextAccountID = AuthContextKey("account_id")
