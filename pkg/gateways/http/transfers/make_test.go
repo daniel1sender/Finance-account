@@ -2,14 +2,14 @@ package transfers
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 
-	"github.com/daniel1sender/Desafio-API/pkg/domain/accounts"
 	"github.com/sirupsen/logrus"
-
+	"github.com/daniel1sender/Desafio-API/pkg/domain/accounts"
 	"github.com/daniel1sender/Desafio-API/pkg/domain/entities"
 	"github.com/daniel1sender/Desafio-API/pkg/domain/transfers"
 	server_http "github.com/daniel1sender/Desafio-API/pkg/gateways/http"
@@ -17,18 +17,17 @@ import (
 
 func TestHandlerMake(t *testing.T) {
 	log := logrus.NewEntry(logrus.New())
+	
 	t.Run("should return 201 and a transfer when it's been sucessfully created", func(t *testing.T) {
-
 		transfer := entities.Transfer{AccountOriginID: "1", AccountDestinationID: "0", Amount: 10}
 		useCase := transfers.UseCaseMock{Transfer: transfer}
 		h := NewHandler(&useCase, log)
-
-		createRequest := Request{transfer.AccountOriginID, transfer.AccountDestinationID, transfer.Amount}
+		createRequest := Request{transfer.AccountDestinationID, transfer.Amount}
 		request, _ := json.Marshal(createRequest)
 		newRequest, _ := http.NewRequest(http.MethodPost, "/transfers", bytes.NewReader(request))
+		ctx := context.WithValue(newRequest.Context(), server_http.ContextAccountID, transfer.AccountOriginID)
 		newResponse := httptest.NewRecorder()
-		h.Make(newResponse, newRequest)
-
+		h.Make(newResponse, newRequest.WithContext(ctx))
 		ExpectedCreateAt := transfer.CreatedAt.Format(server_http.DateLayout)
 
 		var response Response
@@ -63,12 +62,14 @@ func TestHandlerMake(t *testing.T) {
 
 	t.Run("should return 400 and an error when it failed to decode the request", func(t *testing.T) {
 
-		useCase := transfers.UseCaseMock{}
+		transfer := entities.Transfer{AccountOriginID: "1", AccountDestinationID: "0", Amount: 10}
+		useCase := transfers.UseCaseMock{Transfer: transfer}
 		h := NewHandler(&useCase, log)
 		b := []byte{}
 		newRequest, _ := http.NewRequest(http.MethodPost, "transfers", bytes.NewBuffer(b))
 		newResponse := httptest.NewRecorder()
-		h.Make(newResponse, newRequest)
+		ctx := context.WithValue(newRequest.Context(), server_http.ContextAccountID, transfer.AccountOriginID)
+		h.Make(newResponse, newRequest.WithContext(ctx))
 
 		var responseReason server_http.Error
 		json.Unmarshal(newResponse.Body.Bytes(), &responseReason)
@@ -94,11 +95,12 @@ func TestHandlerMake(t *testing.T) {
 		useCase := transfers.UseCaseMock{Transfer: transfer, Error: entities.ErrAmountLessOrEqualZero}
 		h := NewHandler(&useCase, log)
 
-		createRequest := Request{transfer.AccountOriginID, transfer.AccountDestinationID, transfer.Amount}
+		createRequest := Request{transfer.AccountDestinationID, transfer.Amount}
 		request, _ := json.Marshal(createRequest)
 		newRequest, _ := http.NewRequest(http.MethodPost, "/transfers", bytes.NewBuffer(request))
 		newResponse := httptest.NewRecorder()
-		h.Make(newResponse, newRequest)
+		ctx := context.WithValue(newRequest.Context(), server_http.ContextAccountID, transfer.AccountOriginID)
+		h.Make(newResponse, newRequest.WithContext(ctx))
 
 		var responseReason server_http.Error
 		json.Unmarshal(newResponse.Body.Bytes(), &responseReason)
@@ -123,11 +125,12 @@ func TestHandlerMake(t *testing.T) {
 		useCase := transfers.UseCaseMock{Transfer: transfer, Error: entities.ErrSameAccountTransfer}
 		h := NewHandler(&useCase, log)
 
-		createRequest := Request{transfer.AccountOriginID, transfer.AccountDestinationID, transfer.Amount}
+		createRequest := Request{transfer.AccountDestinationID, transfer.Amount}
 		request, _ := json.Marshal(createRequest)
 		newRequest, _ := http.NewRequest(http.MethodPost, "/transfers", bytes.NewBuffer(request))
 		newResponse := httptest.NewRecorder()
-		h.Make(newResponse, newRequest)
+		ctx := context.WithValue(newRequest.Context(), server_http.ContextAccountID, transfer.AccountOriginID)
+		h.Make(newResponse, newRequest.WithContext(ctx))
 
 		var responseReason server_http.Error
 		json.Unmarshal(newResponse.Body.Bytes(), &responseReason)
@@ -151,11 +154,12 @@ func TestHandlerMake(t *testing.T) {
 		useCase := transfers.UseCaseMock{Transfer: transfer, Error: transfers.ErrOriginAccountNotFound}
 		h := NewHandler(&useCase, log)
 
-		createRequest := Request{transfer.AccountOriginID, transfer.AccountDestinationID, transfer.Amount}
+		createRequest := Request{transfer.AccountDestinationID, transfer.Amount}
 		request, _ := json.Marshal(createRequest)
 		newRequest, _ := http.NewRequest(http.MethodPost, "/transfers", bytes.NewBuffer(request))
 		newResponse := httptest.NewRecorder()
-		h.Make(newResponse, newRequest)
+		ctx := context.WithValue(newRequest.Context(), server_http.ContextAccountID, transfer.AccountOriginID)
+		h.Make(newResponse, newRequest.WithContext(ctx))
 
 		var responseReason server_http.Error
 		json.Unmarshal(newResponse.Body.Bytes(), &responseReason)
@@ -179,11 +183,12 @@ func TestHandlerMake(t *testing.T) {
 		useCase := transfers.UseCaseMock{Transfer: transfer, Error: transfers.ErrDestinationAccountNotFound}
 		h := NewHandler(&useCase, log)
 
-		createRequest := Request{transfer.AccountOriginID, transfer.AccountDestinationID, transfer.Amount}
+		createRequest := Request{transfer.AccountDestinationID, transfer.Amount}
 		request, _ := json.Marshal(createRequest)
 		newRequest, _ := http.NewRequest(http.MethodPost, "/transfers", bytes.NewBuffer(request))
 		newResponse := httptest.NewRecorder()
-		h.Make(newResponse, newRequest)
+		ctx := context.WithValue(newRequest.Context(), server_http.ContextAccountID, transfer.AccountOriginID)
+		h.Make(newResponse, newRequest.WithContext(ctx))
 
 		var responseReason server_http.Error
 		json.Unmarshal(newResponse.Body.Bytes(), &responseReason)
@@ -207,11 +212,12 @@ func TestHandlerMake(t *testing.T) {
 		useCase := transfers.UseCaseMock{Transfer: transfer, Error: transfers.ErrInsufficientFunds}
 		h := NewHandler(&useCase, log)
 
-		createRequest := Request{transfer.AccountOriginID, transfer.AccountDestinationID, transfer.Amount}
+		createRequest := Request{transfer.AccountDestinationID, transfer.Amount}
 		request, _ := json.Marshal(createRequest)
 		newRequest, _ := http.NewRequest(http.MethodPost, "/transfers", bytes.NewBuffer(request))
 		newResponse := httptest.NewRecorder()
-		h.Make(newResponse, newRequest)
+		ctx := context.WithValue(newRequest.Context(), server_http.ContextAccountID, transfer.AccountOriginID)
+		h.Make(newResponse, newRequest.WithContext(ctx))
 
 		var responseReason server_http.Error
 		json.Unmarshal(newResponse.Body.Bytes(), &responseReason)
@@ -228,6 +234,5 @@ func TestHandlerMake(t *testing.T) {
 			t.Errorf("expected '%s' but got '%s'", transfers.ErrInsufficientFunds.Error(), responseReason.Reason)
 		}
 
-	})
-
+	}) 
 }
