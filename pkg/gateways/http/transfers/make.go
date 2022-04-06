@@ -12,7 +12,6 @@ import (
 )
 
 type Request struct {
-	AccountOriginID      string `json:"account_origin_id"`
 	AccountDestinationID string `json:"account_destination_id"`
 	Amount               int    `json:"amount"`
 }
@@ -27,6 +26,7 @@ type Response struct {
 
 func (h Handler) Make(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
+	originAccountID := ctx.Value(server_http.ContextAccountID).(string)
 	log := h.logger
 	var createRequest Request
 	err := json.NewDecoder(r.Body).Decode(&createRequest)
@@ -39,7 +39,7 @@ func (h Handler) Make(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	transfer, err := h.useCase.Make(ctx, createRequest.AccountOriginID, createRequest.AccountDestinationID, createRequest.Amount)
+	transfer, err := h.useCase.Make(ctx, originAccountID, createRequest.AccountDestinationID, createRequest.Amount)
 	w.Header().Add("Content-Type", server_http.JSONContentType)
 	if err != nil {
 		log.WithError(err).Error("create transfer request failed")
@@ -79,11 +79,11 @@ func (h Handler) Make(w http.ResponseWriter, r *http.Request) {
 	}
 
 	ExpectedCreateAt := transfer.CreatedAt.Format(server_http.DateLayout)
-	response := Response{transfer.ID, transfer.AccountOriginID, transfer.AccountDestinationID, transfer.Amount, ExpectedCreateAt}
+	response := Response{transfer.ID, originAccountID, transfer.AccountDestinationID, transfer.Amount, ExpectedCreateAt}
 	w.WriteHeader(http.StatusCreated)
 	_ = json.NewEncoder(w).Encode(response)
 	log.WithFields(logrus.Fields{
-		"origin_account_id":      transfer.AccountOriginID,
+		"origin_account_id":      originAccountID,
 		"destination_account_id": transfer.AccountDestinationID,
 	}).Info("transfer successful")
 }
