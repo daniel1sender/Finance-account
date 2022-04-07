@@ -18,7 +18,7 @@ func (h Handler) ValidateToken(next http.Handler) http.HandlerFunc {
 		if authHeader == "" {
 			h.logger.Error("got an empty authorization header")
 			response := server_http.Error{Reason: "got an empty authorization header"}
-			w.WriteHeader(http.StatusBadRequest)
+			w.WriteHeader(http.StatusUnauthorized)
 			json.NewEncoder(w).Encode(response)
 			return
 		}
@@ -27,7 +27,7 @@ func (h Handler) ValidateToken(next http.Handler) http.HandlerFunc {
 		if len(authString) != 2 {
 			h.logger.Error("wrong authorization header format")
 			response := server_http.Error{Reason: "wrong authorization header format"}
-			w.WriteHeader(http.StatusBadRequest)
+			w.WriteHeader(http.StatusUnauthorized)
 			json.NewEncoder(w).Encode(response)
 			return
 		}
@@ -35,7 +35,7 @@ func (h Handler) ValidateToken(next http.Handler) http.HandlerFunc {
 		if authString[0] != "Bearer" {
 			h.logger.Error("invalid authentication method")
 			response := server_http.Error{Reason: "invalid authentication method"}
-			w.WriteHeader(http.StatusBadRequest)
+			w.WriteHeader(http.StatusUnauthorized)
 			json.NewEncoder(w).Encode(response)
 			return
 		}
@@ -51,7 +51,7 @@ func (h Handler) ValidateToken(next http.Handler) http.HandlerFunc {
 				json.NewEncoder(w).Encode(response)
 			case errors.Is(err, login.ErrTokenNotFound):
 				response := server_http.Error{Reason: login.ErrTokenNotFound.Error()}
-				w.WriteHeader(http.StatusNotFound)
+				w.WriteHeader(http.StatusForbidden)
 				json.NewEncoder(w).Encode(response)
 			default:
 				response := server_http.Error{Reason: err.Error()}
