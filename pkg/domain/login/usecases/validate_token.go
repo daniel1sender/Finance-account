@@ -11,7 +11,7 @@ import (
 func (l LoginUseCase) ValidateToken(ctx context.Context, tokenString string) (entities.Claims, error) {
 	claim, err := l.ParseToken(ctx, tokenString)
 	if err != nil {
-		return entities.Claims{}, fmt.Errorf("%w: %v", login.ErrInvalidToken, err)
+		return entities.Claims{}, fmt.Errorf("%w: %s", login.ErrInvalidToken, err.Error())
 	}
 	token, err := l.LoginRepository.GetTokenByID(ctx, claim.TokenID)
 	if err != nil {

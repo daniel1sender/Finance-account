@@ -7,6 +7,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
+	"github.com/daniel1sender/Desafio-API/pkg/domain/entities"
 	"github.com/daniel1sender/Desafio-API/pkg/domain/login"
 	server_http "github.com/daniel1sender/Desafio-API/pkg/gateways/http"
 	"github.com/sirupsen/logrus"
@@ -23,7 +24,11 @@ func TestMiddlewareValidateToken(t *testing.T) {
 		header := http.Header{
 			"Authorization": []string{"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxZDlhY2RhNS1lZTRlLTQ5ZDMtOTdiMy1hN2UxYmE5ZWNiNmMiLCJleHAiOjE2NDkxNzU5NzAsImlhdCI6MTY0OTE3NTY3MCwianRpIjoiNzJhNGExYWItNmI4Zi00NDRmLTg4ODYtZjc1NDI0NjYwZGFjIn0.DPE5rEofHuWpSly0qE_5kZ__EvPQP_vySNTxT3FJ7A0"},
 		}
-		useCase := login.UseCaseMock{}
+		useCase := login.UseCaseMock{
+			Claims: entities.Claims{Sub: "95571638-1aa3-4ee8-a05f-4c2d6c97ef4e"},
+			Token:  "",
+			Error:  nil,
+		}
 		handler := NewHandler(&useCase, log)
 		request, _ := http.NewRequest(http.MethodGet, "/login", nil)
 		request.Header = header
@@ -34,7 +39,7 @@ func TestMiddlewareValidateToken(t *testing.T) {
 		json.Unmarshal(newResponse.Body.Bytes(), &response)
 
 		got := newResponse.Body.String()
-		expected := "authenticated"
+		expected := useCase.Claims.Sub
 
 		assert.Equal(t, newResponse.Code, http.StatusOK)
 		assert.Equal(t, expected, got)
@@ -176,5 +181,6 @@ func TestMiddlewareValidateToken(t *testing.T) {
 
 func createHandleFunc(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
-	w.Write([]byte("authenticated"))
+	accountID := r.Context().Value(server_http.ContextAccountID)
+	w.Write([]byte(accountID.(string)))
 }

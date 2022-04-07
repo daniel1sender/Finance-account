@@ -7,8 +7,9 @@ import (
 )
 
 type UseCaseMock struct {
-	Token string
-	Error error
+	Claims entities.Claims
+	Token  string
+	Error  error
 }
 
 func (m *UseCaseMock) Login(ctx context.Context, cpf, accountSecret string) (string, error) {
@@ -16,5 +17,5 @@ func (m *UseCaseMock) Login(ctx context.Context, cpf, accountSecret string) (str
 }
 
 func (m *UseCaseMock) ValidateToken(ctx context.Context, tokenString string) (entities.Claims, error) {
-	return entities.Claims{}, m.Error
+	return entities.Claims{Sub: m.Claims.Sub}, m.Error
 }
