@@ -63,7 +63,7 @@ func TestMiddlewareValidateToken(t *testing.T) {
 		got := response.Reason
 		expected := "got an empty authorization header"
 
-		assert.Equal(t, http.StatusBadRequest, newResponse.Code)
+		assert.Equal(t, http.StatusUnauthorized, newResponse.Code)
 		assert.Equal(t, expected, got)
 	})
 
@@ -85,7 +85,7 @@ func TestMiddlewareValidateToken(t *testing.T) {
 		got := response.Reason
 		expected := "wrong authorization header format"
 
-		assert.Equal(t, http.StatusBadRequest, newResponse.Code)
+		assert.Equal(t, http.StatusUnauthorized, newResponse.Code)
 		assert.Equal(t, expected, got)
 	})
 
@@ -107,7 +107,7 @@ func TestMiddlewareValidateToken(t *testing.T) {
 		got := response.Reason
 		expected := "invalid authentication method"
 
-		assert.Equal(t, http.StatusBadRequest, newResponse.Code)
+		assert.Equal(t, http.StatusUnauthorized, newResponse.Code)
 		assert.Equal(t, expected, got)
 	})
 
@@ -151,7 +151,7 @@ func TestMiddlewareValidateToken(t *testing.T) {
 		got := response.Reason
 		expected := login.ErrTokenNotFound.Error()
 
-		assert.Equal(t, http.StatusNotFound, newResponse.Code)
+		assert.Equal(t, http.StatusForbidden, newResponse.Code)
 		assert.Equal(t, expected, got)
 	})
 
