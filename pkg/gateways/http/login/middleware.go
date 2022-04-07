@@ -41,9 +41,9 @@ func (h Handler) ValidateToken(next http.Handler) http.HandlerFunc {
 		}
 
 		ctx := r.Context()
-		token, err := h.UseCase.ValidateToken(ctx, authString[1])
+		claim, err := h.UseCase.ValidateToken(ctx, authString[1])
 		if err != nil {
-			log.WithError(err).Error("error occurred when was validating token")
+			log.WithError(err).Error("error occurred while was validating token")
 			switch {
 			case errors.Is(err, login.ErrInvalidToken):
 				response := server_http.Error{Reason: login.ErrInvalidToken.Error()}
@@ -61,7 +61,7 @@ func (h Handler) ValidateToken(next http.Handler) http.HandlerFunc {
 			return
 		}
 
-		accountID := token.Sub
+		accountID := claim.Sub
 		ctx = context.WithValue(r.Context(), server_http.ContextAccountID, accountID)
 		next.ServeHTTP(w, r.WithContext(ctx))
 	}
