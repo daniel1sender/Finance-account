@@ -11,13 +11,19 @@ import (
 	server_http "github.com/daniel1sender/Desafio-API/pkg/gateways/http"
 )
 
+var (
+	ErrEmptyAuthHeader     = errors.New("got an empty authorization header")
+	ErrInvalidHeaderFormat = errors.New("wrong authorization header format")
+	ErrInvalidMethod       = errors.New("invalid authentication method")
+)
+
 func (h Handler) ValidateToken(next http.Handler) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		log := h.logger
 		authHeader := r.Header.Get("Authorization")
 		if authHeader == "" {
-			h.logger.Error("got an empty authorization header")
-			response := server_http.Error{Reason: "got an empty authorization header"}
+			h.logger.Error(ErrEmptyAuthHeader)
+			response := server_http.Error{Reason: ErrEmptyAuthHeader.Error()}
 			w.WriteHeader(http.StatusUnauthorized)
 			json.NewEncoder(w).Encode(response)
 			return
@@ -25,16 +31,16 @@ func (h Handler) ValidateToken(next http.Handler) http.HandlerFunc {
 
 		authString := strings.Split(authHeader, " ")
 		if len(authString) != 2 {
-			h.logger.Error("wrong authorization header format")
-			response := server_http.Error{Reason: "wrong authorization header format"}
+			h.logger.Error(ErrInvalidHeaderFormat)
+			response := server_http.Error{Reason: ErrInvalidHeaderFormat.Error()}
 			w.WriteHeader(http.StatusUnauthorized)
 			json.NewEncoder(w).Encode(response)
 			return
 		}
 
 		if authString[0] != "Bearer" {
-			h.logger.Error("invalid authentication method")
-			response := server_http.Error{Reason: "invalid authentication method"}
+			h.logger.Error(ErrInvalidMethod)
+			response := server_http.Error{Reason: ErrInvalidMethod.Error()}
 			w.WriteHeader(http.StatusUnauthorized)
 			json.NewEncoder(w).Encode(response)
 			return
