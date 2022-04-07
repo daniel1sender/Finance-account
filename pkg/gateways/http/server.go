@@ -11,4 +11,4 @@ type Error struct {
 
 type AuthContextKey string
 
-var ContextAccountID = AuthContextKey("account_id")
+var ContextAccountID AuthContextKey = "account_id"
