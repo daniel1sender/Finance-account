@@ -51,11 +51,7 @@ func (h Handler) ValidateToken(next http.Handler) http.HandlerFunc {
 		if err != nil {
 			log.WithError(err).Error("error occurred while was validating token")
 			switch {
-			case errors.Is(err, login.ErrInvalidToken):
-				response := server_http.Error{Reason: login.ErrInvalidToken.Error()}
-				w.WriteHeader(http.StatusForbidden)
-				json.NewEncoder(w).Encode(response)
-			case errors.Is(err, login.ErrTokenNotFound):
+			case errors.Is(err, login.ErrInvalidToken), errors.Is(err, login.ErrTokenNotFound):
 				response := server_http.Error{Reason: login.ErrInvalidToken.Error()}
 				w.WriteHeader(http.StatusForbidden)
 				json.NewEncoder(w).Encode(response)
