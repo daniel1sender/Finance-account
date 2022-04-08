@@ -149,7 +149,7 @@ func TestMiddlewareValidateToken(t *testing.T) {
 		json.Unmarshal(newResponse.Body.Bytes(), &response)
 
 		got := response.Reason
-		expected := login.ErrTokenNotFound.Error()
+		expected := login.ErrInvalidToken.Error()
 
 		assert.Equal(t, http.StatusForbidden, newResponse.Code)
 		assert.Equal(t, expected, got)
