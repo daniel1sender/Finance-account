@@ -56,7 +56,7 @@ func (h Handler) ValidateToken(next http.Handler) http.HandlerFunc {
 				w.WriteHeader(http.StatusForbidden)
 				json.NewEncoder(w).Encode(response)
 			case errors.Is(err, login.ErrTokenNotFound):
-				response := server_http.Error{Reason: login.ErrTokenNotFound.Error()}
+				response := server_http.Error{Reason: login.ErrInvalidToken.Error()}
 				w.WriteHeader(http.StatusForbidden)
 				json.NewEncoder(w).Encode(response)
 			default:
