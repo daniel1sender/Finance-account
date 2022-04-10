@@ -8,16 +8,17 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/sirupsen/logrus"
 	"github.com/daniel1sender/Desafio-API/pkg/domain/accounts"
 	"github.com/daniel1sender/Desafio-API/pkg/domain/entities"
 	"github.com/daniel1sender/Desafio-API/pkg/domain/transfers"
+	"github.com/daniel1sender/Desafio-API/pkg/domain/transfers/usecases"
 	server_http "github.com/daniel1sender/Desafio-API/pkg/gateways/http"
+	"github.com/sirupsen/logrus"
 )
 
 func TestHandlerMake(t *testing.T) {
 	log := logrus.NewEntry(logrus.New())
-	
+
 	t.Run("should return 201 and a transfer when it's been sucessfully created", func(t *testing.T) {
 		transfer := entities.Transfer{AccountOriginID: "1", AccountDestinationID: "0", Amount: 10}
 		useCase := transfers.UseCaseMock{Transfer: transfer}
@@ -151,7 +152,7 @@ func TestHandlerMake(t *testing.T) {
 	t.Run("should return 400 and an error when transfer origin id is not found", func(t *testing.T) {
 
 		transfer := entities.Transfer{AccountOriginID: "0", AccountDestinationID: "1", Amount: 10}
-		useCase := transfers.UseCaseMock{Transfer: transfer, Error: transfers.ErrOriginAccountNotFound}
+		useCase := transfers.UseCaseMock{Transfer: transfer, Error: usecases.ErrOriginAccountNotFound}
 		h := NewHandler(&useCase, log)
 
 		createRequest := Request{transfer.AccountDestinationID, transfer.Amount}
@@ -172,7 +173,7 @@ func TestHandlerMake(t *testing.T) {
 			t.Errorf("expected '%s' but got '%s'", server_http.JSONContentType, newResponse.Header().Get("content-type"))
 		}
 
-		if responseReason.Reason != transfers.ErrOriginAccountNotFound.Error() {
+		if responseReason.Reason != usecases.ErrOriginAccountNotFound.Error() {
 			t.Errorf("expected '%s' but got '%s'", accounts.ErrAccountNotFound.Error(), responseReason.Reason)
 		}
 	})
@@ -180,7 +181,7 @@ func TestHandlerMake(t *testing.T) {
 	t.Run("should return 400 and an error when transfer destination id is not found", func(t *testing.T) {
 
 		transfer := entities.Transfer{AccountOriginID: "0", AccountDestinationID: "1", Amount: 10}
-		useCase := transfers.UseCaseMock{Transfer: transfer, Error: transfers.ErrDestinationAccountNotFound}
+		useCase := transfers.UseCaseMock{Transfer: transfer, Error: usecases.ErrDestinationAccountNotFound}
 		h := NewHandler(&useCase, log)
 
 		createRequest := Request{transfer.AccountDestinationID, transfer.Amount}
@@ -201,7 +202,7 @@ func TestHandlerMake(t *testing.T) {
 			t.Errorf("expected '%s' but got '%s'", server_http.JSONContentType, newResponse.Header().Get("content-type"))
 		}
 
-		if responseReason.Reason != transfers.ErrDestinationAccountNotFound.Error() {
+		if responseReason.Reason != usecases.ErrDestinationAccountNotFound.Error() {
 			t.Errorf("expected '%s' but got '%s'", accounts.ErrAccountNotFound.Error(), responseReason.Reason)
 		}
 	})
@@ -209,7 +210,7 @@ func TestHandlerMake(t *testing.T) {
 	t.Run("should return 400 and error when origin account doesn't have sufficient funds", func(t *testing.T) {
 
 		transfer := entities.Transfer{AccountOriginID: "0", AccountDestinationID: "1", Amount: 10}
-		useCase := transfers.UseCaseMock{Transfer: transfer, Error: transfers.ErrInsufficientFunds}
+		useCase := transfers.UseCaseMock{Transfer: transfer, Error: usecases.ErrInsufficientFunds}
 		h := NewHandler(&useCase, log)
 
 		createRequest := Request{transfer.AccountDestinationID, transfer.Amount}
@@ -230,9 +231,9 @@ func TestHandlerMake(t *testing.T) {
 			t.Errorf("expected '%s' but got '%s'", server_http.JSONContentType, newResponse.Header().Get("content-type"))
 		}
 
-		if responseReason.Reason != transfers.ErrInsufficientFunds.Error() {
-			t.Errorf("expected '%s' but got '%s'", transfers.ErrInsufficientFunds.Error(), responseReason.Reason)
+		if responseReason.Reason != usecases.ErrInsufficientFunds.Error() {
+			t.Errorf("expected '%s' but got '%s'", usecases.ErrInsufficientFunds.Error(), responseReason.Reason)
 		}
 
-	}) 
+	})
 }
