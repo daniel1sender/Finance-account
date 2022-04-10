@@ -1,4 +1,4 @@
-package transfers
+package usecases
 
 import (
 	"context"
