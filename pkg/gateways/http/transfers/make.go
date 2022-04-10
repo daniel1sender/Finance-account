@@ -6,7 +6,7 @@ import (
 	"net/http"
 
 	"github.com/daniel1sender/Desafio-API/pkg/domain/entities"
-	"github.com/daniel1sender/Desafio-API/pkg/domain/transfers"
+	"github.com/daniel1sender/Desafio-API/pkg/domain/transfers/usecases"
 	server_http "github.com/daniel1sender/Desafio-API/pkg/gateways/http"
 	"github.com/sirupsen/logrus"
 )
@@ -45,12 +45,12 @@ func (h Handler) Make(w http.ResponseWriter, r *http.Request) {
 		log.WithError(err).Error("create transfer request failed")
 		switch {
 
-		case errors.Is(err, transfers.ErrOriginAccountNotFound):
+		case errors.Is(err, usecases.ErrOriginAccountNotFound):
 			response := server_http.Error{Reason: err.Error()}
 			w.WriteHeader(http.StatusBadRequest)
 			json.NewEncoder(w).Encode(&response)
 
-		case errors.Is(err, transfers.ErrDestinationAccountNotFound):
+		case errors.Is(err, usecases.ErrDestinationAccountNotFound):
 			response := server_http.Error{Reason: err.Error()}
 			w.WriteHeader(http.StatusBadRequest)
 			json.NewEncoder(w).Encode(&response)
@@ -65,8 +65,8 @@ func (h Handler) Make(w http.ResponseWriter, r *http.Request) {
 			w.WriteHeader(http.StatusBadRequest)
 			json.NewEncoder(w).Encode(&response)
 
-		case errors.Is(err, transfers.ErrInsufficientFunds):
-			response := server_http.Error{Reason: transfers.ErrInsufficientFunds.Error()}
+		case errors.Is(err, usecases.ErrInsufficientFunds):
+			response := server_http.Error{Reason: usecases.ErrInsufficientFunds.Error()}
 			w.WriteHeader(http.StatusBadRequest)
 			json.NewEncoder(w).Encode(&response)
 

@@ -16,7 +16,7 @@ import (
 	"github.com/daniel1sender/Desafio-API/pkg/config"
 	accounts_usecase "github.com/daniel1sender/Desafio-API/pkg/domain/accounts/usecases"
 	login_usecase "github.com/daniel1sender/Desafio-API/pkg/domain/login/usecases"
-	transfers_usecase "github.com/daniel1sender/Desafio-API/pkg/domain/transfers"
+	transfers_usecase "github.com/daniel1sender/Desafio-API/pkg/domain/transfers/usecases"
 	accounts_handler "github.com/daniel1sender/Desafio-API/pkg/gateways/http/accounts"
 	login_handler "github.com/daniel1sender/Desafio-API/pkg/gateways/http/login"
 	transfers_handler "github.com/daniel1sender/Desafio-API/pkg/gateways/http/transfers"
