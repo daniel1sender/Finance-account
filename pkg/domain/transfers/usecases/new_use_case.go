@@ -1,13 +1,7 @@
 package usecases
 
 import (
-	"errors"
-
 	"github.com/daniel1sender/Desafio-API/pkg/domain/transfers"
-)
-
-var (
-	ErrBalanceLessZero = errors.New("balance account cannot be less than zero")
 )
 
 type TransferUseCase struct {
