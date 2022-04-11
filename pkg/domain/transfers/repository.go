@@ -8,6 +8,7 @@ import (
 
 type Repository interface {
 	Insert(ctx context.Context, transfer entities.Transfer) error
+	GetByID(ctx context.Context, accountID string) ([]entities.Transfer, error)
 }
 
 type AccountRepository interface {
