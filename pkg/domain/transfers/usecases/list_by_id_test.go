@@ -28,7 +28,7 @@ func TestTransfersUseCase_GetByID(t *testing.T) {
 		assert.Nil(t, err)
 	})
 
-	t.Run("should return a empty list of transfers and a error", func(t *testing.T) {
+	t.Run("should return an empty list of transfers and an error", func(t *testing.T) {
 		tests.DeleteAllTransfers(Db)
 		transfer, _ := entities.NewTransfer(account1.ID, account2.ID, 1)
 		transfersList, err := transferUsecase.ListByID(ctx, transfer.AccountOriginID)
