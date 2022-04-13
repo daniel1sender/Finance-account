@@ -6,7 +6,6 @@ import (
 
 	"github.com/daniel1sender/Desafio-API/pkg/domain/entities"
 	"github.com/daniel1sender/Desafio-API/pkg/domain/transfers"
-	"github.com/jackc/pgx/v4"
 )
 
 const listByIDStatement = "SELECT id, account_origin_id, account_destination_id, amount, created_at FROM transfers WHERE account_origin_id = $1"
@@ -16,9 +15,7 @@ func (tr TransfersRepository) ListByID(ctx context.Context, accountID string) ([
 	var transfer entities.Transfer
 
 	rows, err := tr.Query(ctx, listByIDStatement, accountID)
-	if err == pgx.ErrNoRows {
-		return []entities.Transfer{}, transfers.ErrTransfersNotFound
-	} else if err != nil {
+	if err != nil {
 		return []entities.Transfer{}, err
 	}
 
