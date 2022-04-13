@@ -18,11 +18,11 @@ func TestTransfersUseCase_GetByID(t *testing.T) {
 	transferUsecase := NewUseCase(transferRepository, accountRepository)
 	account1, _ := entities.NewAccount("Jonh Doe", "12345678910", "123", 10)
 	account2, _ := entities.NewAccount("Jonh Doe", "12345678911", "123", 10)
-	
+
 	t.Run("should return a list of transfers", func(t *testing.T) {
 		transfer, _ := entities.NewTransfer(account1.ID, account2.ID, 1)
 		transferRepository.Insert(ctx, transfer)
-		transfersList, err := transferUsecase.GetByID(ctx, transfer.AccountOriginID)
+		transfersList, err := transferUsecase.ListByID(ctx, transfer.AccountOriginID)
 
 		assert.NotEmpty(t, transfersList)
 		assert.Nil(t, err)
@@ -31,7 +31,7 @@ func TestTransfersUseCase_GetByID(t *testing.T) {
 	t.Run("should return a empty list of transfers and a error", func(t *testing.T) {
 		tests.DeleteAllTransfers(Db)
 		transfer, _ := entities.NewTransfer(account1.ID, account2.ID, 1)
-		transfersList, err := transferUsecase.GetByID(ctx, transfer.AccountOriginID)
+		transfersList, err := transferUsecase.ListByID(ctx, transfer.AccountOriginID)
 
 		assert.Empty(t, transfersList)
 		assert.NotNil(t, err)
