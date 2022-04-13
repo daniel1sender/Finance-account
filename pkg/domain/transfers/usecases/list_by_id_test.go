@@ -24,6 +24,11 @@ func TestTransfersUseCase_GetByID(t *testing.T) {
 		transferRepository.Insert(ctx, transfer)
 		transfersList, err := transferUsecase.ListByID(ctx, transfer.AccountOriginID)
 
+		assert.Equal(t, transfersList[0].ID, transfer.ID)
+		assert.Equal(t, transfersList[0].AccountOriginID, transfer.AccountOriginID)
+		assert.Equal(t, transfersList[0].AccountDestinationID, transfer.AccountDestinationID)
+		assert.Equal(t, transfersList[0].Amount, transfer.Amount)
+		assert.NotEmpty(t, transfersList[0].CreatedAt)
 		assert.NotEmpty(t, transfersList)
 		assert.Nil(t, err)
 	})
