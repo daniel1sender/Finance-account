@@ -17,7 +17,7 @@ func (tr TransfersRepository) ListByID(ctx context.Context, accountID string) ([
 
 	rows, err := tr.Query(ctx, listByIDStatement, accountID)
 	if err == pgx.ErrNoRows {
-		return []entities.Transfer{}, transfers.ErrTransferNotFound
+		return []entities.Transfer{}, transfers.ErrTransfersNotFound
 	} else if err != nil {
 		return []entities.Transfer{}, err
 	}

@@ -9,7 +9,7 @@ import (
 
 var (
 	ErrEmptyList        = errors.New("empty list of transfers")
-	ErrTransferNotFound = errors.New("transfer not found")
+	ErrTransfersNotFound = errors.New("transfers not found")
 )
 
 type UseCase interface {
