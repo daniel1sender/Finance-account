@@ -10,7 +10,7 @@ import (
 
 const listByIDStatement = "SELECT id, account_origin_id, account_destination_id, amount, created_at FROM transfers WHERE account_origin_id = $1"
 
-func (tr TransfersRepository) ListByID(ctx context.Context, accountID string) ([]entities.Transfer, error) {
+func (tr TransfersRepository) ListByAccountID(ctx context.Context, accountID string) ([]entities.Transfer, error) {
 	var transfersList []entities.Transfer
 	var transfer entities.Transfer
 

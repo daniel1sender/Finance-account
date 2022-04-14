@@ -20,6 +20,6 @@ func (m *UseCaseMock) UpdateBalance(ctx context.Context, id string, balance int)
 	panic("not implemented")
 }
 
-func (m *UseCaseMock) ListByID(ctx context.Context, accountID string) ([]entities.Transfer, error) {
+func (m *UseCaseMock) ListByAccountID(ctx context.Context, accountID string) ([]entities.Transfer, error) {
 	return m.ListTransfers, m.Error
 }
