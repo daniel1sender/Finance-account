@@ -15,7 +15,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestHandlerListBy(t *testing.T) {
+func TestHandlerListByID(t *testing.T) {
 	log := logrus.NewEntry(logrus.New())
 
 	t.Run("should return 200 and the list of transfers", func(t *testing.T) {
