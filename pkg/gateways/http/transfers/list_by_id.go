@@ -52,8 +52,8 @@ func (h Handler) ListByID(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusOK)
 	log.WithFields(logrus.Fields{
-		"origin_account_id": originAccountID,
-		"total_transfers":   len(transfersList),
+		"origin_account_id":      originAccountID,
+		"total_transfers_listed": len(transfersList),
 	}).Info("transfers listed successfully")
 	_ = json.NewEncoder(w).Encode(response)
 }
