@@ -15,7 +15,7 @@ type ResponseList struct {
 	AccountOriginID      string `json:"account_origin_id"`
 	AccountDestinationID string `json:"account_destination_id"`
 	Amount               int    `json:"amount"`
-	CreatedAt            string `json:"create_at"`
+	CreatedAt            string `json:"created_at"`
 }
 
 func (h Handler) ListByID(w http.ResponseWriter, r *http.Request) {
