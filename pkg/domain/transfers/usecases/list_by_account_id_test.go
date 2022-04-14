@@ -11,7 +11,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestTransfersUseCase_ListByID(t *testing.T) {
+func TestTransfersUseCase_ListByAccountID(t *testing.T) {
 	transferRepository := transfers_storage.NewStorage(Db)
 	accountRepository := accounts_storage.NewStorage(Db)
 	ctx := context.Background()

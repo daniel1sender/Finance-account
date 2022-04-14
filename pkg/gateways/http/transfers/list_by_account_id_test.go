@@ -15,7 +15,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestHandlerListByID(t *testing.T) {
+func TestHandlerListByAccountID(t *testing.T) {
 	log := logrus.NewEntry(logrus.New())
 
 	t.Run("should return 200 and the list of transfers", func(t *testing.T) {
@@ -27,7 +27,7 @@ func TestHandlerListByID(t *testing.T) {
 		newRequest, _ := http.NewRequest(http.MethodGet, "/transfers", nil)
 		ctx := context.WithValue(newRequest.Context(), server_http.ContextAccountID, transfer.AccountOriginID)
 		newResponse := httptest.NewRecorder()
-		h.ListByID(newResponse, newRequest.WithContext(ctx))
+		h.ListByAccountID(newResponse, newRequest.WithContext(ctx))
 
 		var response []ResponseList
 		_ = json.Unmarshal(newResponse.Body.Bytes(), &response)
@@ -43,7 +43,7 @@ func TestHandlerListByID(t *testing.T) {
 		newRequest, _ := http.NewRequest(http.MethodGet, "/transfers", nil)
 		ctx := context.WithValue(newRequest.Context(), server_http.ContextAccountID, "123")
 		newResponse := httptest.NewRecorder()
-		h.ListByID(newResponse, newRequest.WithContext(ctx))
+		h.ListByAccountID(newResponse, newRequest.WithContext(ctx))
 
 		var response server_http.Error
 		_ = json.Unmarshal(newResponse.Body.Bytes(), &response)
@@ -60,7 +60,7 @@ func TestHandlerListByID(t *testing.T) {
 		newRequest, _ := http.NewRequest(http.MethodGet, "/transfers", nil)
 		ctx := context.WithValue(newRequest.Context(), server_http.ContextAccountID, "123")
 		newResponse := httptest.NewRecorder()
-		h.ListByID(newResponse, newRequest.WithContext(ctx))
+		h.ListByAccountID(newResponse, newRequest.WithContext(ctx))
 
 		var response server_http.Error
 		_ = json.Unmarshal(newResponse.Body.Bytes(), &response)
