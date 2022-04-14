@@ -8,7 +8,7 @@ import (
 
 type Repository interface {
 	Insert(ctx context.Context, transfer entities.Transfer) error
-	ListByID(ctx context.Context, accountID string) ([]entities.Transfer, error)
+	ListByAccountID(ctx context.Context, accountID string) ([]entities.Transfer, error)
 }
 
 type AccountRepository interface {

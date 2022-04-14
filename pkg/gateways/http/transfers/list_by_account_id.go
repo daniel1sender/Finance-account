@@ -24,7 +24,7 @@ func (h Handler) ListByID(w http.ResponseWriter, r *http.Request) {
 	originAccountID := ctx.Value(server_http.ContextAccountID).(string)
 	log := h.logger
 
-	transfersList, err := h.useCase.ListByID(ctx, originAccountID)
+	transfersList, err := h.useCase.ListByAccountID(ctx, originAccountID)
 	w.Header().Add("Content-Type", server_http.JSONContentType)
 	if err != nil {
 		log.WithError(err).Error("transfers listing request failed")
