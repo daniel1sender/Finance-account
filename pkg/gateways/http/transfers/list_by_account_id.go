@@ -18,7 +18,7 @@ type ResponseList struct {
 	CreatedAt            string `json:"created_at"`
 }
 
-func (h Handler) ListByID(w http.ResponseWriter, r *http.Request) {
+func (h Handler) ListByAccountID(w http.ResponseWriter, r *http.Request) {
 
 	ctx := r.Context()
 	originAccountID := ctx.Value(server_http.ContextAccountID).(string)

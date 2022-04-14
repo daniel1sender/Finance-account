@@ -71,7 +71,7 @@ func main() {
 	r.HandleFunc("/accounts", accountHandler.GetAll).Methods(http.MethodGet)
 	r.HandleFunc("/accounts/{id}/balance", accountHandler.GetBalanceByID).Methods(http.MethodGet)
 	r.HandleFunc("/transfers", loginHandler.ValidateToken(http.HandlerFunc(transferHandler.Make))).Methods(http.MethodPost)
-	r.HandleFunc("/transfers", loginHandler.ValidateToken(http.HandlerFunc(transferHandler.ListByID))).Methods(http.MethodGet)
+	r.HandleFunc("/transfers", loginHandler.ValidateToken(http.HandlerFunc(transferHandler.ListByAccountID))).Methods(http.MethodGet)
 	r.HandleFunc("/login", loginHandler.Login).Methods(http.MethodPost)
 
 	const writeTime = 60 * time.Second
