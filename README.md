@@ -1,5 +1,5 @@
 # Finance account
-Finance account é uma API REST que termite a criação de contas, autenticação e realização transferências entre elas dentro de um simples sistema bancário. A API é escrita em golang e está embasada no paradigma da clean architecture.
+Finance account é uma API REST que permite a criação de contas, autenticação e realização transferências entre elas dentro de um simples sistema bancário. A API é escrita em golang e está embasada no paradigma da clean architecture.
 
 Com o uso da API é possível:
 *  Criar contas
@@ -33,7 +33,7 @@ go mod download
 #### Variáveis de Ambiente
 [Nome | Descrição | Exemplo
 ------------| ------------------------------------ | -------------------------------------------------
-DB_URL | string com nome, usuário, porta, host do banco dados | "postgres://postgres:4321@localhost:5432/projeto"
+DB_URL | string com nome, usuário, porta e host do banco de dados | "postgres://postgres:4321@localhost:5432/projeto"
 API_PORT | Porta em que o servidor é executado | ":5000"
 TOKEN_SECRET| Segredo de geração do Token | "AjwMkrz632"
 EXP_TIME | Tempo de expiração do Token | "5m"]
