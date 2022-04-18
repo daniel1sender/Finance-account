@@ -31,7 +31,7 @@ func (h Handler) ListByAccountID(w http.ResponseWriter, r *http.Request) {
 		log.WithError(err).Error("transfers listing request failed")
 		switch {
 		case errors.Is(err, transfers.ErrEmptyList):
-			response := server_http.Error{Reason: transfers.ErrTransfersNotFound.Error()}
+			response := server_http.Error{Reason: transfers.ErrEmptyList.Error()}
 			w.WriteHeader(http.StatusNotFound)
 			json.NewEncoder(w).Encode(response)
 		default:
