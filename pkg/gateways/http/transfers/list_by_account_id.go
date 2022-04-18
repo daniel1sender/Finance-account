@@ -22,8 +22,9 @@ func (h Handler) ListByAccountID(w http.ResponseWriter, r *http.Request) {
 
 	ctx := r.Context()
 	originAccountID := ctx.Value(server_http.ContextAccountID).(string)
-	log := h.logger
-
+	log := h.logger.WithFields(logrus.Fields{
+		"origin_account_id": originAccountID,
+	})
 	transfersList, err := h.useCase.ListByAccountID(ctx, originAccountID)
 	w.Header().Add("Content-Type", server_http.JSONContentType)
 	if err != nil {
