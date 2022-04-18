@@ -50,10 +50,10 @@ func TestHandlerListByAccountID(t *testing.T) {
 
 		assert.Equal(t, newResponse.Header().Get("content-type"), server_http.JSONContentType)
 		assert.Equal(t, newResponse.Code, http.StatusNotFound)
-		assert.Equal(t, response.Reason, transfers.ErrTransfersNotFound.Error())
+		assert.Equal(t, response.Reason, transfers.ErrEmptyList.Error())
 	})
 
-	t.Run("should return 500 and an error when an unexpected error occourred", func(t *testing.T) {
+	t.Run("should return 500 and an error when an unexpected error occurred", func(t *testing.T) {
 		unexpectedError := errors.New("unexpected error")
 		useCase := transfers.UseCaseMock{Error: unexpectedError}
 		h := NewHandler(&useCase, log)
