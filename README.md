@@ -1,12 +1,12 @@
 # Finance account
-Finance account é uma API REST que permite a criação de contas, autenticação e realização transferências entre elas dentro de um simples sistema bancário. A API é escrita em golang e está embasada no paradigma da clean architecture.
+Finance account é uma API REST que termite a criação de contas, autenticação e realização transferências entre elas dentro de um simples sistema bancário. A API é escrita em golang e está embasada no paradigma da clean architecture.
 
 Com o uso da API é possível:
 *  Criar contas
 *  Listar contas criadas
 *  Acessar saldo bancário pelo id da conta
-*  Autenticar um usuário
-*  Realizar transferências entre contas 
+*  Autenticar um usuário pelo CPF e Senha da conta
+*  Realizar transferências entre usuários autenticados
 *  Listar as transferências da usuária autenticada 
 
 ## dependências 
@@ -31,16 +31,21 @@ go mod download
 
 ## Como Usar
 #### Variáveis de Ambiente
-Nome    	|  Descrição
-------------|  ------------------------------------
-DB_URL  	|  URL do banco 
-API_PORT	|  Porta em que o servidor é executade
-TOKEN_SECRET|  Segredo de geração do Token
-EXP_TIME	|  Tempo de expiração do Token
+[Nome | Descrição | Exemplo
+------------| ------------------------------------ | -------------------------------------------------
+DB_URL | string com nome, usuário, porta, host do banco dados | "postgres://postgres:4321@localhost:5432/projeto"
+API_PORT | Porta em que o servidor é executado | ":5000"
+TOKEN_SECRET| Segredo de geração do Token | "AjwMkrz632"
+EXP_TIME | Tempo de expiração do Token | "5m"]
 
 Para executar via Docker-Compose:
 ```docker
 docker-compose up --build -d
+```
+
+Para rodar a aplicação via Shell:
+```linux
+./run.sh
 ```
 
 ## Endpoints
@@ -169,6 +174,12 @@ Caso algum erro inesperado no servidor ocorra
 
 **POST /transfers - criação da transferência**
 
+Cabeçalho da Requisição:
+
+{
+    "Authorization" : "Bearer Token"
+}
+
 Corpo da requisição:
 
 ```json
@@ -241,6 +252,12 @@ Caso algum erro inesperado no servidor ocorra
 ```
 
 **GET /transfers - listagem das transferências da usuária autenticada**
+
+Cabeçalho da Requisição:
+
+{
+    "Authorization" : "Bearer Token"
+}
 
 Resposta de sucesso:
 
@@ -338,7 +355,7 @@ Caso algum erro inesperado no servidor ocorra
 }
 ```
 
-## Licensa
+## Licença
 [MIT](https://choosealicense.com/licenses/mit/)
 
 ## Agradecimentos
