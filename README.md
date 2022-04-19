@@ -9,6 +9,8 @@ Com o uso da API é possível:
 *  Realizar transferências entre usuários autenticados
 *  Listar as transferências da usuária autenticada 
 
+**Para realizar uma transferência ou lista-las o usuário precisa estar autenticado através de um token JWT**
+
 ## dependências 
 * [go 1.18](https://go.dev/dl/)
 * [JWT](https://pkg.go.dev/github.com/golang-jwt/jwt/v4@v4.4.0)
@@ -43,13 +45,13 @@ Para executar via Docker-Compose:
 docker-compose up --build -d
 ```
 
-Para rodar a aplicação via Shell:
+Para rodar a aplicação via arquivo com comandos shell:
 ```linux
 ./run.sh
 ```
 
 ## Endpoints
-O corpo tanto da resposta como o da requisição estão em formato JSON
+O corpo da resposta e da requisição estão em formato JSON
 
 #### Accounts
 
@@ -86,13 +88,13 @@ Resposta de insucesso:
 Caso CPF informado esteja em um formato inválido
 ```json
 {
-"reason": "cpf informed is invalid"
+    "reason": "cpf informed is invalid"
 }
 ```
 Caso o nome informado esteja vazio
 ```json
 {
-"reason": "name informed is empty"
+    "reason": "name informed is empty"
 }
 ```
 
@@ -101,7 +103,7 @@ Caso o nome informado esteja vazio
 Caso o cpf já exista no banco
 ```json
 {
-"reason": "cpf informed alredy exists"
+    "reason": "cpf informed alredy exists"
 }
 ```
 
@@ -110,7 +112,7 @@ Caso o cpf já exista no banco
 Caso algum erro inesperado no servidor ocorra
 ```json
 {
-"reason": "internal server error"
+    "reason": "internal server error"
 }
 ```
 
@@ -138,7 +140,7 @@ Resposta de sucesso:
 Caso algum erro inesperado no servidor ocorra
 ```json
 {
-"reason": "internal server error"
+    "reason": "internal server error"
 }
 ```
 
@@ -166,7 +168,7 @@ Caso a conta não tenha sido encontrada
 Caso algum erro inesperado no servidor ocorra
 ```json
 {
-"reason": "internal server error"
+    "reason": "internal server error"
 }
 ```
 
@@ -195,11 +197,11 @@ Resposta de sucesso:
 
 ```json
 {
-"id": "ddc8969a-e5e3-4723-9a3e-6c4c1fc1353f",
-"account_origin_id": "cea09752-2cee-4abb-85be-3d8b28083e32",
-"account_destination_id": "030d3cdf-5e9d-4c2f-a47b-d37555c2fdd2",
-"amount": 1,
-"create_at": "2022-04-14T17:23:49Z"
+    "id": "ddc8969a-e5e3-4723-9a3e-6c4c1fc1353f",
+    "account_origin_id": "cea09752-2cee-4abb-85be-3d8b28083e32",
+    "account_destination_id": "030d3cdf-5e9d-4c2f-a47b-d37555c2fdd2",
+    "amount": 1,
+    "create_at": "2022-04-14T17:23:49Z"
 }
 ```
 
@@ -210,35 +212,35 @@ Resposta de insucesso:
 Caso a conta de origem da transferência não seja encontrada
 ```json
 {
-"reason": "transfer origin account not found"
+    "reason": "transfer origin account not found"
 }
 ```
 
 Caso a conta de destino da transferência não seja encontrada
 ```json
 {
-"reason": "transfer destination account not found"
+    "reason": "transfer destination account not found"
 }
 ```
 
 Caso a quantia seja menor ou igual a zero
 ```json
 {
-"reason": "amount is less or equal zero"
+    "reason": "amount is less or equal zero"
 }
 ```
 
 Caso tentativa de transferência seja para a mesma conta
 ```json
 {
-"reason": "transfer attempt to the same account"
+    "reason": "transfer attempt to the same account"
 }
 ```
 
 Caso a conta de origem não tenha saldo suficiente para realizar a transferência 
 ```json
 {
-"reason": "insufficient balance on account"
+    "reason": "insufficient balance on account"
 }
 ```
 
@@ -247,7 +249,7 @@ Caso a conta de origem não tenha saldo suficiente para realizar a transferênci
 Caso algum erro inesperado no servidor ocorra
 ```json
 {
-"reason": "internal server error"
+    "reason": "internal server error"
 }
 ```
 
@@ -282,7 +284,7 @@ Resposta de insucesso:
 Caso não exista transferências pertencentes aquela conta 
 ```json
 {
-"reason": "no transfer found for this account"
+    "reason": "no transfer found for this account"
 }
 ```
 
@@ -291,7 +293,7 @@ Caso não exista transferências pertencentes aquela conta
 Caso algum erro inesperado no servidor ocorra
 ```json
 {
-"reason": "internal server error"
+    "reason": "internal server error"
 }
 ```
 
@@ -303,8 +305,8 @@ Corpo da requisição:
 
 ```json
 {
-"cpf":"12345678910",
-"secret":"123"
+    "cpf":"12345678910",
+    "secret":"123"
 }
 ```
 
@@ -314,7 +316,7 @@ Resposta de sucesso:
 
 ```json
 {
-"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjZWEwOTc1Mi0yY2VlLTRhYmItODViZS0zZDhiMjgwODNlMzIiLCJleHAiOjE2NDk5NTkxNTgsImlhdCI6MTY0OTk1ODg1OCwianRpIjoiZDJkY2RlMjAtOGI1ZS00ZjI0LTg2MDctZjRlMGQxNzFkZmI2In0.VQ2GZIyahFQFWIbTjtoECrbCXTgdxwTdkDu7PMH4DAM"
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjZWEwOTc1Mi0yY2VlLTRhYmItODViZS0zZDhiMjgwODNlMzIiLCJleHAiOjE2NDk5NTkxNTgsImlhdCI6MTY0OTk1ODg1OCwianRpIjoiZDJkY2RlMjAtOGI1ZS00ZjI0LTg2MDctZjRlMGQxNzFkZmI2In0.VQ2GZIyahFQFWIbTjtoECrbCXTgdxwTdkDu7PMH4DAM"
 }
 ```
 
@@ -326,14 +328,14 @@ Resposta de insucesso:
 Caso um senha vazia tenha sido informada
 ```json
 {
-"reason": "empty secret was informed"
+    "reason": "empty secret was informed"
 }
 ```
 
 Caso o cpf informado esteja em um formato inválido
 ```json
 {
-"reason": "cpf informed is invalid"
+    "reason": "cpf informed is invalid"
 }
 ```
 
@@ -342,7 +344,7 @@ Caso o cpf informado esteja em um formato inválido
 Caso exista alguma credencial inválida
 ```json
 {
-"reason": "invalid credentials"
+    "reason": "invalid credentials"
 }
 ```
 
@@ -351,7 +353,7 @@ Caso exista alguma credencial inválida
 Caso algum erro inesperado no servidor ocorra
 ```json
 {
-"reason": "internal server error"
+    "reason": "internal server error"
 }
 ```
 
@@ -359,4 +361,4 @@ Caso algum erro inesperado no servidor ocorra
 [MIT](https://choosealicense.com/licenses/mit/)
 
 ## Agradecimentos
-Agradeço ao meu mentor [Pedro](https://github.com/pedroyremolo e aos colegas por me terem me fornecido o conteúdo certo para realização da aplicação.
+Agradeço ao meu mentor [Pedro](https://github.com/pedroyremolo e aos colegas de time por me terem me fornecido o conteúdo certo para realização da aplicação.
