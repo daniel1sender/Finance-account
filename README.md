@@ -33,20 +33,20 @@ go mod download
 
 ## Como Usar
 #### Variáveis de Ambiente
-[Nome | Descrição | Exemplo
+Nome | Descrição | Exemplo
 ------------| ------------------------------------ | -------------------------------------------------
 DB_URL | string com nome, usuário, porta e host do banco de dados | "postgres://postgres:4321@localhost:5432/projeto"
 API_PORT | Porta em que o servidor é executado | ":5000"
 TOKEN_SECRET| Segredo de geração do Token | "AjwMkrz632"
-EXP_TIME | Tempo de expiração do Token | "5m"]
+EXP_TIME | Tempo de expiração do Token | "5m"
 
 Para executar via Docker-Compose:
-```docker
+```bash
 docker-compose up --build -d
 ```
 
 Para rodar a aplicação via arquivo com comandos shell:
-```linux
+```bash
 ./run.sh
 ```
 
@@ -182,6 +182,14 @@ Cabeçalho da Requisição:
     "Authorization" : "Bearer Token"
 }
 
+Exemplo:
+
+```json
+{
+    "Authorization:" "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjZWEwOTc1Mi0yY2VlLTRhYmItODViZS0zZDhiMjgwODNlMzIiLCJleHAiOjE2NDk5NTkxNTgsImlhdCI6MTY0OTk1ODg1OCwianRpIjoiZDJkY2RlMjAtOGI1ZS00ZjI0LTg2MDctZjRlMGQxNzFkZmI2In0.VQ2GZIyahFQFWIbTjtoECrbCXTgdxwTdkDu7PMH4DAM"
+}
+```
+
 Corpo da requisição:
 
 ```json
@@ -261,20 +269,26 @@ Cabeçalho da Requisição:
     "Authorization" : "Bearer Token"
 }
 
+Exemplo:
+
+```json
+{
+    "Authorization:" "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjZWEwOTc1Mi0yY2VlLTRhYmItODViZS0zZDhiMjgwODNlMzIiLCJleHAiOjE2NDk5NTkxNTgsImlhdCI6MTY0OTk1ODg1OCwianRpIjoiZDJkY2RlMjAtOGI1ZS00ZjI0LTg2MDctZjRlMGQxNzFkZmI2In0.VQ2GZIyahFQFWIbTjtoECrbCXTgdxwTdkDu7PMH4DAM"
+}
+```
+
 Resposta de sucesso:
 
 * 200 OK
 
 ```json
-]
-    {
+{
         "id": "ddc8969a-e5e3-4723-9a3e-6c4c1fc1353f",
         "account_origin_id": "cea09752-2cee-4abb-85be-3d8b28083e32",
         "account_destination_id": "030d3cdf-5e9d-4c2f-a47b-d37555c2fdd2",
         "amount": 1,
         "created_at": "2022-04-14 14:23:49.170126 -0300 -03"
-    }
-]
+}
 ```
 
 Resposta de insucesso:
