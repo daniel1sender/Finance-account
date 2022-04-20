@@ -38,7 +38,7 @@ Nome | Descrição | Exemplo
 DB_URL | string com nome, usuário, porta e host do banco de dados | "postgres://postgres:4321@localhost:5432/projeto"
 API_PORT | Porta em que o servidor é executado | ":5000"
 TOKEN_SECRET| Segredo de geração do Token | "AjwMkrz632"
-EXP_TIME | Tempo de expiração do Token | "5m"
+EXP_TIME | Tempo de expiração do Token | "5m" (5 minutos)
 
 Para executar via Docker-Compose:
 ```bash
