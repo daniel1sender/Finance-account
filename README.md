@@ -27,7 +27,7 @@ Com o uso da API é possível:
 * [testify](https://pkg.go.dev/github.com/stretchr/testify@v1.7.1/assert)
 
 Para baixá-las, com Go instalado na sua máquina:
-```go
+```bash
 go mod download
 ```
 
@@ -39,6 +39,8 @@ DB_URL | string com nome, usuário, porta e host do banco de dados | "postgres:/
 API_PORT | Porta em que o servidor é executado | ":5000"
 TOKEN_SECRET| Segredo de geração do Token | "AjwMkrz632"
 EXP_TIME | Tempo de expiração do Token | "5m" (5 minutos)
+
+A variável de ambiente EXP_TIME é uma string de duração, pode ser definida como um número, decimal ou não e uma unidade de tempo. [Para saber mais opções de valores para essa variável](https://pkg.go.dev/time#Duration)
 
 Para executar via Docker-Compose:
 ```bash
@@ -375,4 +377,4 @@ Caso algum erro inesperado no servidor ocorra
 [MIT](https://choosealicense.com/licenses/mit/)
 
 ## Agradecimentos
-Agradeço ao meu mentor [Pedro](https://github.com/pedroyremolo e aos colegas de time por me terem me fornecido o conteúdo certo para realização da aplicação.
+Agradeço ao meu mentor [Pedro](https://github.com/pedroyremolo) e aos colegas de time por me terem me fornecido o conteúdo certo para realização da aplicação.
