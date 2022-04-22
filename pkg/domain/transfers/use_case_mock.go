@@ -12,7 +12,7 @@ type UseCaseMock struct {
 	ListTransfers []entities.Transfer
 }
 
-func (m *UseCaseMock) Make(ctx context.Context, originID, destinationID string, amount int) (entities.Transfer, error) {
+func (m *UseCaseMock) Create(ctx context.Context, originID, destinationID string, amount int) (entities.Transfer, error) {
 	return m.Transfer, m.Error
 }
 

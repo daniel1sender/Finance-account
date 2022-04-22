@@ -12,6 +12,6 @@ var (
 )
 
 type UseCase interface {
-	Make(ctx context.Context, originID, destinationID string, amount int) (entities.Transfer, error)
+	Create(ctx context.Context, originID, destinationID string, amount int) (entities.Transfer, error)
 	ListByAccountID(ctx context.Context, accountID string) ([]entities.Transfer, error)
 }

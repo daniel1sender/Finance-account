@@ -12,7 +12,7 @@ import (
 	transfers_storage "github.com/daniel1sender/Desafio-API/pkg/gateways/store/postgres/transfers"
 )
 
-func TestTransfersUseCase_Make(t *testing.T) {
+func TestTransfersUseCase_Create(t *testing.T) {
 	transferRepository := transfers_storage.NewStorage(Db)
 	accountRepository := accounts_storage.NewStorage(Db)
 	ctx := context.Background()
@@ -39,7 +39,7 @@ func TestTransfersUseCase_Make(t *testing.T) {
 		accountRepository.Upsert(ctx, originAccount)
 		accountRepository.Upsert(ctx, destinationAccount)
 
-		makeTransfer, err := transferUsecase.Make(ctx, originAccount.ID, destinationAccount.ID, amount)
+		makeTransfer, err := transferUsecase.Create(ctx, originAccount.ID, destinationAccount.ID, amount)
 
 		if makeTransfer == (entities.Transfer{}) {
 			t.Errorf("expected a transfer but got '%+v'", makeTransfer)
@@ -89,7 +89,7 @@ func TestTransfersUseCase_Make(t *testing.T) {
 		accountRepository.Upsert(ctx, originAccount)
 		accountRepository.Upsert(ctx, destinationAccount)
 
-		makeTransfer, err := transferUsecase.Make(ctx, originAccount.ID, destinationAccount.ID, amount)
+		makeTransfer, err := transferUsecase.Create(ctx, originAccount.ID, destinationAccount.ID, amount)
 
 		if makeTransfer != (entities.Transfer{}) {
 			t.Errorf("expected an empty transfer but got '%+v'", makeTransfer)
@@ -122,7 +122,7 @@ func TestTransfersUseCase_Make(t *testing.T) {
 
 		accountRepository.Upsert(ctx, originAccount)
 
-		makeTransfer, err := transferUseCase.Make(ctx, originAccount.ID, destinationAccount.ID, amount)
+		makeTransfer, err := transferUseCase.Create(ctx, originAccount.ID, destinationAccount.ID, amount)
 
 		if makeTransfer != (entities.Transfer{}) {
 			t.Errorf("expected an empty transfer but got '%+v'", makeTransfer)
@@ -153,7 +153,7 @@ func TestTransfersUseCase_Make(t *testing.T) {
 			t.Errorf("expected no error to create a new account but got '%s'", err)
 		}
 
-		makeTransfer, err := transferUseCase.Make(ctx, originAccount.ID, destinationAccount.ID, amount)
+		makeTransfer, err := transferUseCase.Create(ctx, originAccount.ID, destinationAccount.ID, amount)
 
 		if makeTransfer != (entities.Transfer{}) {
 			t.Errorf("expected an empty transfer but got '%+v'", makeTransfer)
@@ -184,7 +184,7 @@ func TestTransfersUseCase_Make(t *testing.T) {
 		}
 		accountRepository.Upsert(ctx, originAccount)
 
-		makeTransfer, err := transferUsecase.Make(ctx, originAccount.ID, destinationAccount.ID, amount)
+		makeTransfer, err := transferUsecase.Create(ctx, originAccount.ID, destinationAccount.ID, amount)
 
 		if makeTransfer != (entities.Transfer{}) {
 			t.Errorf("expected a empty transfer but got '%+v'", makeTransfer)
