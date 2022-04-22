@@ -27,6 +27,10 @@ type Account struct {
 
 func NewAccount(name, cpf, secret string, balance int) (Account, error) {
 
+	if name == "" {
+		return Account{}, ErrInvalidName
+	}
+
 	err := verify.IsValidSecret(secret)
 	if err != nil {
 		return Account{}, verify.ErrEmptySecret

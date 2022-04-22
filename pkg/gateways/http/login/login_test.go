@@ -10,6 +10,7 @@ import (
 
 	"github.com/daniel1sender/Desafio-API/pkg/domain/accounts"
 	"github.com/daniel1sender/Desafio-API/pkg/domain/login"
+	"github.com/daniel1sender/Desafio-API/pkg/domain/verify"
 	server_http "github.com/daniel1sender/Desafio-API/pkg/gateways/http"
 	"github.com/sirupsen/logrus"
 	"github.com/stretchr/testify/assert"
@@ -72,7 +73,7 @@ func TestHandlerLogin(t *testing.T) {
 	})
 
 	t.Run("should return 400 and an error when an empty secret is informed", func(t *testing.T) {
-		useCase := login.UseCaseMock{Error: login.ErrEmptySecret}
+		useCase := login.UseCaseMock{Error: verify.ErrEmptySecret}
 		handler := NewHandler(&useCase, log)
 		requestBody := Request{"12345678910", "123"}
 		request, _ := json.Marshal(requestBody)
@@ -84,11 +85,11 @@ func TestHandlerLogin(t *testing.T) {
 
 		assert.Equal(t, newResponse.Code, http.StatusBadRequest)
 		assert.Equal(t, newResponse.Header().Get("content-type"), server_http.JSONContentType)
-		assert.Equal(t, response.Reason, login.ErrEmptySecret.Error())
+		assert.Equal(t, response.Reason, verify.ErrEmptySecret.Error())
 	})
 
 	t.Run("should return 400 and an error when the cpf informed doesn't have eleven digits", func(t *testing.T) {
-		useCase := login.UseCaseMock{Error: login.ErrInvalidCPF}
+		useCase := login.UseCaseMock{Error: verify.ErrInvalidCPF}
 		handler := NewHandler(&useCase, log)
 		requestBody := Request{"12345678910", "123"}
 		request, _ := json.Marshal(requestBody)
@@ -100,7 +101,7 @@ func TestHandlerLogin(t *testing.T) {
 
 		assert.Equal(t, newResponse.Code, http.StatusBadRequest)
 		assert.Equal(t, newResponse.Header().Get("content-type"), server_http.JSONContentType)
-		assert.Equal(t, response.Reason, login.ErrInvalidCPF.Error())
+		assert.Equal(t, response.Reason, verify.ErrInvalidCPF.Error())
 	})
 
 	t.Run("should return 400 and an error when the secret informed is invalid", func(t *testing.T) {
