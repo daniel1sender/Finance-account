@@ -6,15 +6,18 @@ import (
 
 	"github.com/daniel1sender/Desafio-API/pkg/domain/entities"
 	"github.com/daniel1sender/Desafio-API/pkg/domain/login"
+	"github.com/daniel1sender/Desafio-API/pkg/domain/verify"
 	jwt "github.com/golang-jwt/jwt/v4"
 	"golang.org/x/crypto/bcrypt"
 )
 
 func (l LoginUseCase) Login(ctx context.Context, cpf, accountSecret string) (string, error) {
-	if len(accountSecret) == 0 {
+	err := verify.IsValidSecret(accountSecret)
+	if err != nil {
 		return "", fmt.Errorf("error while validating the secret informed: %w", login.ErrEmptySecret)
 	}
-	if len(cpf) != 11 {
+	err = verify.IsValidCPF(cpf)
+	if err != nil {
 		return "", fmt.Errorf("error while validating the cpf informed: %w", login.ErrInvalidCPF)
 	}
 	account, err := l.AccountStorage.GetByCPF(ctx, cpf)

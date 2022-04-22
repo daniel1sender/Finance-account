@@ -5,16 +5,15 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/daniel1sender/Desafio-API/pkg/domain/verify"
 	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
 )
 
 var (
-	ErrInvalidCPF      = errors.New("cpf informed is invalid")
 	ErrToGenerateHash  = errors.New("failed to process secret")
 	ErrInvalidName     = errors.New("name informed is empty")
 	ErrNegativeBalance = errors.New("balance of the account created cannot be less than zero")
-	ErrEmptySecret     = errors.New("secret informed is blanc")
 )
 
 type Account struct {
@@ -28,16 +27,14 @@ type Account struct {
 
 func NewAccount(name, cpf, secret string, balance int) (Account, error) {
 
-	if name == "" {
-		return Account{}, ErrInvalidName
+	err := verify.IsValidSecret(secret)
+	if err != nil {
+		return Account{}, verify.ErrEmptySecret
 	}
 
-	if len(cpf) != 11 {
-		return Account{}, ErrInvalidCPF
-	}
-
-	if secret == "" {
-		return Account{}, ErrEmptySecret
+	err = verify.IsValidCPF(cpf)
+	if err != nil {
+		return Account{}, verify.ErrInvalidCPF
 	}
 
 	hash, err := HashGenerator(secret)

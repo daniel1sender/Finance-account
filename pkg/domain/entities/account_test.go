@@ -3,6 +3,8 @@ package entities
 import (
 	"errors"
 	"testing"
+
+	"github.com/daniel1sender/Desafio-API/pkg/domain/verify"
 )
 
 func TestNewAccount(t *testing.T) {
@@ -68,8 +70,8 @@ func TestNewAccount(t *testing.T) {
 			t.Errorf("expected '%+v' but got '%+v'", account, Account{})
 		}
 
-		if !errors.Is(err, ErrInvalidCPF) {
-			t.Errorf("expected error '%s' but got '%s'", ErrInvalidCPF, err)
+		if !errors.Is(err, verify.ErrInvalidCPF) {
+			t.Errorf("expected error '%s' but got '%s'", verify.ErrInvalidCPF, err)
 		}
 
 	})
@@ -87,8 +89,8 @@ func TestNewAccount(t *testing.T) {
 			t.Errorf("expected '%+v' but got '%+v'", Account{}, account)
 		}
 
-		if !errors.Is(err, ErrEmptySecret) {
-			t.Errorf("expected '%s' but got '%s'", ErrEmptySecret, err)
+		if !errors.Is(err, verify.ErrEmptySecret) {
+			t.Errorf("expected '%s' but got '%s'", verify.ErrEmptySecret, err)
 		}
 
 	})

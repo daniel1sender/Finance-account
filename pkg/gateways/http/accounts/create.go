@@ -7,6 +7,7 @@ import (
 
 	"github.com/daniel1sender/Desafio-API/pkg/domain/accounts"
 	"github.com/daniel1sender/Desafio-API/pkg/domain/entities"
+	"github.com/daniel1sender/Desafio-API/pkg/domain/verify"
 	server_http "github.com/daniel1sender/Desafio-API/pkg/gateways/http"
 	"github.com/sirupsen/logrus"
 )
@@ -57,13 +58,13 @@ func (h Handler) Create(w http.ResponseWriter, r *http.Request) {
 			w.WriteHeader(http.StatusBadRequest)
 			json.NewEncoder(w).Encode(response)
 
-		case errors.Is(err, entities.ErrInvalidCPF):
-			response := server_http.Error{Reason: entities.ErrInvalidCPF.Error()}
+		case errors.Is(err, verify.ErrInvalidCPF):
+			response := server_http.Error{Reason: verify.ErrInvalidCPF.Error()}
 			w.WriteHeader(http.StatusBadRequest)
 			json.NewEncoder(w).Encode(response)
 
-		case errors.Is(err, entities.ErrEmptySecret):
-			response := server_http.Error{Reason: entities.ErrEmptySecret.Error()}
+		case errors.Is(err, verify.ErrEmptySecret):
+			response := server_http.Error{Reason: verify.ErrEmptySecret.Error()}
 			w.WriteHeader(http.StatusBadRequest)
 			json.NewEncoder(w).Encode(response)
 
