@@ -58,7 +58,6 @@ func NewAccount(name, cpf, secret string, balance int) (Account, error) {
 	}, nil
 }
 
-//essa função será resposável por criar o hash a partir do secret/password passado.
 func HashGenerator(secret string) (string, error) {
 
 	hash, err := bcrypt.GenerateFromPassword([]byte(secret), 4)
