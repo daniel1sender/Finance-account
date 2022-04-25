@@ -1,8 +1,9 @@
 package entities
 
 import (
-	"errors"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestNewTransfer(t *testing.T) {
@@ -13,26 +14,12 @@ func TestNewTransfer(t *testing.T) {
 		originID := "1"
 		destinationID := "2"
 		transfer, err := NewTransfer(originID, destinationID, amount)
-		if err != nil {
-			t.Errorf("expected no error but got '%s'", err)
-		}
 
-		if transfer.Amount != amount {
-			t.Errorf("expected amount '%d' but got '%d'", transfer.Amount, amount)
-		}
-
-		if transfer.AccountOriginID != originID {
-			t.Errorf("expected originId '%s' but got '%s'", originID, transfer.AccountOriginID)
-		}
-
-		if transfer.AccountDestinationID != destinationID {
-			t.Errorf("expected detinationId '%s' but got '%s'", destinationID, transfer.AccountDestinationID)
-		}
-
-		if transfer.CreatedAt.IsZero() == true {
-			t.Error("expected a time different from zero")
-		}
-
+		assert.Nil(t, err)
+		assert.Equal(t, transfer.Amount, amount)
+		assert.Equal(t, transfer.AccountOriginID, originID)
+		assert.Equal(t, transfer.AccountDestinationID, destinationID)
+		assert.NotEmpty(t, transfer.CreatedAt)
 	})
 
 	t.Run("should return an empty transfer and an error when amount is less or equal zero", func(t *testing.T) {
@@ -42,14 +29,8 @@ func TestNewTransfer(t *testing.T) {
 		destinationID := "2"
 		transfer, err := NewTransfer(originID, destinationID, amount)
 
-		if !errors.Is(err, ErrAmountLessOrEqualZero) {
-			t.Errorf("expected error '%s' but got '%s'", ErrAmountLessOrEqualZero, err)
-		}
-
-		if transfer != (Transfer{}) {
-			t.Errorf("expected '%+v' but got '%+v'", Transfer{}, transfer)
-		}
-
+		assert.Equal(t, err, ErrAmountLessOrEqualZero)
+		assert.Empty(t, transfer)
 	})
 
 	t.Run("should return an empty transfer and an error when transfer is to the same account", func(t *testing.T) {
@@ -59,14 +40,7 @@ func TestNewTransfer(t *testing.T) {
 		destinationID := "1"
 		transfer, err := NewTransfer(originID, destinationID, amount)
 
-		if !errors.Is(err, ErrSameAccountTransfer) {
-			t.Errorf("expected error '%s' but got '%s'", ErrSameAccountTransfer, err)
-		}
-
-		if transfer != (Transfer{}) {
-			t.Errorf("expected an empty transfer but got '%+v'", transfer)
-		}
-
+		assert.Equal(t, err, ErrSameAccountTransfer)
+		assert.Empty(t, transfer)
 	})
-
 }
