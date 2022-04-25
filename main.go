@@ -31,7 +31,7 @@ func main() {
 	logger.SetFormatter(&logrus.JSONFormatter{})
 	log := logrus.NewEntry(logger)
 
-	apiConfig, err := config.GetConfig()
+	apiConfig, err := config.GetFromEnv()
 	if err != nil {
 		log.WithError(err).Fatal("error while processing environment variables")
 	}
