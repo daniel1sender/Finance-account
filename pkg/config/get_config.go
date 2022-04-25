@@ -4,7 +4,7 @@ import (
 	"github.com/kelseyhightower/envconfig"
 )
 
-func GetConfig() (Config, error) {
+func GetFromEnv() (Config, error) {
 	var apiConfig Config
 	err := envconfig.Process("", &apiConfig)
 	if err != nil {
