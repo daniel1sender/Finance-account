@@ -12,6 +12,7 @@ services:
      - DB_URL=postgres://postgres:1234@db:5432/desafio?sslmode=disable
      - API_PORT=:3000
      - EXP_TIME=5m
+     - TOKEN_SECRET=PU3lcBUKmE
     networks:
       - application
   db: 
