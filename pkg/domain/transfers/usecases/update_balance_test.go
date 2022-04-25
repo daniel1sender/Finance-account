@@ -2,7 +2,6 @@ package usecases
 
 import (
 	"context"
-	"errors"
 	"testing"
 
 	accounts_usecase "github.com/daniel1sender/Desafio-API/pkg/domain/accounts"
@@ -10,6 +9,7 @@ import (
 	"github.com/daniel1sender/Desafio-API/pkg/gateways/store/postgres/accounts"
 	"github.com/daniel1sender/Desafio-API/pkg/gateways/store/postgres/transfers"
 	"github.com/daniel1sender/Desafio-API/pkg/tests"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestTranferUseCase_UpdateBalance(t *testing.T) {
@@ -23,40 +23,27 @@ func TestTranferUseCase_UpdateBalance(t *testing.T) {
 		cpf := "12345678010"
 		secret := "123"
 		balance := 10
-
-		account, err := entities.NewAccount(name, cpf, secret, balance)
-		if err != nil {
-			t.Errorf("expected no error to create a new account but got '%s'", err)
-		}
-
+		account, _ := entities.NewAccount(name, cpf, secret, balance)
 		accountsRespository.Upsert(ctx, account)
 
-		updateAccountError := accountUseCase.updateBalance(ctx, account.ID, 20.0)
+		err := accountUseCase.updateBalance(ctx, account.ID, 20.0)
 
-		if updateAccountError != nil {
-			t.Errorf("expected no error but got '%s'", updateAccountError)
-		}
-
+		assert.Nil(t, err)
 	})
 
-	t.Run("should return an empty account an error when account don't exists", func(t *testing.T) {
+	t.Run("should return an empty account and an error when the account doesn't exist", func(t *testing.T) {
 		name := "John Doe"
 		cpf := "11111111031"
 		secret := "123"
 		balance := 10
 
-		account, err := entities.NewAccount(name, cpf, secret, balance)
-		if err != nil {
-			t.Errorf("expected no error to create a new account but got '%s'", err)
-		}
+		account, _ := entities.NewAccount(name, cpf, secret, balance)
 		tests.DeleteAllAccounts(Db)
 
-		err = accountUseCase.updateBalance(ctx, account.ID, 20.0)
+		err := accountUseCase.updateBalance(ctx, account.ID, 20.0)
 
-		if !errors.Is(err, accounts_usecase.ErrAccountNotFound) {
-			t.Errorf("expected '%s' but got '%s'", accounts_usecase.ErrAccountNotFound, err)
-		}
-
+		assert.NotNil(t, err)
+		assert.Equal(t, err, accounts_usecase.ErrAccountNotFound)
 	})
 	tests.DeleteAllAccounts(Db)
 	tests.DeleteAllTransfers(Db)

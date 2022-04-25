@@ -1,10 +1,10 @@
 package entities
 
 import (
-	"errors"
 	"testing"
 
 	"github.com/daniel1sender/Desafio-API/pkg/domain/verify"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestNewAccount(t *testing.T) {
@@ -16,26 +16,12 @@ func TestNewAccount(t *testing.T) {
 		secret := "123"
 		balance := 10
 		account, err := NewAccount(name, cpf, secret, balance)
-		if err != nil {
-			t.Errorf("expected no error but got '%s'", err)
-		}
 
-		if account.Name != name {
-			t.Errorf("expected '%s' but got '%s'", name, account.Name)
-		}
-
-		if account.CPF != cpf {
-			t.Errorf("expected '%s' but got '%s'", cpf, account.CPF)
-		}
-
-		if account.Balance != balance {
-			t.Errorf("expected '%d' but got '%d'", balance, account.Balance)
-		}
-
-		if account.CreatedAt.IsZero() {
-			t.Errorf("expected time different from zero time")
-		}
-
+		assert.Nil(t, err)
+		assert.Equal(t, account.Name, name)
+		assert.Equal(t, account.CPF, cpf)
+		assert.Equal(t, account.Balance, balance)
+		assert.NotEmpty(t, account.CreatedAt)
 	})
 
 	t.Run("should return an empty account and an error when name is empty", func(t *testing.T) {
@@ -47,17 +33,11 @@ func TestNewAccount(t *testing.T) {
 
 		account, err := NewAccount(name, cpf, secret, balance)
 
-		if account != (Account{}) {
-			t.Errorf("expected '%+v' but got '%+v'", Account{}, account)
-		}
-
-		if !errors.Is(err, ErrInvalidName) {
-			t.Errorf("expected error '%s' but got '%s'", ErrInvalidName, err)
-		}
-
+		assert.Empty(t, account)
+		assert.Equal(t, err, ErrInvalidName)
 	})
 
-	t.Run("should return an empty account and an error when cpf don't have 11 digits", func(t *testing.T) {
+	t.Run("should return an empty account and an error when cpf doesn't have 11 digits", func(t *testing.T) {
 
 		name := "John Doe"
 		cpf := "1111111030"
@@ -66,14 +46,8 @@ func TestNewAccount(t *testing.T) {
 
 		account, err := NewAccount(name, cpf, secret, balance)
 
-		if account != (Account{}) {
-			t.Errorf("expected '%+v' but got '%+v'", account, Account{})
-		}
-
-		if !errors.Is(err, verify.ErrInvalidCPF) {
-			t.Errorf("expected error '%s' but got '%s'", verify.ErrInvalidCPF, err)
-		}
-
+		assert.Empty(t, account)
+		assert.Equal(t, err, verify.ErrInvalidCPF)
 	})
 
 	t.Run("should return an empty account and an error when secret informed is empty", func(t *testing.T) {
@@ -85,14 +59,8 @@ func TestNewAccount(t *testing.T) {
 
 		account, err := NewAccount(name, cpf, secret, balance)
 
-		if account != (Account{}) {
-			t.Errorf("expected '%+v' but got '%+v'", Account{}, account)
-		}
-
-		if !errors.Is(err, verify.ErrEmptySecret) {
-			t.Errorf("expected '%s' but got '%s'", verify.ErrEmptySecret, err)
-		}
-
+		assert.Empty(t, account)
+		assert.Equal(t, err, verify.ErrEmptySecret)
 	})
 
 	t.Run("should return an empty account and an error when balance is less than zero", func(t *testing.T) {
@@ -104,14 +72,8 @@ func TestNewAccount(t *testing.T) {
 
 		account, err := NewAccount(name, cpf, secret, balance)
 
-		if account != (Account{}) {
-			t.Errorf("expected '%+v' but got '%+v'", account, Account{})
-		}
-
-		if !errors.Is(err, ErrNegativeBalance) {
-			t.Errorf("expected error '%s' but got '%s'", ErrNegativeBalance, err)
-		}
-
+		assert.Empty(t, account)
+		assert.Equal(t, err, ErrNegativeBalance)
 	})
 
-}
+} 
