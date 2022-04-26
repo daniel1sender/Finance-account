@@ -16,7 +16,7 @@ func TestAccountUseCase_GetBalanceByID(t *testing.T) {
 	accountUsecase := NewUseCase(repository)
 	ctx := context.Background()
 
-	t.Run("should return an account balance when id is found", func(t *testing.T) {
+	t.Run("should return an account balance when the id is found", func(t *testing.T) {
 		name := "John Doe"
 		cpf := "11111111030"
 		secret := "123"
@@ -30,7 +30,7 @@ func TestAccountUseCase_GetBalanceByID(t *testing.T) {
 		assert.NotNil(t, getBalance)
 	})
 
-	t.Run("should return a null account balance and an error when id isn't found", func(t *testing.T) {
+	t.Run("should return a null account balance and an error when the id isn't found", func(t *testing.T) {
 		name := "John Doe"
 		cpf := "11111111030"
 		secret := "123"
