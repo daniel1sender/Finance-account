@@ -10,7 +10,7 @@ import (
 func (ar accountRepository) GetByID(id string) (entities.Account, error) {
 	account, ok := ar.users[id]
 	if !ok {
-		return entities.Account{}, fmt.Errorf("error finding account: %w", accounts.ErrAccountNotFound)
+		return entities.Account{}, fmt.Errorf("error while finding account: %w", accounts.ErrAccountNotFound)
 	}
 	return account, nil
 }
