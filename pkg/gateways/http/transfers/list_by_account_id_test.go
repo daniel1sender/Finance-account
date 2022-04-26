@@ -29,7 +29,7 @@ func TestHandlerListByAccountID(t *testing.T) {
 		newResponse := httptest.NewRecorder()
 		h.ListByAccountID(newResponse, newRequest.WithContext(ctx))
 
-		var response []ResponseList
+		var response []ListTransfersResponse
 		_ = json.Unmarshal(newResponse.Body.Bytes(), &response)
 
 		assert.Equal(t, newResponse.Header().Get("content-type"), server_http.JSONContentType)

@@ -11,12 +11,12 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-type Request struct {
+type LoginUserRequest struct {
 	Cpf    string `json:"cpf"`
 	Secret string `json:"secret"`
 }
 
-type Response struct {
+type LoginUserResponse struct {
 	Token string `json:"token"`
 }
 
@@ -26,7 +26,7 @@ func (h Handler) Login(w http.ResponseWriter, r *http.Request) {
 		"method": r.Method,
 	})
 
-	var request Request
+	var request LoginUserRequest
 	err := json.NewDecoder(r.Body).Decode(&request)
 	if err != nil {
 		w.Header().Add("Content-Type", server_http.JSONContentType)
@@ -62,7 +62,7 @@ func (h Handler) Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	response := Response{Token: token}
+	response := LoginUserResponse{Token: token}
 	w.WriteHeader(http.StatusCreated)
 	_ = json.NewEncoder(w).Encode(response)
 	log.Info("token was created successfully")

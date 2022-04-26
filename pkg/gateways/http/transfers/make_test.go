@@ -23,7 +23,7 @@ func TestHandlerMake(t *testing.T) {
 		transfer := entities.Transfer{AccountOriginID: "1", AccountDestinationID: "0", Amount: 10}
 		useCase := transfers.UseCaseMock{Transfer: transfer}
 		h := NewHandler(&useCase, log)
-		createRequest := Request{transfer.AccountDestinationID, transfer.Amount}
+		createRequest := CreateTransferRequest{transfer.AccountDestinationID, transfer.Amount}
 		request, _ := json.Marshal(createRequest)
 		newRequest, _ := http.NewRequest(http.MethodPost, "/transfers", bytes.NewReader(request))
 		ctx := context.WithValue(newRequest.Context(), server_http.ContextAccountID, transfer.AccountOriginID)
@@ -31,7 +31,7 @@ func TestHandlerMake(t *testing.T) {
 		h.Make(newResponse, newRequest.WithContext(ctx))
 		ExpectedCreateAt := transfer.CreatedAt.Format(server_http.DateLayout)
 
-		var response Response
+		var response CreateTransferResponse
 		_ = json.Unmarshal(newResponse.Body.Bytes(), &response)
 
 		if newResponse.Code != http.StatusCreated {
@@ -96,7 +96,7 @@ func TestHandlerMake(t *testing.T) {
 		useCase := transfers.UseCaseMock{Transfer: transfer, Error: entities.ErrAmountLessOrEqualZero}
 		h := NewHandler(&useCase, log)
 
-		createRequest := Request{transfer.AccountDestinationID, transfer.Amount}
+		createRequest := CreateTransferRequest{transfer.AccountDestinationID, transfer.Amount}
 		request, _ := json.Marshal(createRequest)
 		newRequest, _ := http.NewRequest(http.MethodPost, "/transfers", bytes.NewBuffer(request))
 		newResponse := httptest.NewRecorder()
@@ -126,7 +126,7 @@ func TestHandlerMake(t *testing.T) {
 		useCase := transfers.UseCaseMock{Transfer: transfer, Error: entities.ErrSameAccountTransfer}
 		h := NewHandler(&useCase, log)
 
-		createRequest := Request{transfer.AccountDestinationID, transfer.Amount}
+		createRequest := CreateTransferRequest{transfer.AccountDestinationID, transfer.Amount}
 		request, _ := json.Marshal(createRequest)
 		newRequest, _ := http.NewRequest(http.MethodPost, "/transfers", bytes.NewBuffer(request))
 		newResponse := httptest.NewRecorder()
@@ -155,7 +155,7 @@ func TestHandlerMake(t *testing.T) {
 		useCase := transfers.UseCaseMock{Transfer: transfer, Error: usecases.ErrOriginAccountNotFound}
 		h := NewHandler(&useCase, log)
 
-		createRequest := Request{transfer.AccountDestinationID, transfer.Amount}
+		createRequest := CreateTransferRequest{transfer.AccountDestinationID, transfer.Amount}
 		request, _ := json.Marshal(createRequest)
 		newRequest, _ := http.NewRequest(http.MethodPost, "/transfers", bytes.NewBuffer(request))
 		newResponse := httptest.NewRecorder()
@@ -184,7 +184,7 @@ func TestHandlerMake(t *testing.T) {
 		useCase := transfers.UseCaseMock{Transfer: transfer, Error: usecases.ErrDestinationAccountNotFound}
 		h := NewHandler(&useCase, log)
 
-		createRequest := Request{transfer.AccountDestinationID, transfer.Amount}
+		createRequest := CreateTransferRequest{transfer.AccountDestinationID, transfer.Amount}
 		request, _ := json.Marshal(createRequest)
 		newRequest, _ := http.NewRequest(http.MethodPost, "/transfers", bytes.NewBuffer(request))
 		newResponse := httptest.NewRecorder()
@@ -213,7 +213,7 @@ func TestHandlerMake(t *testing.T) {
 		useCase := transfers.UseCaseMock{Transfer: transfer, Error: usecases.ErrInsufficientFunds}
 		h := NewHandler(&useCase, log)
 
-		createRequest := Request{transfer.AccountDestinationID, transfer.Amount}
+		createRequest := CreateTransferRequest{transfer.AccountDestinationID, transfer.Amount}
 		request, _ := json.Marshal(createRequest)
 		newRequest, _ := http.NewRequest(http.MethodPost, "/transfers", bytes.NewBuffer(request))
 		newResponse := httptest.NewRecorder()

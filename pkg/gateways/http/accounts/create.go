@@ -11,14 +11,14 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-type CreateRequest struct {
+type CreateAccountRequest struct {
 	Name    string `json:"name"`
 	CPF     string `json:"cpf"`
 	Secret  string `json:"secret"`
 	Balance int    `json:"balance"`
 }
 
-type CreateResponse struct {
+type CreateAccountResponse struct {
 	ID        string `json:"id"`
 	Name      string `json:"name"`
 	CPF       string `json:"cpf"`
@@ -30,7 +30,7 @@ func (h Handler) Create(w http.ResponseWriter, r *http.Request) {
 
 	log := h.logger
 
-	var createRequest CreateRequest
+	var createRequest CreateAccountRequest
 	err := json.NewDecoder(r.Body).Decode(&createRequest)
 	if err != nil {
 		w.Header().Add("Content-Type", server_http.JSONContentType)
@@ -86,7 +86,7 @@ func (h Handler) Create(w http.ResponseWriter, r *http.Request) {
 	}
 
 	ExpectedCreateAt := account.CreatedAt.Format(server_http.DateLayout)
-	CreateResponse := CreateResponse{account.ID, account.Name, account.CPF, account.Balance, ExpectedCreateAt}
+	CreateResponse := CreateAccountResponse{account.ID, account.Name, account.CPF, account.Balance, ExpectedCreateAt}
 	w.WriteHeader(http.StatusCreated)
 	_ = json.NewEncoder(w).Encode(CreateResponse)
 	log.WithFields(logrus.Fields{

@@ -11,7 +11,7 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-type ByIdResponse struct {
+type GetBalanceByIdResponse struct {
 	Balance int `json:"balance"`
 }
 
@@ -38,7 +38,7 @@ func (h Handler) GetBalanceByID(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	balanceResponse := ByIdResponse{balance}
+	balanceResponse := GetBalanceByIdResponse{balance}
 	w.WriteHeader(http.StatusOK)
 	_ = json.NewEncoder(w).Encode(balanceResponse)
 	log.WithFields(logrus.Fields{

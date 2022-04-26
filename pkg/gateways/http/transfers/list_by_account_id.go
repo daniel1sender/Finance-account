@@ -10,7 +10,7 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-type ResponseList struct {
+type ListTransfersResponse struct {
 	TransferID           string `json:"id"`
 	AccountOriginID      string `json:"account_origin_id"`
 	AccountDestinationID string `json:"account_destination_id"`
@@ -42,7 +42,7 @@ func (h Handler) ListByAccountID(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	response := make([]ResponseList, len(transfersList))
+	response := make([]ListTransfersResponse, len(transfersList))
 	for index, transfer := range transfersList {
 		response[index].TransferID = transfer.ID
 		response[index].AccountOriginID = transfer.AccountOriginID
