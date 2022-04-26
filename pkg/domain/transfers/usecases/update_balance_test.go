@@ -13,8 +13,8 @@ import (
 )
 
 func TestTranferUseCase_UpdateBalance(t *testing.T) {
-	transfersRespository := transfers.NewStorage(Db)
-	accountsRespository := accounts.NewStorage(Db)
+	transfersRespository := transfers.NewRepository(Db)
+	accountsRespository := accounts.NewRepository(Db)
 	accountUseCase := NewUseCase(transfersRespository, accountsRespository)
 	ctx := context.Background()
 

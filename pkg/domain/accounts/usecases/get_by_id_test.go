@@ -12,7 +12,7 @@ import (
 )
 
 func TestAccountUseCase_GetById(t *testing.T) {
-	repository := accounts_repository.NewStorage(Db)
+	repository := accounts_repository.NewRepository(Db)
 	accountUseCase := NewUseCase(repository)
 	ctx := context.Background()
 

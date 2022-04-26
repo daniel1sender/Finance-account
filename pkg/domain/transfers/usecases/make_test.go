@@ -13,8 +13,8 @@ import (
 )
 
 func TestTransfersUseCase_Make(t *testing.T) {
-	transferRepository := transfers_storage.NewStorage(Db)
-	accountRepository := accounts_storage.NewStorage(Db)
+	transferRepository := transfers_storage.NewRepository(Db)
+	accountRepository := accounts_storage.NewRepository(Db)
 	ctx := context.Background()
 
 	t.Run("should return a transfer", func(t *testing.T) {

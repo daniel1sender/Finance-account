@@ -8,6 +8,6 @@ type LoginRepository struct {
 	*pgx.Pool
 }
 
-func NewStorage(connection *pgx.Pool) LoginRepository {
+func NewRepository(connection *pgx.Pool) LoginRepository {
 	return LoginRepository{connection}
 }

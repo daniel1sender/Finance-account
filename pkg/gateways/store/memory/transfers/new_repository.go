@@ -2,13 +2,13 @@ package transfers
 
 import "github.com/daniel1sender/Desafio-API/pkg/domain/entities"
 
-type TransferStorage struct {
+type TransferRepository struct {
 	storage map[string]entities.Transfer
 }
 
-func NewStorage() TransferStorage {
+func NewRepository() TransferRepository {
 	sto := make(map[string]entities.Transfer)
-	return TransferStorage{
+	return TransferRepository{
 		storage: sto,
 	}
 }

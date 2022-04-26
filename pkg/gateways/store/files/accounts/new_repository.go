@@ -13,7 +13,7 @@ type accountRepository struct {
 	users map[string]entities.Account
 }
 
-func NewStorage() accountRepository {
+func NewRepository() accountRepository {
 	accountMap := make(map[string]entities.Account)
 	if _, err := os.Stat("Account_Repository.json"); err != nil {
 		_, err := os.OpenFile("Account_Repository.json", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)

@@ -51,15 +51,15 @@ func main() {
 
 	defer dbPool.Close()
 
-	accountRepository := accounts.NewStorage(dbPool)
+	accountRepository := accounts.NewRepository(dbPool)
 	accountUseCase := accounts_usecase.NewUseCase(accountRepository)
 	accountHandler := accounts_handler.NewHandler(accountUseCase, log)
 
-	transferStorage := transfers.NewStorage(dbPool)
+	transferStorage := transfers.NewRepository(dbPool)
 	transferUseCase := transfers_usecase.NewUseCase(transferStorage, accountRepository)
 	transferHandler := transfers_handler.NewHandler(transferUseCase, log)
 
-	loginStorage := login.NewStorage(dbPool)
+	loginStorage := login.NewRepository(dbPool)
 	loginUseCase, err := login_usecase.NewUseCase(accountRepository, loginStorage, apiConfig.TokenSecret, apiConfig.ExpTime)
 	if err != nil {
 		log.WithError(err).Error("error while parsing the duration")

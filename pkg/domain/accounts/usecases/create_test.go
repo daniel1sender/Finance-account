@@ -12,7 +12,7 @@ import (
 )
 
 func TestAccountUseCase_Create(t *testing.T) {
-	repository := accounts_repository.NewStorage(Db)
+	repository := accounts_repository.NewRepository(Db)
 	accountUsecase := NewUseCase(repository)
 	ctx := context.Background()
 

@@ -4,13 +4,13 @@ import (
 	"github.com/daniel1sender/Desafio-API/pkg/domain/entities"
 )
 
-type AccountStorage struct {
+type AccountRepository struct {
 	storage map[string]entities.Account
 }
 
-func NewStorage() AccountStorage {
+func NewRepository() AccountRepository {
 	sto := make(map[string]entities.Account)
-	return AccountStorage{
+	return AccountRepository{
 		storage: sto,
 	}
 }

@@ -14,8 +14,8 @@ import (
 
 func TestLoginUsecase_ValidateToken(t *testing.T) {
 	ctx := context.Background()
-	accountRepository := accounts.NewStorage(Db)
-	loginRepository := login.NewStorage(Db)
+	accountRepository := accounts.NewRepository(Db)
+	loginRepository := login.NewRepository(Db)
 	tokenSecret := "123"
 	duration := "1m"
 	useCase, _ := NewUseCase(accountRepository, loginRepository, tokenSecret, duration)

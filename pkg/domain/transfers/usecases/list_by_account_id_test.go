@@ -12,8 +12,8 @@ import (
 )
 
 func TestTransfersUseCase_ListByAccountID(t *testing.T) {
-	transferRepository := transfers_storage.NewStorage(Db)
-	accountRepository := accounts_storage.NewStorage(Db)
+	transferRepository := transfers_storage.NewRepository(Db)
+	accountRepository := accounts_storage.NewRepository(Db)
 	ctx := context.Background()
 	transferUsecase := NewUseCase(transferRepository, accountRepository)
 	account1, _ := entities.NewAccount("Jonh Doe", "12345678910", "123", 10)

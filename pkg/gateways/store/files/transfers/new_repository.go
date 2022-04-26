@@ -15,22 +15,22 @@ type TransferRepository struct {
 	users   map[string]entities.Transfer
 }
 
-func NewStorage() TransferRepository {
+func NewRepository() TransferRepository {
 	openFile, err := os.OpenFile("Transfer_Respository.json", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
 	if err != nil {
 		log.Fatal(err)
 	}
-	trasnferMap := make(map[string]entities.Transfer)
+	transferMap := make(map[string]entities.Transfer)
 	readFile, err := ioutil.ReadAll(openFile)
 	if err != nil {
 		return TransferRepository{}
 	}
-	err = json.Unmarshal(readFile, &trasnferMap)
+	err = json.Unmarshal(readFile, &transferMap)
 	if err != nil {
 		fmt.Println(err)
 	}
 	return TransferRepository{
 		storage: openFile,
-		users:   trasnferMap,
+		users:   transferMap,
 	}
 }
