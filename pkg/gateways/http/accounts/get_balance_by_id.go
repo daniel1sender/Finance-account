@@ -1,7 +1,6 @@
 package accounts
 
 import (
-	"encoding/json"
 	"errors"
 	"net/http"
 
@@ -20,27 +19,23 @@ func (h Handler) GetBalanceByID(w http.ResponseWriter, r *http.Request) {
 	accountID := mux.Vars(r)["id"]
 	balance, err := h.useCase.GetBalanceByID(r.Context(), accountID)
 
-	w.Header().Add("Content-Type", server_http.JSONContentType)
 	if err != nil {
 		log.WithError(err).Error("get balance by id request failed")
 		switch {
+			
 		case errors.Is(err, accounts.ErrAccountNotFound):
 			response := server_http.Error{Reason: accounts.ErrAccountNotFound.Error()}
-			w.WriteHeader(http.StatusNotFound)
-			json.NewEncoder(w).Encode(response)
+			_ = server_http.Send(w, response, http.StatusNotFound)
 
 		default:
 			response := server_http.Error{Reason: "internal error server"}
-			w.WriteHeader(http.StatusInternalServerError)
-			json.NewEncoder(w).Encode(response)
-
+			_ = server_http.Send(w, response, http.StatusInternalServerError)
 		}
 		return
 	}
 
-	balanceResponse := GetBalanceByIdResponse{balance}
-	w.WriteHeader(http.StatusOK)
-	_ = json.NewEncoder(w).Encode(balanceResponse)
+	response := GetBalanceByIdResponse{balance}
+	_ = server_http.Send(w, response, http.StatusOK)
 	log.WithFields(logrus.Fields{
 		"account_id": accountID,
 	}).Info("account balance found successfully")

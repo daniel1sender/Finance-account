@@ -30,67 +30,54 @@ func (h Handler) Create(w http.ResponseWriter, r *http.Request) {
 
 	log := h.logger
 
-	var createRequest CreateAccountRequest
-	err := json.NewDecoder(r.Body).Decode(&createRequest)
+	var request CreateAccountRequest
+	err := json.NewDecoder(r.Body).Decode(&request)
 	if err != nil {
-		w.Header().Add("Content-Type", server_http.JSONContentType)
-		response := server_http.Error{Reason: "invalid request body"}
 		log.WithError(err).Error("error decoding body")
-		w.WriteHeader(http.StatusBadRequest)
-		json.NewEncoder(w).Encode(response)
+		response := server_http.Error{Reason: "invalid request body"}
+		_ = server_http.Send(w, response, http.StatusBadRequest)
 		return
 	}
 
-	account, err := h.useCase.Create(r.Context(), createRequest.Name, createRequest.CPF, createRequest.Secret, createRequest.Balance)
-	w.Header().Add("Content-Type", server_http.JSONContentType)
+	account, err := h.useCase.Create(r.Context(), request.Name, request.CPF, request.Secret, request.Balance)
 	if err != nil {
 		log.WithError(err).Error("create account request failed")
 		switch {
-
 		case errors.Is(err, accounts.ErrExistingCPF):
 			response := server_http.Error{Reason: accounts.ErrExistingCPF.Error()}
-			w.WriteHeader(http.StatusConflict)
-			json.NewEncoder(w).Encode(response)
+			_ = server_http.Send(w, response, http.StatusConflict)
 
 		case errors.Is(err, entities.ErrInvalidName):
 			response := server_http.Error{Reason: entities.ErrInvalidName.Error()}
-			w.WriteHeader(http.StatusBadRequest)
-			json.NewEncoder(w).Encode(response)
+			_ = server_http.Send(w, response, http.StatusBadRequest)
 
 		case errors.Is(err, entities.ErrInvalidCPF):
 			response := server_http.Error{Reason: entities.ErrInvalidCPF.Error()}
-			w.WriteHeader(http.StatusBadRequest)
-			json.NewEncoder(w).Encode(response)
+			_ = server_http.Send(w, response, http.StatusBadRequest)
 
 		case errors.Is(err, entities.ErrEmptySecret):
 			response := server_http.Error{Reason: entities.ErrEmptySecret.Error()}
-			w.WriteHeader(http.StatusBadRequest)
-			json.NewEncoder(w).Encode(response)
+			_ = server_http.Send(w, response, http.StatusBadRequest)
 
 		case errors.Is(err, entities.ErrToGenerateHash):
 			response := server_http.Error{Reason: entities.ErrToGenerateHash.Error()}
-			w.WriteHeader(http.StatusInternalServerError)
-			json.NewEncoder(w).Encode(response)
+			_ = server_http.Send(w, response, http.StatusInternalServerError)
 
 		case errors.Is(err, entities.ErrNegativeBalance):
 			response := server_http.Error{Reason: entities.ErrNegativeBalance.Error()}
-			w.WriteHeader(http.StatusBadRequest)
-			json.NewEncoder(w).Encode(response)
+			_ = server_http.Send(w, response, http.StatusBadRequest)
 
 		default:
 			response := server_http.Error{Reason: "internal server error"}
-			w.WriteHeader(http.StatusInternalServerError)
-			json.NewEncoder(w).Encode(response)
+			_ = server_http.Send(w, response, http.StatusInternalServerError)
 		}
 		return
 	}
 
-	ExpectedCreateAt := account.CreatedAt.Format(server_http.DateLayout)
-	CreateResponse := CreateAccountResponse{account.ID, account.Name, account.CPF, account.Balance, ExpectedCreateAt}
-	w.WriteHeader(http.StatusCreated)
-	_ = json.NewEncoder(w).Encode(CreateResponse)
+	expectedCreateAt := account.CreatedAt.Format(server_http.DateLayout)
+	response := CreateAccountResponse{account.ID, account.Name, account.CPF, account.Balance, expectedCreateAt}
+	_ = server_http.Send(w, response, http.StatusCreated)
 	log.WithFields(logrus.Fields{
-		"account_id": CreateResponse.ID,
+		"account_id": response.ID,
 	}).Info("successfully account created")
-
 }

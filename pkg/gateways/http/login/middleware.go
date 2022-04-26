@@ -2,7 +2,6 @@ package login
 
 import (
 	"context"
-	"encoding/json"
 	"errors"
 	"net/http"
 	"strings"
@@ -24,8 +23,7 @@ func (h Handler) ValidateToken(next http.Handler) http.HandlerFunc {
 		if authHeader == "" {
 			h.logger.Error(ErrEmptyAuthHeader)
 			response := server_http.Error{Reason: ErrEmptyAuthHeader.Error()}
-			w.WriteHeader(http.StatusUnauthorized)
-			json.NewEncoder(w).Encode(response)
+			_ = server_http.Send(w, response, http.StatusUnauthorized)
 			return
 		}
 
@@ -33,16 +31,14 @@ func (h Handler) ValidateToken(next http.Handler) http.HandlerFunc {
 		if len(authString) != 2 {
 			h.logger.Error(ErrInvalidHeaderFormat)
 			response := server_http.Error{Reason: ErrInvalidHeaderFormat.Error()}
-			w.WriteHeader(http.StatusUnauthorized)
-			json.NewEncoder(w).Encode(response)
+			_ = server_http.Send(w, response, http.StatusUnauthorized)
 			return
 		}
 
 		if authString[0] != "Bearer" {
 			h.logger.Error(ErrInvalidMethod)
 			response := server_http.Error{Reason: ErrInvalidMethod.Error()}
-			w.WriteHeader(http.StatusUnauthorized)
-			json.NewEncoder(w).Encode(response)
+			_ = server_http.Send(w, response, http.StatusUnauthorized)
 			return
 		}
 
@@ -51,14 +47,14 @@ func (h Handler) ValidateToken(next http.Handler) http.HandlerFunc {
 		if err != nil {
 			log.WithError(err).Error("error occurred while was validating token")
 			switch {
+
 			case errors.Is(err, login.ErrInvalidToken), errors.Is(err, login.ErrTokenNotFound):
 				response := server_http.Error{Reason: login.ErrInvalidToken.Error()}
-				w.WriteHeader(http.StatusForbidden)
-				json.NewEncoder(w).Encode(response)
+				_ = server_http.Send(w, response, http.StatusForbidden)
+				
 			default:
 				response := server_http.Error{Reason: err.Error()}
-				w.WriteHeader(http.StatusInternalServerError)
-				json.NewEncoder(w).Encode(response)
+				_ = server_http.Send(w, response, http.StatusInternalServerError)
 			}
 			return
 		}

@@ -29,41 +29,37 @@ func (h Handler) Login(w http.ResponseWriter, r *http.Request) {
 	var request LoginUserRequest
 	err := json.NewDecoder(r.Body).Decode(&request)
 	if err != nil {
-		w.Header().Add("Content-Type", server_http.JSONContentType)
 		response := server_http.Error{Reason: "invalid request body"}
 		log.WithError(err).Error("error while decoding the body")
-		w.WriteHeader(http.StatusBadRequest)
-		json.NewEncoder(w).Encode(response)
+		_ = server_http.Send(w, response, http.StatusBadRequest)
 		return
 	}
 
-	w.Header().Add("Content-Type", server_http.JSONContentType)
 	token, err := h.UseCase.Login(r.Context(), request.Cpf, request.Secret)
 	if err != nil {
 		log.WithError(err).Error("login request failed")
 		switch {
+
 		case errors.Is(err, accounts.ErrAccountNotFound), errors.Is(err, login.ErrInvalidSecret):
 			response := server_http.Error{Reason: login.ErrInvalidCredentials.Error()}
-			w.WriteHeader(http.StatusForbidden)
-			json.NewEncoder(w).Encode(response)
+			_ = server_http.Send(w, response, http.StatusForbidden)
+
 		case errors.Is(err, login.ErrEmptySecret):
 			response := server_http.Error{Reason: login.ErrEmptySecret.Error()}
-			w.WriteHeader(http.StatusBadRequest)
-			json.NewEncoder(w).Encode(response)
+			_ = server_http.Send(w, response, http.StatusBadRequest)
+
 		case errors.Is(err, login.ErrInvalidCPF):
 			response := server_http.Error{Reason: login.ErrInvalidCPF.Error()}
-			w.WriteHeader(http.StatusBadRequest)
-			json.NewEncoder(w).Encode(response)
+			_ = server_http.Send(w, response, http.StatusBadRequest)
+			
 		default:
 			response := server_http.Error{Reason: "internal server error"}
-			w.WriteHeader(http.StatusInternalServerError)
-			json.NewEncoder(w).Encode(response)
+			_ = server_http.Send(w, response, http.StatusInternalServerError)
 		}
 		return
 	}
 
 	response := LoginUserResponse{Token: token}
-	w.WriteHeader(http.StatusCreated)
-	_ = json.NewEncoder(w).Encode(response)
+	_ = server_http.Send(w, response, http.StatusCreated)
 	log.Info("token was created successfully")
 }

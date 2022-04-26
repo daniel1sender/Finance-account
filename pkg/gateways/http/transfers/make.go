@@ -28,60 +28,50 @@ func (h Handler) Make(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	originAccountID := ctx.Value(server_http.ContextAccountID).(string)
 	log := h.logger
-	var createRequest CreateTransferRequest
-	err := json.NewDecoder(r.Body).Decode(&createRequest)
+	var request CreateTransferRequest
+	err := json.NewDecoder(r.Body).Decode(&request)
 	if err != nil {
-		w.Header().Add("Content-Type", server_http.JSONContentType)
 		response := server_http.Error{Reason: "invalid request body"}
 		log.WithError(err).Error("error decoding body")
-		w.WriteHeader(http.StatusBadRequest)
-		json.NewEncoder(w).Encode(response)
+		_ = server_http.Send(w, response, http.StatusBadRequest)
 		return
 	}
 
-	transfer, err := h.useCase.Make(ctx, originAccountID, createRequest.AccountDestinationID, createRequest.Amount)
-	w.Header().Add("Content-Type", server_http.JSONContentType)
+	transfer, err := h.useCase.Make(ctx, originAccountID, request.AccountDestinationID, request.Amount)
 	if err != nil {
 		log.WithError(err).Error("create transfer request failed")
 		switch {
 
 		case errors.Is(err, usecases.ErrOriginAccountNotFound):
 			response := server_http.Error{Reason: err.Error()}
-			w.WriteHeader(http.StatusBadRequest)
-			json.NewEncoder(w).Encode(&response)
+			_ = server_http.Send(w, response, http.StatusBadRequest)
 
 		case errors.Is(err, usecases.ErrDestinationAccountNotFound):
 			response := server_http.Error{Reason: err.Error()}
-			w.WriteHeader(http.StatusBadRequest)
-			json.NewEncoder(w).Encode(&response)
+			_ = server_http.Send(w, response, http.StatusBadRequest)
 
 		case errors.Is(err, entities.ErrAmountLessOrEqualZero):
 			response := server_http.Error{Reason: entities.ErrAmountLessOrEqualZero.Error()}
-			w.WriteHeader(http.StatusBadRequest)
-			json.NewEncoder(w).Encode(&response)
+			_ = server_http.Send(w, response, http.StatusBadRequest)
 
 		case errors.Is(err, entities.ErrSameAccountTransfer):
 			response := server_http.Error{Reason: entities.ErrSameAccountTransfer.Error()}
-			w.WriteHeader(http.StatusBadRequest)
-			json.NewEncoder(w).Encode(&response)
+			_ = server_http.Send(w, response, http.StatusBadRequest)
 
 		case errors.Is(err, usecases.ErrInsufficientFunds):
 			response := server_http.Error{Reason: usecases.ErrInsufficientFunds.Error()}
-			w.WriteHeader(http.StatusBadRequest)
-			json.NewEncoder(w).Encode(&response)
+			_ = server_http.Send(w, response, http.StatusBadRequest)
 
 		default:
 			response := server_http.Error{Reason: "internal server error"}
-			w.WriteHeader(http.StatusInternalServerError)
-			json.NewEncoder(w).Encode(&response)
+			_ = server_http.Send(w, response, http.StatusInternalServerError)
 		}
 		return
 	}
 
 	ExpectedCreateAt := transfer.CreatedAt.Format(server_http.DateLayout)
 	response := CreateTransferResponse{transfer.ID, originAccountID, transfer.AccountDestinationID, transfer.Amount, ExpectedCreateAt}
-	w.WriteHeader(http.StatusCreated)
-	_ = json.NewEncoder(w).Encode(response)
+	_ = server_http.Send(w, response, http.StatusCreated)
 	log.WithFields(logrus.Fields{
 		"origin_account_id":      originAccountID,
 		"destination_account_id": transfer.AccountDestinationID,

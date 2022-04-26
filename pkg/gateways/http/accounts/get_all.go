@@ -1,7 +1,6 @@
 package accounts
 
 import (
-	"encoding/json"
 	"errors"
 	"net/http"
 
@@ -25,32 +24,29 @@ func (h Handler) GetAll(w http.ResponseWriter, r *http.Request) {
 
 	log := h.logger
 	accountsList, err := h.useCase.GetAll(r.Context())
-	w.Header().Add("Content-Type", server_http.JSONContentType)
 	if len(accountsList) == 0 && err != nil {
 		log.WithError(err).Error("listing all accounts request failed")
 		switch {
+
 		case errors.Is(err, accounts.ErrAccountNotFound):
-			w.WriteHeader(http.StatusNotFound)
 			response := GetAllResponse{[]Account{}}
-			json.NewEncoder(w).Encode(response)
+			_ = server_http.Send(w, response, http.StatusNotFound)
+
 		default:
-			w.WriteHeader(http.StatusInternalServerError)
 			response := GetAllResponse{[]Account{}}
-			json.NewEncoder(w).Encode(response)
+			_ = server_http.Send(w, response, http.StatusInternalServerError)
 		}
 		return
 	}
 
-	getResponse := GetAllResponse{}
+	response := GetAllResponse{}
 	for _, value := range accountsList {
 		account := Account{value.ID, value.Name, value.CreatedAt.Format(server_http.DateLayout), value.Balance}
-		getResponse.List = append(getResponse.List, account)
+		response.List = append(response.List, account)
 	}
 
-	w.Header().Add("Content-Type", server_http.JSONContentType)
-	responseGet := GetAllResponse{getResponse.List}
-	w.WriteHeader(http.StatusOK)
-	_ = json.NewEncoder(w).Encode(responseGet)
+	responseList := GetAllResponse{response.List}
+	_ = server_http.Send(w, responseList, http.StatusOK)
 	log.WithFields(logrus.Fields{
 		"accounts_count": len(accountsList),
 	}).Info("accounts listed successfully")
