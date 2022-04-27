@@ -63,7 +63,7 @@ func (h Handler) Make(w http.ResponseWriter, r *http.Request) {
 			_ = server_http.Send(w, response, http.StatusBadRequest)
 
 		default:
-			response := server_http.Error{Reason: "internal server error"}
+			response := server_http.Error{Reason: err.Error()}
 			_ = server_http.Send(w, response, http.StatusInternalServerError)
 		}
 		return

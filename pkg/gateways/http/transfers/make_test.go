@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"errors"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -233,6 +234,37 @@ func TestHandlerMake(t *testing.T) {
 
 		if responseReason.Reason != usecases.ErrInsufficientFunds.Error() {
 			t.Errorf("expected '%s' but got '%s'", usecases.ErrInsufficientFunds.Error(), responseReason.Reason)
+		}
+
+	})
+
+	t.Run("should return 500 and an error when an unexpected error occurred", func(t *testing.T) {
+
+		transfer := entities.Transfer{AccountOriginID: "0", AccountDestinationID: "1", Amount: 10}
+		unexpectedError := errors.New("unexpected error")
+		useCase := transfers.UseCaseMock{Error: unexpectedError}
+		h := NewHandler(&useCase, log)
+
+		createRequest := CreateTransferRequest{transfer.AccountDestinationID, transfer.Amount}
+		request, _ := json.Marshal(createRequest)
+		newRequest, _ := http.NewRequest(http.MethodPost, "/transfers", bytes.NewBuffer(request))
+		newResponse := httptest.NewRecorder()
+		ctx := context.WithValue(newRequest.Context(), server_http.ContextAccountID, transfer.AccountOriginID)
+		h.Make(newResponse, newRequest.WithContext(ctx))
+
+		var responseReason server_http.Error
+		json.Unmarshal(newResponse.Body.Bytes(), &responseReason)
+
+		if newResponse.Code != http.StatusInternalServerError {
+			t.Errorf("expected '%d' but got '%d'", http.StatusInternalServerError, newResponse.Code)
+		}
+
+		if newResponse.Header().Get("content-type") != server_http.JSONContentType {
+			t.Errorf("expected '%s' but got '%s'", server_http.JSONContentType, newResponse.Header().Get("content-type"))
+		}
+
+		if responseReason.Reason != unexpectedError.Error() {
+			t.Errorf("expected '%s' but got '%s'", unexpectedError.Error(), responseReason.Reason)
 		}
 
 	})

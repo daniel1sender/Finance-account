@@ -83,7 +83,7 @@ func TestHandlerGetAll(t *testing.T) {
 
 	})
 
-	t.Run("should return 500 and an empty list of accounts when some error with database occur", func(t *testing.T) {
+	t.Run("should return 500 and an error when an unexpected error occurred", func(t *testing.T) {
 		useCase := accounts.UseCaseMock{List: []entities.Account{}, Error: accounts.ErrEmptyList}
 		newRequest, _ := http.NewRequest(http.MethodGet, "/accounts", nil)
 		newResponse := httptest.NewRecorder()
