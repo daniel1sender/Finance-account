@@ -28,7 +28,7 @@ func (h Handler) GetBalanceByID(w http.ResponseWriter, r *http.Request) {
 			_ = server_http.Send(w, response, http.StatusNotFound)
 
 		default:
-			response := server_http.Error{Reason: "internal error server"}
+			response := server_http.Error{Reason: err.Error()}
 			_ = server_http.Send(w, response, http.StatusInternalServerError)
 		}
 		return
