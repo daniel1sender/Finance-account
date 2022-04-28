@@ -12,11 +12,11 @@ import (
 )
 
 func (l LoginUseCase) Login(ctx context.Context, cpf, accountSecret string) (string, error) {
-	err := verify.IsValidSecret(accountSecret)
+	err := verify.ValidateSecret(accountSecret)
 	if err != nil {
 		return "", fmt.Errorf("error while validating the secret informed: %w", verify.ErrEmptySecret)
 	}
-	err = verify.IsValidCPF(cpf)
+	err = verify.ValidateCPF(cpf)
 	if err != nil {
 		return "", fmt.Errorf("error while validating the cpf informed: %w", verify.ErrInvalidCPF)
 	}
