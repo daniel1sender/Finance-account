@@ -1,6 +1,8 @@
 # Finance account
 Finance account é uma API REST que permite a criação de contas, autenticação e realização transferências entre elas dentro de um simples sistema bancário. A API é escrita em golang e está embasada no paradigma da clean architecture.
 
+**Os valores monetários são tratados em centavos**
+
 Com o uso da API é possível:
 *  Criar contas
 *  Listar contas criadas
