@@ -32,7 +32,7 @@ func TestTransfersUseCase_Create(t *testing.T) {
 		accountRepository.Upsert(ctx, originAccount)
 		accountRepository.Upsert(ctx, destinationAccount)
 
-		transfer, err := transferUsecase.Create(ctx, originAccount.ID, destinationAccount.ID, amount)
+		transfer, err := transferUsecase.Make(ctx, originAccount.ID, destinationAccount.ID, amount)
 
 		assert.NotEmpty(t, transfer)
 		assert.Equal(t, transfer.AccountOriginID, originAccount.ID)
@@ -58,7 +58,7 @@ func TestTransfersUseCase_Create(t *testing.T) {
 		accountRepository.Upsert(ctx, originAccount)
 		accountRepository.Upsert(ctx, destinationAccount)
 
-		transfer, err := transferUsecase.Create(ctx, originAccount.ID, destinationAccount.ID, amount)
+		transfer, err := transferUsecase.Make(ctx, originAccount.ID, destinationAccount.ID, amount)
 
 		assert.Empty(t, transfer)
 		assert.NotEqual(t, err, entities.ErrAmountLessOrEqualZero)
@@ -78,7 +78,7 @@ func TestTransfersUseCase_Create(t *testing.T) {
 		destinationAccount, _ := entities.NewAccount(name, cpf2, secret, balance)
 		accountRepository.Upsert(ctx, originAccount)
 
-		transfer, err := transferUseCase.Create(ctx, originAccount.ID, destinationAccount.ID, amount)
+		transfer, err := transferUseCase.Make(ctx, originAccount.ID, destinationAccount.ID, amount)
 
 		assert.Empty(t, transfer)
 		assert.Equal(t, err, ErrInsufficientFunds)
@@ -97,7 +97,7 @@ func TestTransfersUseCase_Create(t *testing.T) {
 		originAccount, _ := entities.NewAccount(name, cpf1, secret, balance)
 		destinationAccount, _ := entities.NewAccount(name, cpf2, secret, balance)
 
-		transfer, err := transferUseCase.Create(ctx, originAccount.ID, destinationAccount.ID, amount)
+		transfer, err := transferUseCase.Make(ctx, originAccount.ID, destinationAccount.ID, amount)
 
 		assert.Empty(t, transfer)
 		assert.NotEqual(t, err, ErrOriginAccountNotFound)
@@ -116,7 +116,7 @@ func TestTransfersUseCase_Create(t *testing.T) {
 		destinationAccount, _ := entities.NewAccount(name, cpf2, secret, balance)
 		accountRepository.Upsert(ctx, originAccount)
 
-		transfer, err := transferUsecase.Create(ctx, originAccount.ID, destinationAccount.ID, amount)
+		transfer, err := transferUsecase.Make(ctx, originAccount.ID, destinationAccount.ID, amount)
 
 		assert.Empty(t, transfer)
 		assert.NotEqual(t, err, ErrDestinationAccountNotFound)
