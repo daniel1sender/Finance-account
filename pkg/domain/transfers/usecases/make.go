@@ -15,7 +15,7 @@ var (
 	ErrDestinationAccountNotFound = errors.New("transfer destination account not found")
 )
 
-func (tu TransferUseCase) Create(ctx context.Context, originID, destinationID string, amount int) (entities.Transfer, error) {
+func (tu TransferUseCase) Make(ctx context.Context, originID, destinationID string, amount int) (entities.Transfer, error) {
 
 	originAccountBalance, err := tu.accountStorage.GetBalanceByID(ctx, originID)
 	if err != nil {

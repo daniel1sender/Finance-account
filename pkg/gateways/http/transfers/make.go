@@ -24,7 +24,7 @@ type Response struct {
 	CreatedAt            string `json:"create_at"`
 }
 
-func (h Handler) Create(w http.ResponseWriter, r *http.Request) {
+func (h Handler) Make(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	originAccountID := ctx.Value(server_http.ContextAccountID).(string)
 	log := h.logger
@@ -39,7 +39,7 @@ func (h Handler) Create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	transfer, err := h.useCase.Create(ctx, originAccountID, createRequest.AccountDestinationID, createRequest.Amount)
+	transfer, err := h.useCase.Make(ctx, originAccountID, createRequest.AccountDestinationID, createRequest.Amount)
 	w.Header().Add("Content-Type", server_http.JSONContentType)
 	if err != nil {
 		log.WithError(err).Error("create transfer request failed")

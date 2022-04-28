@@ -28,7 +28,7 @@ func TestHandlerCreate(t *testing.T) {
 		newRequest, _ := http.NewRequest(http.MethodPost, "/transfers", bytes.NewReader(request))
 		ctx := context.WithValue(newRequest.Context(), server_http.ContextAccountID, transfer.AccountOriginID)
 		newResponse := httptest.NewRecorder()
-		h.Create(newResponse, newRequest.WithContext(ctx))
+		h.Make(newResponse, newRequest.WithContext(ctx))
 		ExpectedCreateAt := transfer.CreatedAt.Format(server_http.DateLayout)
 
 		var response Response
@@ -70,7 +70,7 @@ func TestHandlerCreate(t *testing.T) {
 		newRequest, _ := http.NewRequest(http.MethodPost, "transfers", bytes.NewBuffer(b))
 		newResponse := httptest.NewRecorder()
 		ctx := context.WithValue(newRequest.Context(), server_http.ContextAccountID, transfer.AccountOriginID)
-		h.Create(newResponse, newRequest.WithContext(ctx))
+		h.Make(newResponse, newRequest.WithContext(ctx))
 
 		var responseReason server_http.Error
 		json.Unmarshal(newResponse.Body.Bytes(), &responseReason)
@@ -101,7 +101,7 @@ func TestHandlerCreate(t *testing.T) {
 		newRequest, _ := http.NewRequest(http.MethodPost, "/transfers", bytes.NewBuffer(request))
 		newResponse := httptest.NewRecorder()
 		ctx := context.WithValue(newRequest.Context(), server_http.ContextAccountID, transfer.AccountOriginID)
-		h.Create(newResponse, newRequest.WithContext(ctx))
+		h.Make(newResponse, newRequest.WithContext(ctx))
 
 		var responseReason server_http.Error
 		json.Unmarshal(newResponse.Body.Bytes(), &responseReason)
@@ -131,7 +131,7 @@ func TestHandlerCreate(t *testing.T) {
 		newRequest, _ := http.NewRequest(http.MethodPost, "/transfers", bytes.NewBuffer(request))
 		newResponse := httptest.NewRecorder()
 		ctx := context.WithValue(newRequest.Context(), server_http.ContextAccountID, transfer.AccountOriginID)
-		h.Create(newResponse, newRequest.WithContext(ctx))
+		h.Make(newResponse, newRequest.WithContext(ctx))
 
 		var responseReason server_http.Error
 		json.Unmarshal(newResponse.Body.Bytes(), &responseReason)
@@ -160,7 +160,7 @@ func TestHandlerCreate(t *testing.T) {
 		newRequest, _ := http.NewRequest(http.MethodPost, "/transfers", bytes.NewBuffer(request))
 		newResponse := httptest.NewRecorder()
 		ctx := context.WithValue(newRequest.Context(), server_http.ContextAccountID, transfer.AccountOriginID)
-		h.Create(newResponse, newRequest.WithContext(ctx))
+		h.Make(newResponse, newRequest.WithContext(ctx))
 
 		var responseReason server_http.Error
 		json.Unmarshal(newResponse.Body.Bytes(), &responseReason)
@@ -189,7 +189,7 @@ func TestHandlerCreate(t *testing.T) {
 		newRequest, _ := http.NewRequest(http.MethodPost, "/transfers", bytes.NewBuffer(request))
 		newResponse := httptest.NewRecorder()
 		ctx := context.WithValue(newRequest.Context(), server_http.ContextAccountID, transfer.AccountOriginID)
-		h.Create(newResponse, newRequest.WithContext(ctx))
+		h.Make(newResponse, newRequest.WithContext(ctx))
 
 		var responseReason server_http.Error
 		json.Unmarshal(newResponse.Body.Bytes(), &responseReason)
@@ -218,7 +218,7 @@ func TestHandlerCreate(t *testing.T) {
 		newRequest, _ := http.NewRequest(http.MethodPost, "/transfers", bytes.NewBuffer(request))
 		newResponse := httptest.NewRecorder()
 		ctx := context.WithValue(newRequest.Context(), server_http.ContextAccountID, transfer.AccountOriginID)
-		h.Create(newResponse, newRequest.WithContext(ctx))
+		h.Make(newResponse, newRequest.WithContext(ctx))
 
 		var responseReason server_http.Error
 		json.Unmarshal(newResponse.Body.Bytes(), &responseReason)
