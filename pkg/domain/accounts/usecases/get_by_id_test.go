@@ -36,15 +36,10 @@ func TestAccountUseCase_GetById(t *testing.T) {
 
 	t.Run("should return an empty account and an error when the account doesn't exist", func(t *testing.T) {
 
-		name := "John Doe"
-		cpf := "11111111030"
-		secret := "123"
-		balance := 10
-
-		account, _ := entities.NewAccount(name, cpf, secret, balance)
+		id := "247eade0-53b2-4ee5-9a3b-0da9afba5700"
 		tests.DeleteAllAccounts(Db)
 
-		getAccountByID, err := accountUseCase.GetByID(ctx, account.ID)
+		getAccountByID, err := accountUseCase.GetByID(ctx, id)
 
 		assert.Empty(t, getAccountByID)
 		assert.Equal(t, err, accounts_usecase.ErrAccountNotFound)
