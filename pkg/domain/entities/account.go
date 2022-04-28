@@ -31,12 +31,12 @@ func NewAccount(name, cpf, secret string, balance int) (Account, error) {
 		return Account{}, ErrInvalidName
 	}
 
-	err := verify.IsValidSecret(secret)
+	err := verify.ValidateSecret(secret)
 	if err != nil {
 		return Account{}, verify.ErrEmptySecret
 	}
 
-	err = verify.IsValidCPF(cpf)
+	err = verify.ValidateCPF(cpf)
 	if err != nil {
 		return Account{}, verify.ErrInvalidCPF
 	}
