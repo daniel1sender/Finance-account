@@ -32,15 +32,10 @@ func TestTranferUseCase_UpdateBalance(t *testing.T) {
 	})
 
 	t.Run("should return an empty account and an error when the account doesn't exist", func(t *testing.T) {
-		name := "John Doe"
-		cpf := "11111111031"
-		secret := "123"
-		balance := 10
-
-		account, _ := entities.NewAccount(name, cpf, secret, balance)
+		id := "247eade0-53b2-4ee5-9a3b-0da9afba5700"
 		tests.DeleteAllAccounts(Db)
 
-		err := accountUseCase.updateBalance(ctx, account.ID, 20.0)
+		err := accountUseCase.updateBalance(ctx, id, 20.0)
 
 		assert.NotNil(t, err)
 		assert.Equal(t, err, accounts_usecase.ErrAccountNotFound)
