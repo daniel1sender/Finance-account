@@ -44,10 +44,10 @@ func TestAccountUseCase_Create(t *testing.T) {
 
 		_, _ = accountUsecase.Create(ctx, name, cpf, secret, balance)
 
-		createdAccount1, err1 := accountUsecase.Create(ctx, name, cpf, secret, balance)
+		createdAccount, err := accountUsecase.Create(ctx, name, cpf, secret, balance)
 
-		assert.Equal(t, err1, accounts_usecase.ErrExistingCPF)
-		assert.Empty(t, createdAccount1)
+		assert.Equal(t, err, accounts_usecase.ErrExistingCPF)
+		assert.Empty(t, createdAccount)
 	})
 	tests.DeleteAllAccounts(Db)
 }

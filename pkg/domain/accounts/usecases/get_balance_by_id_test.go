@@ -28,6 +28,7 @@ func TestAccountUseCase_GetBalanceByID(t *testing.T) {
 		getBalance, err := accountUsecase.GetBalanceByID(ctx, account.ID)
 		assert.Nil(t, err)
 		assert.NotNil(t, getBalance)
+		assert.Equal(t, getBalance, account.Balance)
 	})
 
 	t.Run("should return a null account balance and an error when the id isn't found", func(t *testing.T) {

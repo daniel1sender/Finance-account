@@ -28,6 +28,10 @@ func TestAccountUseCase_GetAll(t *testing.T) {
 		getAccounts, err := accountUsecase.GetAll(ctx)
 		assert.Nil(t, err)
 		assert.NotEmpty(t, getAccounts)
+		assert.Equal(t, getAccounts[0].Name, account.Name)
+		assert.Equal(t, getAccounts[0].CPF, account.CPF)
+		assert.Equal(t, getAccounts[0].Balance, account.Balance)
+		assert.Equal(t, getAccounts[0].Secret, account.Secret) 
 	})
 
 	t.Run("should return an empty list", func(t *testing.T) {
