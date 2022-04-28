@@ -31,7 +31,7 @@ func TestAccountUseCase_GetBalanceByID(t *testing.T) {
 		assert.Equal(t, getBalance, account.Balance)
 	})
 
-	t.Run("should return a null account balance and an error when the id isn't found", func(t *testing.T) {
+	t.Run("should return an account balance equal to zero and an error when the id wasn't found", func(t *testing.T) {
 		name := "John Doe"
 		cpf := "11111111030"
 		secret := "123"
