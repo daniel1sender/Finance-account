@@ -28,6 +28,10 @@ func TestAccountUseCase_GetById(t *testing.T) {
 
 		assert.Nil(t, err)
 		assert.NotEmpty(t, getAccountByID)
+		assert.Equal(t, getAccountByID.Name, account.Name)
+		assert.Equal(t, getAccountByID.CPF, account.CPF)
+		assert.Equal(t, getAccountByID.Balance, account.Balance)
+		assert.Equal(t, getAccountByID.Secret, account.Secret)
 	})
 
 	t.Run("should return an empty account and an error when the account doesn't exist", func(t *testing.T) {
