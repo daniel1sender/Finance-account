@@ -41,7 +41,7 @@ func NewAccount(name, cpf, secret string, balance int) (Account, error) {
 		return Account{}, verify.ErrInvalidCPF
 	}
 
-	hash, err := HashGenerator(secret)
+	hash, err := GenerateHash(secret)
 	if err != nil {
 		return Account{}, fmt.Errorf("%w: %s", ErrToGenerateHash, err)
 	}
@@ -62,7 +62,7 @@ func NewAccount(name, cpf, secret string, balance int) (Account, error) {
 	}, nil
 }
 
-func HashGenerator(secret string) (string, error) {
+func GenerateHash(secret string) (string, error) {
 
 	hash, err := bcrypt.GenerateFromPassword([]byte(secret), 4)
 
