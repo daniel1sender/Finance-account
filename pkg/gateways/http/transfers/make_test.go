@@ -16,7 +16,7 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-func TestHandlerCreate(t *testing.T) {
+func TestHandlerMake(t *testing.T) {
 	log := logrus.NewEntry(logrus.New())
 
 	t.Run("should return 201 and a transfer when it's been sucessfully created", func(t *testing.T) {
