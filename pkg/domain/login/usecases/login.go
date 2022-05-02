@@ -4,21 +4,21 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/daniel1sender/Desafio-API/pkg/domain"
 	"github.com/daniel1sender/Desafio-API/pkg/domain/entities"
 	"github.com/daniel1sender/Desafio-API/pkg/domain/login"
-	"github.com/daniel1sender/Desafio-API/pkg/domain/verify"
 	jwt "github.com/golang-jwt/jwt/v4"
 	"golang.org/x/crypto/bcrypt"
 )
 
 func (l LoginUseCase) Login(ctx context.Context, cpf, accountSecret string) (string, error) {
-	err := verify.ValidateSecret(accountSecret)
+	err := domain.ValidateSecret(accountSecret)
 	if err != nil {
-		return "", fmt.Errorf("error while validating the secret informed: %w", verify.ErrEmptySecret)
+		return "", fmt.Errorf("error while validating the secret informed: %w", domain.ErrEmptySecret)
 	}
-	err = verify.ValidateCPF(cpf)
+	err = domain.ValidateCPF(cpf)
 	if err != nil {
-		return "", fmt.Errorf("error while validating the cpf informed: %w", verify.ErrInvalidCPF)
+		return "", fmt.Errorf("error while validating the cpf informed: %w", domain.ErrInvalidCPF)
 	}
 	account, err := l.AccountStorage.GetByCPF(ctx, cpf)
 	if err != nil {

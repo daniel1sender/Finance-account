@@ -5,9 +5,9 @@ import (
 	"errors"
 	"net/http"
 
+	"github.com/daniel1sender/Desafio-API/pkg/domain"
 	"github.com/daniel1sender/Desafio-API/pkg/domain/accounts"
 	"github.com/daniel1sender/Desafio-API/pkg/domain/login"
-	"github.com/daniel1sender/Desafio-API/pkg/domain/verify"
 	server_http "github.com/daniel1sender/Desafio-API/pkg/gateways/http"
 	"github.com/sirupsen/logrus"
 )
@@ -47,12 +47,12 @@ func (h Handler) Login(w http.ResponseWriter, r *http.Request) {
 			response := server_http.Error{Reason: login.ErrInvalidCredentials.Error()}
 			w.WriteHeader(http.StatusForbidden)
 			json.NewEncoder(w).Encode(response)
-		case errors.Is(err, verify.ErrEmptySecret):
-			response := server_http.Error{Reason: verify.ErrEmptySecret.Error()}
+		case errors.Is(err, domain.ErrEmptySecret):
+			response := server_http.Error{Reason: domain.ErrEmptySecret.Error()}
 			w.WriteHeader(http.StatusBadRequest)
 			json.NewEncoder(w).Encode(response)
-		case errors.Is(err, verify.ErrInvalidCPF):
-			response := server_http.Error{Reason: verify.ErrInvalidCPF.Error()}
+		case errors.Is(err, domain.ErrInvalidCPF):
+			response := server_http.Error{Reason: domain.ErrInvalidCPF.Error()}
 			w.WriteHeader(http.StatusBadRequest)
 			json.NewEncoder(w).Encode(response)
 		default:

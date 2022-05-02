@@ -8,9 +8,9 @@ import (
 	"testing"
 	"time"
 
+	"github.com/daniel1sender/Desafio-API/pkg/domain"
 	"github.com/daniel1sender/Desafio-API/pkg/domain/accounts"
 	"github.com/daniel1sender/Desafio-API/pkg/domain/entities"
-	"github.com/daniel1sender/Desafio-API/pkg/domain/verify"
 	server_http "github.com/daniel1sender/Desafio-API/pkg/gateways/http"
 	"github.com/sirupsen/logrus"
 )
@@ -119,7 +119,7 @@ func TestHandlerCreate(t *testing.T) {
 
 	t.Run("should return 400 and an error when the cpf informed doesn't have eleven digits", func(t *testing.T) {
 
-		useCase := accounts.UseCaseMock{Error: verify.ErrInvalidCPF}
+		useCase := accounts.UseCaseMock{Error: domain.ErrInvalidCPF}
 		h := NewHandler(&useCase, log)
 
 		createRequest := CreateRequest{}
@@ -140,8 +140,8 @@ func TestHandlerCreate(t *testing.T) {
 			t.Errorf("expected '%s' but got '%s'", server_http.JSONContentType, newResponse.Header().Get("content-type"))
 		}
 
-		if responseReason.Reason != verify.ErrInvalidCPF.Error() {
-			t.Errorf("expected '%s' but got '%s'", verify.ErrInvalidCPF.Error(), responseReason.Reason)
+		if responseReason.Reason != domain.ErrInvalidCPF.Error() {
+			t.Errorf("expected '%s' but got '%s'", domain.ErrInvalidCPF.Error(), responseReason.Reason)
 		}
 
 	})
@@ -177,7 +177,7 @@ func TestHandlerCreate(t *testing.T) {
 
 	t.Run("should return 400 and an error when an empty secret is informed", func(t *testing.T) {
 
-		useCase := accounts.UseCaseMock{Error: verify.ErrEmptySecret}
+		useCase := accounts.UseCaseMock{Error: domain.ErrEmptySecret}
 		h := NewHandler(&useCase, log)
 
 		createRequest := CreateRequest{}
@@ -198,8 +198,8 @@ func TestHandlerCreate(t *testing.T) {
 			t.Errorf("expected '%s' but got '%s'", server_http.JSONContentType, newResponse.Header().Get("content-type"))
 		}
 
-		if responseReason.Reason != verify.ErrEmptySecret.Error() {
-			t.Errorf("expected '%s' but got '%s'", verify.ErrEmptySecret.Error(), responseReason.Reason)
+		if responseReason.Reason != domain.ErrEmptySecret.Error() {
+			t.Errorf("expected '%s' but got '%s'", domain.ErrEmptySecret.Error(), responseReason.Reason)
 		}
 
 	})
