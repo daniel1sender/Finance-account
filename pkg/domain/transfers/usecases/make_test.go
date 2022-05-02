@@ -12,7 +12,7 @@ import (
 	transfers_storage "github.com/daniel1sender/Desafio-API/pkg/gateways/store/postgres/transfers"
 )
 
-func TestTransfersUseCase_Create(t *testing.T) {
+func TestTransfersUseCase_Make(t *testing.T) {
 	transferRepository := transfers_storage.NewStorage(Db)
 	accountRepository := accounts_storage.NewStorage(Db)
 	ctx := context.Background()
