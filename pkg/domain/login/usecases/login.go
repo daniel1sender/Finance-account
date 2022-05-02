@@ -14,11 +14,11 @@ import (
 func (l LoginUseCase) Login(ctx context.Context, cpf, accountSecret string) (string, error) {
 	err := domain.ValidateSecret(accountSecret)
 	if err != nil {
-		return "", fmt.Errorf("error while validating the secret informed: %w", domain.ErrEmptySecret)
+		return "", fmt.Errorf("error while validating the secret informed: %w", err)
 	}
 	err = domain.ValidateCPF(cpf)
 	if err != nil {
-		return "", fmt.Errorf("error while validating the cpf informed: %w", domain.ErrInvalidCPF)
+		return "", fmt.Errorf("error while validating the cpf informed: %w", err)
 	}
 	account, err := l.AccountStorage.GetByCPF(ctx, cpf)
 	if err != nil {
