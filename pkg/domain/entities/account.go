@@ -33,12 +33,12 @@ func NewAccount(name, cpf, secret string, balance int) (Account, error) {
 
 	err := verify.ValidateSecret(secret)
 	if err != nil {
-		return Account{}, verify.ErrEmptySecret
+		return Account{}, fmt.Errorf("error while validating secret: %w", err)
 	}
 
 	err = verify.ValidateCPF(cpf)
 	if err != nil {
-		return Account{}, verify.ErrInvalidCPF
+		return Account{}, fmt.Errorf("error while validating cpf: %w", err)
 	}
 
 	hash, err := GenerateHash(secret)
