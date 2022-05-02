@@ -3,7 +3,7 @@ package entities
 import (
 	"testing"
 
-	"github.com/daniel1sender/Desafio-API/pkg/domain/verify"
+	"github.com/daniel1sender/Desafio-API/pkg/domain"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -47,7 +47,7 @@ func TestNewAccount(t *testing.T) {
 		account, err := NewAccount(name, cpf, secret, balance)
 
 		assert.Empty(t, account)
-		assert.Equal(t, err, verify.ErrInvalidCPF)
+		assert.Equal(t, err, domain.ErrInvalidCPF)
 	})
 
 	t.Run("should return an empty account and an error when secret informed is empty", func(t *testing.T) {
@@ -60,7 +60,7 @@ func TestNewAccount(t *testing.T) {
 		account, err := NewAccount(name, cpf, secret, balance)
 
 		assert.Empty(t, account)
-		assert.Equal(t, err, verify.ErrEmptySecret)
+		assert.Equal(t, err, domain.ErrEmptySecret)
 	})
 
 	t.Run("should return an empty account and an error when balance is less than zero", func(t *testing.T) {
@@ -76,4 +76,4 @@ func TestNewAccount(t *testing.T) {
 		assert.Equal(t, err, ErrNegativeBalance)
 	})
 
-} 
+}

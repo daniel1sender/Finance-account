@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/daniel1sender/Desafio-API/pkg/domain/verify"
+	"github.com/daniel1sender/Desafio-API/pkg/domain"
 	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -31,12 +31,12 @@ func NewAccount(name, cpf, secret string, balance int) (Account, error) {
 		return Account{}, ErrInvalidName
 	}
 
-	err := verify.ValidateSecret(secret)
+	err := domain.ValidateSecret(secret)
 	if err != nil {
 		return Account{}, fmt.Errorf("error while validating secret: %w", err)
 	}
 
-	err = verify.ValidateCPF(cpf)
+	err = domain.ValidateCPF(cpf)
 	if err != nil {
 		return Account{}, fmt.Errorf("error while validating cpf: %w", err)
 	}
