@@ -16,7 +16,7 @@ func TestAccountUseCase_GetById(t *testing.T) {
 	accountUseCase := NewUseCase(repository)
 	ctx := context.Background()
 
-	t.Run("should return an account when the account id it is found", func(t *testing.T) {
+	t.Run("should return an account when the account id is found", func(t *testing.T) {
 		name := "John Doe"
 		cpf := "11111111030"
 		secret := "123"
