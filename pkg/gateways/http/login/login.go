@@ -42,15 +42,19 @@ func (h Handler) Login(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.WithError(err).Error("login request failed")
 		switch {
+
 		case errors.Is(err, accounts.ErrAccountNotFound), errors.Is(err, login.ErrInvalidSecret):
 			response := server_http.Error{Reason: login.ErrInvalidCredentials.Error()}
 			_ = server_http.SendResponse(w, response, http.StatusForbidden)
+
 		case errors.Is(err, domain.ErrEmptySecret):
 			response := server_http.Error{Reason: domain.ErrEmptySecret.Error()}
 			_ = server_http.SendResponse(w, response, http.StatusBadRequest)
+
 		case errors.Is(err, domain.ErrInvalidCPF):
 			response := server_http.Error{Reason: domain.ErrInvalidCPF.Error()}
 			_ = server_http.SendResponse(w, response, http.StatusBadRequest)
+			
 		default:
 			response := server_http.Error{Reason: "internal server error"}
 			_ = server_http.SendResponse(w, response, http.StatusInternalServerError)

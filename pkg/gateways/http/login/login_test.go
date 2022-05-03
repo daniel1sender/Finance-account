@@ -20,6 +20,7 @@ func TestHandlerLogin(t *testing.T) {
 	log := logrus.NewEntry(logrus.New())
 
 	t.Run("should return 201 and the token created", func(t *testing.T) {
+
 		useCase := login.UseCaseMock{
 			Token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjM2Q3OGU2My1mYWQ5LTQ1ZTgtODI0OC1iOGNjMDc4ZDFiZGYiLCJleHAiOjE2NDg2Nzc5MDYsImlhdCI6MTY0ODY3NzYwNiwianRpIjoiZDNhNDYxMDctMDQzNi00ZmViLTk4YmItZGEzMTQzZmFiYWQyIn0.cN2-NOvwMwvEIKxBBVV-toJkmohkRDwppzCQs7XOqpA",
 			Error: nil,
@@ -57,6 +58,7 @@ func TestHandlerLogin(t *testing.T) {
 	})
 
 	t.Run("should return 404 and an error when the account is not found", func(t *testing.T) {
+
 		useCase := login.UseCaseMock{Error: accounts.ErrAccountNotFound}
 		handler := NewHandler(&useCase, log)
 		requestBody := LoginUserRequest{"12345678910", "123"}
@@ -73,6 +75,7 @@ func TestHandlerLogin(t *testing.T) {
 	})
 
 	t.Run("should return 400 and an error when an empty secret is informed", func(t *testing.T) {
+
 		useCase := login.UseCaseMock{Error: domain.ErrEmptySecret}
 		handler := NewHandler(&useCase, log)
 		requestBody := LoginUserRequest{"12345678910", "123"}
@@ -89,6 +92,7 @@ func TestHandlerLogin(t *testing.T) {
 	})
 
 	t.Run("should return 400 and an error when the cpf informed doesn't have eleven digits", func(t *testing.T) {
+
 		useCase := login.UseCaseMock{Error: domain.ErrInvalidCPF}
 		handler := NewHandler(&useCase, log)
 		requestBody := LoginUserRequest{"12345678910", "123"}
@@ -105,6 +109,7 @@ func TestHandlerLogin(t *testing.T) {
 	})
 
 	t.Run("should return 400 and an error when the secret informed is invalid", func(t *testing.T) {
+
 		useCase := login.UseCaseMock{Error: login.ErrInvalidSecret}
 		handler := NewHandler(&useCase, log)
 		requestBody := LoginUserRequest{"12345678910", "123"}
@@ -121,6 +126,7 @@ func TestHandlerLogin(t *testing.T) {
 	})
 
 	t.Run("should return 500 and an error when an unexpected error occourred", func(t *testing.T) {
+		
 		unexpectedError := errors.New("unexpected error")
 		useCase := login.UseCaseMock{Error: unexpectedError}
 		handler := NewHandler(&useCase, log)
