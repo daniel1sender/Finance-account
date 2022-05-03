@@ -33,8 +33,7 @@ func (h Handler) Login(w http.ResponseWriter, r *http.Request) {
 		w.Header().Add("Content-Type", server_http.JSONContentType)
 		response := server_http.Error{Reason: "invalid request body"}
 		log.WithError(err).Error("error while decoding the body")
-		w.WriteHeader(http.StatusBadRequest)
-		json.NewEncoder(w).Encode(response)
+		_ = server_http.SendResponse(w, response, http.StatusBadRequest)
 		return
 	}
 
@@ -45,26 +44,21 @@ func (h Handler) Login(w http.ResponseWriter, r *http.Request) {
 		switch {
 		case errors.Is(err, accounts.ErrAccountNotFound), errors.Is(err, login.ErrInvalidSecret):
 			response := server_http.Error{Reason: login.ErrInvalidCredentials.Error()}
-			w.WriteHeader(http.StatusForbidden)
-			json.NewEncoder(w).Encode(response)
+			_ = server_http.SendResponse(w, response, http.StatusForbidden)
 		case errors.Is(err, domain.ErrEmptySecret):
 			response := server_http.Error{Reason: domain.ErrEmptySecret.Error()}
-			w.WriteHeader(http.StatusBadRequest)
-			json.NewEncoder(w).Encode(response)
+			_ = server_http.SendResponse(w, response, http.StatusBadRequest)
 		case errors.Is(err, domain.ErrInvalidCPF):
 			response := server_http.Error{Reason: domain.ErrInvalidCPF.Error()}
-			w.WriteHeader(http.StatusBadRequest)
-			json.NewEncoder(w).Encode(response)
+			_ = server_http.SendResponse(w, response, http.StatusBadRequest)
 		default:
 			response := server_http.Error{Reason: "internal server error"}
-			w.WriteHeader(http.StatusInternalServerError)
-			json.NewEncoder(w).Encode(response)
+			_ = server_http.SendResponse(w, response, http.StatusInternalServerError)
 		}
 		return
 	}
 
 	response := Response{Token: token}
-	w.WriteHeader(http.StatusCreated)
-	_ = json.NewEncoder(w).Encode(response)
+	_ = server_http.SendResponse(w, response, http.StatusCreated)
 	log.Info("token was created successfully")
 }
