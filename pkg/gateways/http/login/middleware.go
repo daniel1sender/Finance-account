@@ -19,6 +19,7 @@ var (
 
 func (h Handler) ValidateToken(next http.Handler) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		var statusCode int
 		log := h.logger
 		authHeader := r.Header.Get("Authorization")
 		if authHeader == "" {
@@ -57,17 +58,16 @@ func (h Handler) ValidateToken(next http.Handler) http.HandlerFunc {
 			case errors.Is(err, login.ErrInvalidToken), errors.Is(err, login.ErrTokenNotFound):
 				response := server_http.Error{Reason: login.ErrInvalidToken.Error()}
 				_ = server_http.SendResponse(w, response, http.StatusForbidden)
-				log.WithFields(logrus.Fields{
-					"status_code": http.StatusForbidden,
-				}).WithError(login.ErrInvalidToken).Error("error occurred while was validating token")
+				statusCode = http.StatusForbidden
 
 			default:
 				response := server_http.Error{Reason: err.Error()}
 				_ = server_http.SendResponse(w, response, http.StatusInternalServerError)
-				log.WithFields(logrus.Fields{
-					"status_code": http.StatusInternalServerError,
-				}).WithError(err).Error("error occurred while was validating token")
+				statusCode = http.StatusInternalServerError
 			}
+			log.WithFields(logrus.Fields{
+				"status_code": statusCode,
+			}).WithError(err).Error("error occurred while was validating token")
 			return
 		}
 
