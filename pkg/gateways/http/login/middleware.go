@@ -20,7 +20,7 @@ var (
 func (h Handler) ValidateToken(next http.Handler) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var statusCode int
-		var response interface{}
+		var response server_http.Error
 		log := h.logger
 		authHeader := r.Header.Get("Authorization")
 		if authHeader == "" {
