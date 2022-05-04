@@ -46,7 +46,7 @@ func TestMiddlewareValidateToken(t *testing.T) {
 
 	})
 
-	t.Run("should return 400 when the authorization header is empty", func(t *testing.T) {
+	t.Run("should return 401 when the authorization header is empty", func(t *testing.T) {
 		header := http.Header{
 			"Authorization": []string{},
 		}
@@ -67,7 +67,7 @@ func TestMiddlewareValidateToken(t *testing.T) {
 		assert.Equal(t, expected, got)
 	})
 
-	t.Run("should return 400 when got a wrong authorization header format", func(t *testing.T) {
+	t.Run("should return 401 when got a wrong authorization header format", func(t *testing.T) {
 		header := http.Header{
 			"Authorization": []string{"Bearer"},
 		}
@@ -89,7 +89,7 @@ func TestMiddlewareValidateToken(t *testing.T) {
 		assert.Equal(t, expected, got)
 	})
 
-	t.Run("should return 400 when the authentication method is wrong", func(t *testing.T) {
+	t.Run("should return 401 when the authentication method is wrong", func(t *testing.T) {
 		header := http.Header{
 			"Authorization": []string{"method token"},
 		}
@@ -133,7 +133,7 @@ func TestMiddlewareValidateToken(t *testing.T) {
 		assert.Equal(t, expected, got)
 	})
 
-	t.Run("should return 404 when the token is not found", func(t *testing.T) {
+	t.Run("should return 403 when the token is not found", func(t *testing.T) {
 		header := http.Header{
 			"Authorization": []string{"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxZDlhY2RhNS1lZTRlLTQ5ZDMtOTdiMy1hN2UxYmE5ZWNiNmMiLCJleHAiOjE2NDkxNzU5NzAsImlhdCI6MTY0OTE3NTY3MCwianRpIjoiNzJhNGExYWItNmI4Zi00NDRmLTg4ODYtZjc1NDI0NjYwZGFjIn0.DPE5rEofHuWpSly0qE_5kZ__EvPQP_vySNTxT3FJ7A0"},
 		}

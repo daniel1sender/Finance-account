@@ -57,7 +57,7 @@ func TestHandlerLogin(t *testing.T) {
 		assert.Equal(t, response.Reason, expected)
 	})
 
-	t.Run("should return 404 and an error when the account is not found", func(t *testing.T) {
+	t.Run("should return 403 and an error when the account is not found", func(t *testing.T) {
 
 		useCase := login.UseCaseMock{Error: accounts.ErrAccountNotFound}
 		handler := NewHandler(&useCase, log)
@@ -108,7 +108,7 @@ func TestHandlerLogin(t *testing.T) {
 		assert.Equal(t, response.Reason, domain.ErrInvalidCPF.Error())
 	})
 
-	t.Run("should return 400 and an error when the secret informed is invalid", func(t *testing.T) {
+	t.Run("should return 403 and an error when the secret informed is invalid", func(t *testing.T) {
 
 		useCase := login.UseCaseMock{Error: login.ErrInvalidSecret}
 		handler := NewHandler(&useCase, log)
