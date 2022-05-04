@@ -29,40 +29,38 @@ func (h Handler) Login(w http.ResponseWriter, r *http.Request) {
 
 	var statusCode int
 	var request LoginRequest
-	var response interface{}
+	var response LoginResponse
 	err := json.NewDecoder(r.Body).Decode(&request)
 	if err != nil {
-		w.Header().Add("Content-Type", server_http.JSONContentType)
-		response := server_http.Error{Reason: "invalid request body"}
-		_ = server_http.SendResponse(w, response, http.StatusBadRequest)
+		responseError := server_http.Error{Reason: "invalid request body"}
+		_ = server_http.SendResponse(w, responseError, http.StatusBadRequest)
 		log.WithFields(logrus.Fields{
 			"status_code": http.StatusBadRequest,
 		}).WithError(err).Error("error while decoding the body")
 		return
 	}
 
-	w.Header().Add("Content-Type", server_http.JSONContentType)
 	token, err := h.UseCase.Login(r.Context(), request.Cpf, request.Secret)
 	if err != nil {
+		var responseError server_http.Error
 		switch {
-
 		case errors.Is(err, accounts.ErrAccountNotFound), errors.Is(err, login.ErrInvalidSecret):
-			response = server_http.Error{Reason: login.ErrInvalidCredentials.Error()}
+			responseError = server_http.Error{Reason: login.ErrInvalidCredentials.Error()}
 			statusCode = http.StatusForbidden
 
 		case errors.Is(err, domain.ErrEmptySecret):
-			response = server_http.Error{Reason: domain.ErrEmptySecret.Error()}
+			responseError = server_http.Error{Reason: domain.ErrEmptySecret.Error()}
 			statusCode = http.StatusBadRequest
 
 		case errors.Is(err, domain.ErrInvalidCPF):
-			response = server_http.Error{Reason: domain.ErrInvalidCPF.Error()}
+			responseError = server_http.Error{Reason: domain.ErrInvalidCPF.Error()}
 			statusCode = http.StatusBadRequest
 
 		default:
-			response = server_http.Error{Reason: "internal server error"}
+			responseError = server_http.Error{Reason: "internal server error"}
 			statusCode = http.StatusInternalServerError
 		}
-		_ = server_http.SendResponse(w, response, statusCode)
+		_ = server_http.SendResponse(w, responseError, statusCode)
 		log.WithFields(logrus.Fields{
 			"status_code": statusCode,
 		}).WithError(err).Error("login request failed")
