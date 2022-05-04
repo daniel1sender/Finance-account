@@ -1,6 +1,7 @@
 package entities
 
 import (
+	"errors"
 	"testing"
 
 	"github.com/daniel1sender/Desafio-API/pkg/domain"
@@ -47,7 +48,7 @@ func TestNewAccount(t *testing.T) {
 		account, err := NewAccount(name, cpf, secret, balance)
 
 		assert.Empty(t, account)
-		assert.Equal(t, err, domain.ErrInvalidCPF)
+		assert.True(t, errors.Is(err, domain.ErrInvalidCPF))
 	})
 
 	t.Run("should return an empty account and an error when secret informed is empty", func(t *testing.T) {
@@ -60,7 +61,7 @@ func TestNewAccount(t *testing.T) {
 		account, err := NewAccount(name, cpf, secret, balance)
 
 		assert.Empty(t, account)
-		assert.Equal(t, err, domain.ErrEmptySecret)
+		assert.True(t, errors.Is(err, domain.ErrEmptySecret))
 	})
 
 	t.Run("should return an empty account and an error when balance is less than zero", func(t *testing.T) {
