@@ -50,12 +50,12 @@ func (h Handler) Login(w http.ResponseWriter, r *http.Request) {
 			response = server_http.Error{Reason: login.ErrInvalidCredentials.Error()}
 			statusCode = http.StatusForbidden
 
-		case errors.Is(err, login.ErrEmptySecret):
-			response = server_http.Error{Reason: login.ErrEmptySecret.Error()}
+		case errors.Is(err, domain.ErrEmptySecret):
+			response = server_http.Error{Reason: domain.ErrEmptySecret.Error()}
 			statusCode = http.StatusBadRequest
 
-		case errors.Is(err, login.ErrInvalidCPF):
-			response = server_http.Error{Reason: login.ErrInvalidCPF.Error()}
+		case errors.Is(err, domain.ErrInvalidCPF):
+			response = server_http.Error{Reason: domain.ErrInvalidCPF.Error()}
 			statusCode = http.StatusBadRequest
 
 		default:
