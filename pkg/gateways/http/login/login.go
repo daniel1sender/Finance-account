@@ -27,6 +27,7 @@ func (h Handler) Login(w http.ResponseWriter, r *http.Request) {
 		"method": r.Method,
 	})
 
+	var statusCode int
 	var request LoginUserRequest
 	err := json.NewDecoder(r.Body).Decode(&request)
 	if err != nil {
@@ -47,31 +48,26 @@ func (h Handler) Login(w http.ResponseWriter, r *http.Request) {
 		case errors.Is(err, accounts.ErrAccountNotFound), errors.Is(err, login.ErrInvalidSecret):
 			response := server_http.Error{Reason: login.ErrInvalidCredentials.Error()}
 			_ = server_http.SendResponse(w, response, http.StatusForbidden)
-			log.WithFields(logrus.Fields{
-				"status_code": http.StatusForbidden,
-			}).WithError(err).Error("login request failed")
+			statusCode = http.StatusForbidden
 
 		case errors.Is(err, domain.ErrEmptySecret):
 			response := server_http.Error{Reason: domain.ErrEmptySecret.Error()}
 			_ = server_http.SendResponse(w, response, http.StatusBadRequest)
-			log.WithFields(logrus.Fields{
-				"status_code": http.StatusBadRequest,
-			}).WithError(err).Error("login request failed")
+			statusCode = http.StatusBadRequest
 
 		case errors.Is(err, domain.ErrInvalidCPF):
 			response := server_http.Error{Reason: domain.ErrInvalidCPF.Error()}
 			_ = server_http.SendResponse(w, response, http.StatusBadRequest)
-			log.WithFields(logrus.Fields{
-				"status_code": http.StatusBadRequest,
-			}).WithError(err).Error("login request failed")
+			statusCode = http.StatusBadRequest
 
 		default:
 			response := server_http.Error{Reason: "internal server error"}
 			_ = server_http.SendResponse(w, response, http.StatusInternalServerError)
-			log.WithFields(logrus.Fields{
-				"status_code": http.StatusInternalServerError,
-			}).WithError(err).Error("login request failed")
+			statusCode = http.StatusInternalServerError
 		}
+		log.WithFields(logrus.Fields{
+			"status_code": statusCode,
+		}).WithError(err).Error("login request failed")
 		return
 	}
 
