@@ -20,10 +20,11 @@ var (
 func (h Handler) ValidateToken(next http.Handler) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var statusCode int
+		var response interface{}
 		log := h.logger
 		authHeader := r.Header.Get("Authorization")
 		if authHeader == "" {
-			response := server_http.Error{Reason: ErrEmptyAuthHeader.Error()}
+			response = server_http.Error{Reason: ErrEmptyAuthHeader.Error()}
 			_ = server_http.SendResponse(w, response, http.StatusUnauthorized)
 			log.WithFields(logrus.Fields{
 				"status_code": http.StatusUnauthorized,
@@ -33,7 +34,7 @@ func (h Handler) ValidateToken(next http.Handler) http.HandlerFunc {
 
 		authString := strings.Split(authHeader, " ")
 		if len(authString) != 2 {
-			response := server_http.Error{Reason: ErrInvalidHeaderFormat.Error()}
+			response = server_http.Error{Reason: ErrInvalidHeaderFormat.Error()}
 			_ = server_http.SendResponse(w, response, http.StatusUnauthorized)
 			log.WithFields(logrus.Fields{
 				"status_code": http.StatusUnauthorized,
@@ -42,7 +43,7 @@ func (h Handler) ValidateToken(next http.Handler) http.HandlerFunc {
 		}
 
 		if authString[0] != "Bearer" {
-			response := server_http.Error{Reason: ErrInvalidMethod.Error()}
+			response = server_http.Error{Reason: ErrInvalidMethod.Error()}
 			_ = server_http.SendResponse(w, response, http.StatusUnauthorized)
 			log.WithFields(logrus.Fields{
 				"status_code": http.StatusUnauthorized,
@@ -56,15 +57,14 @@ func (h Handler) ValidateToken(next http.Handler) http.HandlerFunc {
 			switch {
 
 			case errors.Is(err, login.ErrInvalidToken), errors.Is(err, login.ErrTokenNotFound):
-				response := server_http.Error{Reason: login.ErrInvalidToken.Error()}
-				_ = server_http.SendResponse(w, response, http.StatusForbidden)
+				response = server_http.Error{Reason: login.ErrInvalidToken.Error()}
 				statusCode = http.StatusForbidden
 
 			default:
-				response := server_http.Error{Reason: err.Error()}
-				_ = server_http.SendResponse(w, response, http.StatusInternalServerError)
+				response = server_http.Error{Reason: err.Error()}
 				statusCode = http.StatusInternalServerError
 			}
+			_ = server_http.SendResponse(w, response, statusCode)
 			log.WithFields(logrus.Fields{
 				"status_code": statusCode,
 			}).WithError(err).Error("error occurred while was validating token")
