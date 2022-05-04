@@ -26,12 +26,12 @@ func TestHandlerLogin(t *testing.T) {
 			Error: nil,
 		}
 		handler := NewHandler(&useCase, log)
-		requestBody := LoginUserRequest{"12345678910", "123"}
+		requestBody := LoginRequest{"12345678910", "123"}
 		request, _ := json.Marshal(requestBody)
 		newRequest, _ := http.NewRequest("POST", "/anyroute", bytes.NewReader(request))
 		newResponse := httptest.NewRecorder()
 		handler.Login(newResponse, newRequest)
-		var response LoginUserResponse
+		var response LoginResponse
 		json.Unmarshal(newResponse.Body.Bytes(), &response)
 
 		assert.Equal(t, newResponse.Code, http.StatusCreated)
@@ -61,7 +61,7 @@ func TestHandlerLogin(t *testing.T) {
 
 		useCase := login.UseCaseMock{Error: accounts.ErrAccountNotFound}
 		handler := NewHandler(&useCase, log)
-		requestBody := LoginUserRequest{"12345678910", "123"}
+		requestBody := LoginRequest{"12345678910", "123"}
 		request, _ := json.Marshal(requestBody)
 		newRequest, _ := http.NewRequest("POST", "/anyroute", bytes.NewReader(request))
 		newResponse := httptest.NewRecorder()
@@ -78,7 +78,7 @@ func TestHandlerLogin(t *testing.T) {
 
 		useCase := login.UseCaseMock{Error: domain.ErrEmptySecret}
 		handler := NewHandler(&useCase, log)
-		requestBody := LoginUserRequest{"12345678910", "123"}
+		requestBody := LoginRequest{"12345678910", "123"}
 		request, _ := json.Marshal(requestBody)
 		newRequest, _ := http.NewRequest("POST", "/anyroute", bytes.NewReader(request))
 		newResponse := httptest.NewRecorder()
@@ -95,7 +95,7 @@ func TestHandlerLogin(t *testing.T) {
 
 		useCase := login.UseCaseMock{Error: domain.ErrInvalidCPF}
 		handler := NewHandler(&useCase, log)
-		requestBody := LoginUserRequest{"12345678910", "123"}
+		requestBody := LoginRequest{"12345678910", "123"}
 		request, _ := json.Marshal(requestBody)
 		newRequest, _ := http.NewRequest("POST", "/anyroute", bytes.NewReader(request))
 		newResponse := httptest.NewRecorder()
@@ -112,7 +112,7 @@ func TestHandlerLogin(t *testing.T) {
 
 		useCase := login.UseCaseMock{Error: login.ErrInvalidSecret}
 		handler := NewHandler(&useCase, log)
-		requestBody := LoginUserRequest{"12345678910", "123"}
+		requestBody := LoginRequest{"12345678910", "123"}
 		request, _ := json.Marshal(requestBody)
 		newRequest, _ := http.NewRequest("POST", "/anyroute", bytes.NewReader(request))
 		newResponse := httptest.NewRecorder()
@@ -130,7 +130,7 @@ func TestHandlerLogin(t *testing.T) {
 		unexpectedError := errors.New("unexpected error")
 		useCase := login.UseCaseMock{Error: unexpectedError}
 		handler := NewHandler(&useCase, log)
-		requestBody := LoginUserRequest{"12345678910", "123"}
+		requestBody := LoginRequest{"12345678910", "123"}
 		request, _ := json.Marshal(requestBody)
 		newRequest, _ := http.NewRequest("POST", "/anyroute", bytes.NewReader(request))
 		newResponse := httptest.NewRecorder()
