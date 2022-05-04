@@ -12,12 +12,12 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-type LoginUserRequest struct {
+type LoginRequest struct {
 	Cpf    string `json:"cpf"`
 	Secret string `json:"secret"`
 }
 
-type LoginUserResponse struct {
+type LoginResponse struct {
 	Token string `json:"token"`
 }
 
@@ -28,7 +28,7 @@ func (h Handler) Login(w http.ResponseWriter, r *http.Request) {
 	})
 
 	var statusCode int
-	var request LoginUserRequest
+	var request LoginRequest
 	var response interface{}
 	err := json.NewDecoder(r.Body).Decode(&request)
 	if err != nil {
@@ -69,7 +69,7 @@ func (h Handler) Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	response = LoginUserResponse{Token: token}
+	response = LoginResponse{Token: token}
 	_ = server_http.SendResponse(w, response, http.StatusCreated)
 	log.WithFields(logrus.Fields{
 		"status_code": http.StatusCreated,
