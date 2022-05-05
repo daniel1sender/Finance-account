@@ -37,12 +37,11 @@ func (h Handler) Make(w http.ResponseWriter, r *http.Request) {
 		_ = server_http.SendResponse(w, response, statusCode)
 		log.WithFields(logrus.Fields{
 			"status_code": statusCode,
-		}).WithError(err).Error("error decoding body")
+		}).WithError(err).Error("error while decoding body")
 		return
 	}
 
 	transfer, err := h.useCase.Make(ctx, originAccountID, createRequest.AccountDestinationID, createRequest.Amount)
-	w.Header().Add("Content-Type", server_http.JSONContentType)
 	if err != nil {
 		var responseError server_http.Error
 		switch {
