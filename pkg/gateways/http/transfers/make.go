@@ -11,12 +11,12 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-type Request struct {
+type TransferRequest struct {
 	AccountDestinationID string `json:"account_destination_id"`
 	Amount               int    `json:"amount"`
 }
 
-type Response struct {
+type TransferResponse struct {
 	ID                   string `json:"id"`
 	AccountOriginID      string `json:"account_origin_id"`
 	AccountDestinationID string `json:"account_destination_id"`
@@ -29,7 +29,7 @@ func (h Handler) Make(w http.ResponseWriter, r *http.Request) {
 	originAccountID := ctx.Value(server_http.ContextAccountID).(string)
 	log := h.logger
 	var statusCode int
-	var createRequest Request
+	var createRequest TransferRequest
 	err := json.NewDecoder(r.Body).Decode(&createRequest)
 	if err != nil {
 		response := server_http.Error{Reason: "invalid request body"}
@@ -79,7 +79,7 @@ func (h Handler) Make(w http.ResponseWriter, r *http.Request) {
 	}
 
 	ExpectedCreateAt := transfer.CreatedAt.Format(server_http.DateLayout)
-	response := Response{transfer.ID, originAccountID, transfer.AccountDestinationID, transfer.Amount, ExpectedCreateAt}
+	response := TransferResponse{transfer.ID, originAccountID, transfer.AccountDestinationID, transfer.Amount, ExpectedCreateAt}
 	statusCode = http.StatusCreated
 	_ = server_http.SendResponse(w, response, statusCode)
 	log.WithFields(logrus.Fields{
