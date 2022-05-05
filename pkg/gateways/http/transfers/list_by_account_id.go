@@ -30,9 +30,11 @@ func (h Handler) ListByAccountID(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		var responseError server_http.Error
 		switch {
+
 		case errors.Is(err, transfers.ErrEmptyList):
 			responseError = server_http.Error{Reason: transfers.ErrEmptyList.Error()}
 			statusCode = http.StatusNotFound
+			
 		default:
 			responseError = server_http.Error{Reason: err.Error()}
 			statusCode = http.StatusInternalServerError
