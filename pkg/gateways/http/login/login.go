@@ -27,9 +27,9 @@ func (h Handler) Login(w http.ResponseWriter, r *http.Request) {
 		"method": r.Method,
 	})
 
-	var statusCode int
+
 	var request LoginRequest
-	var response LoginResponse
+
 	err := json.NewDecoder(r.Body).Decode(&request)
 	if err != nil {
 		responseError := server_http.Error{Reason: "invalid request body"}
@@ -43,6 +43,7 @@ func (h Handler) Login(w http.ResponseWriter, r *http.Request) {
 	token, err := h.UseCase.Login(r.Context(), request.Cpf, request.Secret)
 	if err != nil {
 		var responseError server_http.Error
+		var statusCode int
 		switch {
 		case errors.Is(err, accounts.ErrAccountNotFound), errors.Is(err, login.ErrInvalidSecret):
 			responseError = server_http.Error{Reason: login.ErrInvalidCredentials.Error()}
@@ -67,7 +68,7 @@ func (h Handler) Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	response = LoginResponse{Token: token}
+	var response = LoginResponse{Token: token}
 	_ = server_http.SendResponse(w, response, http.StatusCreated)
 	log.WithFields(logrus.Fields{
 		"status_code": http.StatusCreated,
