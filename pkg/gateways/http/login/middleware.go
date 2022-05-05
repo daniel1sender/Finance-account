@@ -19,7 +19,7 @@ var (
 
 func (h Handler) ValidateToken(next http.Handler) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		var statusCode int
+
 		var response server_http.Error
 		log := h.logger
 		authHeader := r.Header.Get("Authorization")
@@ -53,6 +53,7 @@ func (h Handler) ValidateToken(next http.Handler) http.HandlerFunc {
 
 		ctx := r.Context()
 		claim, err := h.UseCase.ValidateToken(ctx, authString[1])
+		var statusCode int
 		if err != nil {
 			switch {
 
