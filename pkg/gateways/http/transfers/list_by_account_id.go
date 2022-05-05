@@ -1,7 +1,6 @@
 package transfers
 
 import (
-	"encoding/json"
 	"errors"
 	"net/http"
 
@@ -21,24 +20,27 @@ type ResponseList struct {
 func (h Handler) ListByAccountID(w http.ResponseWriter, r *http.Request) {
 
 	ctx := r.Context()
+	var statusCode int
 	originAccountID := ctx.Value(server_http.ContextAccountID).(string)
 	log := h.logger.WithFields(logrus.Fields{
 		"origin_account_id": originAccountID,
 	})
+
 	transfersList, err := h.useCase.ListByAccountID(ctx, originAccountID)
-	w.Header().Add("Content-Type", server_http.JSONContentType)
 	if err != nil {
-		log.WithError(err).Error("transfers listing request failed")
+		var responseError server_http.Error
 		switch {
 		case errors.Is(err, transfers.ErrEmptyList):
-			response := server_http.Error{Reason: transfers.ErrEmptyList.Error()}
-			w.WriteHeader(http.StatusNotFound)
-			json.NewEncoder(w).Encode(response)
+			responseError = server_http.Error{Reason: transfers.ErrEmptyList.Error()}
+			statusCode = http.StatusNotFound
 		default:
-			response := server_http.Error{Reason: err.Error()}
-			w.WriteHeader(http.StatusInternalServerError)
-			json.NewEncoder(w).Encode(response)
+			responseError = server_http.Error{Reason: err.Error()}
+			statusCode = http.StatusInternalServerError
 		}
+		_ = server_http.SendResponse(w, responseError, statusCode)
+		log.WithFields(logrus.Fields{
+			"status_code": statusCode,
+		}).WithError(err).Error("transfers listing request failed")
 		return
 	}
 
@@ -51,9 +53,10 @@ func (h Handler) ListByAccountID(w http.ResponseWriter, r *http.Request) {
 		response[index].CreatedAt = transfer.CreatedAt.String()
 	}
 
-	w.WriteHeader(http.StatusOK)
+	statusCode = http.StatusOK
+	_ = server_http.SendResponse(w, response, statusCode)
 	log.WithFields(logrus.Fields{
 		"total_transfers_listed": len(transfersList),
+		"status_code":            statusCode,
 	}).Info("transfers listed successfully")
-	_ = json.NewEncoder(w).Encode(response)
 }
