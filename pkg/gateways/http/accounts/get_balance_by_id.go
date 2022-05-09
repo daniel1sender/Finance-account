@@ -1,7 +1,6 @@
 package accounts
 
 import (
-	"encoding/json"
 	"errors"
 	"net/http"
 
@@ -11,7 +10,7 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-type ByIdResponse struct {
+type GetBalanceByIdResponse struct {
 	Balance int `json:"balance"`
 }
 
@@ -20,28 +19,30 @@ func (h Handler) GetBalanceByID(w http.ResponseWriter, r *http.Request) {
 	accountID := mux.Vars(r)["id"]
 	balance, err := h.useCase.GetBalanceByID(r.Context(), accountID)
 
-	w.Header().Add("Content-Type", server_http.JSONContentType)
 	if err != nil {
-		log.WithError(err).Error("get balance by id request failed")
+		var statusCode int
+		var responseError server_http.Error
 		switch {
+
 		case errors.Is(err, accounts.ErrAccountNotFound):
-			response := server_http.Error{Reason: accounts.ErrAccountNotFound.Error()}
-			w.WriteHeader(http.StatusNotFound)
-			json.NewEncoder(w).Encode(response)
+			responseError = server_http.Error{Reason: accounts.ErrAccountNotFound.Error()}
+			statusCode = http.StatusNotFound
 
 		default:
-			response := server_http.Error{Reason: "internal error server"}
-			w.WriteHeader(http.StatusInternalServerError)
-			json.NewEncoder(w).Encode(response)
-
+			responseError = server_http.Error{Reason: "internal error server"}
+			statusCode = http.StatusInternalServerError
 		}
+		log.WithFields(logrus.Fields{
+			"status_code": statusCode,
+		}).WithError(err).Error("get balance by id request failed")
+		_ = server_http.SendResponse(w, responseError, statusCode)
 		return
 	}
 
-	balanceResponse := ByIdResponse{balance}
-	w.WriteHeader(http.StatusOK)
-	_ = json.NewEncoder(w).Encode(balanceResponse)
+	balanceResponse := GetBalanceByIdResponse{balance}
+	_ = server_http.SendResponse(w, balanceResponse, http.StatusOK)
 	log.WithFields(logrus.Fields{
-		"account_id": accountID,
+		"account_id":  accountID,
+		"status_code": http.StatusOK,
 	}).Info("account balance found successfully")
 }
