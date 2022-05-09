@@ -23,6 +23,7 @@ type GetAccountsResponse struct {
 func (h Handler) GetAll(w http.ResponseWriter, r *http.Request) {
 
 	log := h.logger
+	
 	accountsList, err := h.useCase.GetAll(r.Context())
 	if len(accountsList) == 0 && err != nil {
 		var statusCode int
