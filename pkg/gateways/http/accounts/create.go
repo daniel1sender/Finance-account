@@ -66,7 +66,7 @@ func (h Handler) Create(w http.ResponseWriter, r *http.Request) {
 
 		case errors.Is(err, entities.ErrToGenerateHash):
 			responseError = server_http.Error{Reason: entities.ErrToGenerateHash.Error()}
-			w.WriteHeader(http.StatusInternalServerError)
+			statusCode = http.StatusInternalServerError
 
 		case errors.Is(err, entities.ErrNegativeBalance):
 			responseError = server_http.Error{Reason: entities.ErrNegativeBalance.Error()}
@@ -87,7 +87,7 @@ func (h Handler) Create(w http.ResponseWriter, r *http.Request) {
 	CreateResponse := CreateAccountResponse{account.ID, account.Name, account.CPF, account.Balance, ExpectedCreateAt}
 	_ = server_http.SendResponse(w, CreateResponse, http.StatusCreated)
 	log.WithFields(logrus.Fields{
-		"account_id": CreateResponse.ID,
+		"account_id":  CreateResponse.ID,
 		"status_code": http.StatusCreated,
 	}).Info("successfully account created")
 
