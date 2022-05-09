@@ -17,8 +17,8 @@ type GetBalanceByIdResponse struct {
 func (h Handler) GetBalanceByID(w http.ResponseWriter, r *http.Request) {
 	log := h.logger
 	accountID := mux.Vars(r)["id"]
-	balance, err := h.useCase.GetBalanceByID(r.Context(), accountID)
 
+	balance, err := h.useCase.GetBalanceByID(r.Context(), accountID)
 	if err != nil {
 		var statusCode int
 		var responseError server_http.Error
