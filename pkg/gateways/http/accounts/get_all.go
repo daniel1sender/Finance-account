@@ -1,7 +1,6 @@
 package accounts
 
 import (
-	"encoding/json"
 	"errors"
 	"net/http"
 
@@ -17,7 +16,7 @@ type Account struct {
 	Balance   int    `json:"balance"`
 }
 
-type GetResponse struct {
+type GetAccountsResponse struct {
 	List []Account `json:"list"`
 }
 
@@ -25,34 +24,34 @@ func (h Handler) GetAll(w http.ResponseWriter, r *http.Request) {
 
 	log := h.logger
 	accountsList, err := h.useCase.GetAll(r.Context())
-	w.Header().Add("Content-Type", server_http.JSONContentType)
 	if len(accountsList) == 0 && err != nil {
-		log.WithError(err).Error("listing all accounts request failed")
+		var statusCode int
+		var responseError GetAccountsResponse
 		switch {
 		case errors.Is(err, accounts.ErrAccountNotFound):
-			w.WriteHeader(http.StatusNotFound)
-			response := GetResponse{[]Account{}}
-			json.NewEncoder(w).Encode(response)
+			statusCode = http.StatusNotFound
+			responseError = GetAccountsResponse{[]Account{}}
 		default:
-			w.WriteHeader(http.StatusInternalServerError)
-			response := GetResponse{[]Account{}}
-			json.NewEncoder(w).Encode(response)
+			statusCode = http.StatusInternalServerError
+			responseError = GetAccountsResponse{[]Account{}}
 		}
+		_ = server_http.SendResponse(w, responseError, statusCode)
+		log.WithFields(logrus.Fields{
+			"status_code": statusCode,
+		}).WithError(err).Error("listing all accounts request failed")
 		return
 	}
 
-	getResponse := GetResponse{}
+	response := GetAccountsResponse{}
 	for _, value := range accountsList {
 		account := Account{value.ID, value.Name, value.CreatedAt.Format(server_http.DateLayout), value.Balance}
-		getResponse.List = append(getResponse.List, account)
+		response.List = append(response.List, account)
 	}
 
-	w.Header().Add("Content-Type", server_http.JSONContentType)
-	responseGet := GetResponse{getResponse.List}
-	w.WriteHeader(http.StatusOK)
-	_ = json.NewEncoder(w).Encode(responseGet)
+	listOfAccountsResponse := GetAccountsResponse{response.List}
+	_ = server_http.SendResponse(w, listOfAccountsResponse, http.StatusOK)
 	log.WithFields(logrus.Fields{
-		"accounts_count": len(accountsList),
+		"number_of_accounts": len(accountsList),
+		"status_code":    http.StatusOK,
 	}).Info("accounts listed successfully")
-
 }

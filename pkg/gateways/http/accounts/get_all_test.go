@@ -28,7 +28,7 @@ func TestHandlerGetAll(t *testing.T) {
 
 		ExpectedCreateAt := account.CreatedAt.Format(server_http.DateLayout)
 
-		var accountsList GetResponse
+		var accountsList GetAccountsResponse
 		json.Unmarshal(newResponse.Body.Bytes(), &accountsList)
 
 		for _, value := range accountsList.List {
@@ -66,7 +66,7 @@ func TestHandlerGetAll(t *testing.T) {
 
 		h.GetAll(newResponse, newRequest)
 
-		var accountsList GetResponse
+		var accountsList GetAccountsResponse
 		json.Unmarshal(newResponse.Body.Bytes(), &accountsList)
 
 		if newResponse.Code != http.StatusNotFound {
@@ -92,7 +92,7 @@ func TestHandlerGetAll(t *testing.T) {
 
 		h.GetAll(newResponse, newRequest)
 
-		var accountsList GetResponse
+		var accountsList GetAccountsResponse
 		json.Unmarshal(newResponse.Body.Bytes(), &accountsList)
 
 		if newResponse.Code != http.StatusInternalServerError {
