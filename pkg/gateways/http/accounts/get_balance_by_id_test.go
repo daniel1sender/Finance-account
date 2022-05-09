@@ -24,7 +24,7 @@ func TestHandlerGetBalanceByID(t *testing.T) {
 
 		h.GetBalanceByID(newResponse, newRequest)
 
-		var response ByIdResponse
+		var response GetBalanceByIdResponse
 		json.Unmarshal(newResponse.Body.Bytes(), &response)
 
 		if newResponse.Code != http.StatusOK {
