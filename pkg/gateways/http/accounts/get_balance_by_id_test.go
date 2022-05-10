@@ -9,6 +9,7 @@ import (
 	accounts_usecase "github.com/daniel1sender/Desafio-API/pkg/domain/accounts"
 	server_http "github.com/daniel1sender/Desafio-API/pkg/gateways/http"
 	"github.com/sirupsen/logrus"
+	"gotest.tools/assert"
 )
 
 func TestHandlerGetBalanceByID(t *testing.T) {
@@ -27,18 +28,9 @@ func TestHandlerGetBalanceByID(t *testing.T) {
 		var response GetBalanceByIdResponse
 		json.Unmarshal(newResponse.Body.Bytes(), &response)
 
-		if newResponse.Code != http.StatusOK {
-			t.Errorf("expected %d but got %d", http.StatusOK, newResponse.Code)
-		}
-
-		if newResponse.Header().Get("content-type") != server_http.JSONContentType {
-			t.Errorf("expected %s but got %s", server_http.JSONContentType, newResponse.Header().Get("content-type"))
-		}
-
-		if response.Balance != expectedBalance {
-			t.Errorf("expected '%d' but got '%d'", expectedBalance, response.Balance)
-		}
-
+		assert.Equal(t, newResponse.Code, http.StatusOK )
+		assert.Equal(t, newResponse.Header().Get("content-type"), server_http.JSONContentType)
+		assert.Equal(t, response.Balance, expectedBalance)
 	})
 
 	t.Run("should return 404 and an error when account is not found by id", func(t *testing.T) {
@@ -56,18 +48,9 @@ func TestHandlerGetBalanceByID(t *testing.T) {
 		var response server_http.Error
 		json.Unmarshal(newResponse.Body.Bytes(), &response)
 
-		if newResponse.Code != http.StatusNotFound {
-			t.Errorf("expected '%d' but got '%d'", http.StatusNotFound, newResponse.Code)
-		}
-
-		if newResponse.Header().Get("content-type") != server_http.JSONContentType {
-			t.Errorf("expected '%s' but got '%s'", server_http.JSONContentType, newResponse.Header().Get("content-type"))
-		}
-
-		if response.Reason != accounts_usecase.ErrAccountNotFound.Error() {
-			t.Errorf("expected '%s' but got '%s'", accounts_usecase.ErrAccountNotFound.Error(), response.Reason)
-		}
-
+		assert.Equal(t, newResponse.Code, http.StatusNotFound)
+		assert.Equal(t, newResponse.Header().Get("content-type"), server_http.JSONContentType)
+		assert.Equal(t, response.Reason, accounts_usecase.ErrAccountNotFound.Error())
 	})
 
 }

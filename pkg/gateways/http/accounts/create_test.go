@@ -13,6 +13,7 @@ import (
 	"github.com/daniel1sender/Desafio-API/pkg/domain/entities"
 	server_http "github.com/daniel1sender/Desafio-API/pkg/gateways/http"
 	"github.com/sirupsen/logrus"
+	"gotest.tools/assert"
 )
 
 func TestHandlerCreate(t *testing.T) {
@@ -35,36 +36,19 @@ func TestHandlerCreate(t *testing.T) {
 		var response CreateAccountResponse
 		json.Unmarshal(newResponse.Body.Bytes(), &response)
 
-		if newResponse.Code != http.StatusCreated {
-			t.Errorf("expected '%d' but got '%d'", http.StatusCreated, newResponse.Code)
-		}
-
-		if newResponse.Header().Get("content-type") != server_http.JSONContentType {
-			t.Errorf("expected '%s' but got '%s'", server_http.JSONContentType, newResponse.Header().Get("content-type"))
-		}
-
-		if response.Name != createRequest.Name {
-			t.Errorf("expected '%s' but got '%s'", createRequest.Name, response.Name)
-		}
-
-		if response.CPF != createRequest.CPF {
-			t.Errorf("expected '%s' but got '%s'", createRequest.CPF, response.CPF)
-		}
-
-		if response.Balance != createRequest.Balance {
-			t.Errorf("expected '%d' but got '%d'", 0, response.Balance)
-		}
-
-		if response.CreatedAt != ExpectedCreateAt {
-			t.Errorf("expected '%s' but got '%s'", ExpectedCreateAt, response.CreatedAt)
-		}
+		assert.Equal(t, newResponse.Code, http.StatusCreated)
+		assert.Equal(t, newResponse.Header().Get("content-type"), server_http.JSONContentType)
+		assert.Equal(t, response.Name, createRequest.Name)
+		assert.Equal(t, response.CPF, createRequest.CPF)
+		assert.Equal(t, response.Balance, createRequest.Balance)
+		assert.Equal(t, response.CreatedAt, ExpectedCreateAt)
 	})
 
 	t.Run("should return 400 and an error when it failed to decode the request successfully", func(t *testing.T) {
 
 		useCase := accounts.UseCaseMock{}
 		h := NewHandler(&useCase, log)
-
+		expected := "invalid request body"
 		b := []byte{}
 		newRequest, _ := http.NewRequest("POST", "/anyroute", bytes.NewReader(b))
 		newResponse := httptest.NewRecorder()
@@ -74,19 +58,9 @@ func TestHandlerCreate(t *testing.T) {
 		var responseReason server_http.Error
 		json.Unmarshal(newResponse.Body.Bytes(), &responseReason)
 
-		if newResponse.Code != http.StatusBadRequest {
-			t.Errorf("expected status '%d' but got '%d'", http.StatusBadRequest, newResponse.Code)
-		}
-
-		if newResponse.Header().Get("content-type") != server_http.JSONContentType {
-			t.Errorf("expected '%s' but got '%s'", server_http.JSONContentType, newResponse.Header().Get("content-type"))
-		}
-
-		expected := "invalid request body"
-		if responseReason.Reason != expected {
-			t.Errorf("expected '%s' but got '%s'", expected, responseReason.Reason)
-		}
-
+		assert.Equal(t, newResponse.Code, http.StatusBadRequest)
+		assert.Equal(t, newResponse.Header().Get("content-type"), server_http.JSONContentType)
+		assert.Equal(t, responseReason.Reason, expected)
 	})
 
 	t.Run("should return 400 and an error when an empty name is informed", func(t *testing.T) {
@@ -104,17 +78,9 @@ func TestHandlerCreate(t *testing.T) {
 		var responseReason server_http.Error
 		json.Unmarshal(newResponse.Body.Bytes(), &responseReason)
 
-		if newResponse.Code != http.StatusBadRequest {
-			t.Errorf("expected status '%d' but got '%d'", http.StatusBadRequest, newResponse.Code)
-		}
-
-		if newResponse.Header().Get("content-type") != server_http.JSONContentType {
-			t.Errorf("expected '%s' but got '%s'", server_http.JSONContentType, newResponse.Header().Get("content-type"))
-		}
-
-		if responseReason.Reason != entities.ErrInvalidName.Error() {
-			t.Errorf("expected '%s' but got '%s'", entities.ErrInvalidName, responseReason.Reason)
-		}
+		assert.Equal(t, newResponse.Code, http.StatusBadRequest)
+		assert.Equal(t, newResponse.Header().Get("content-type"), server_http.JSONContentType)
+		assert.Equal(t, responseReason.Reason, entities.ErrInvalidName.Error())
 	})
 
 	t.Run("should return 400 and an error when the cpf informed doesn't have eleven digits", func(t *testing.T) {
@@ -132,18 +98,9 @@ func TestHandlerCreate(t *testing.T) {
 		var responseReason server_http.Error
 		json.Unmarshal(newResponse.Body.Bytes(), &responseReason)
 
-		if newResponse.Code != http.StatusBadRequest {
-			t.Errorf("expected '%d' but got '%d'", http.StatusBadRequest, newResponse.Code)
-		}
-
-		if newResponse.Header().Get("content-type") != server_http.JSONContentType {
-			t.Errorf("expected '%s' but got '%s'", server_http.JSONContentType, newResponse.Header().Get("content-type"))
-		}
-
-		if responseReason.Reason != domain.ErrInvalidCPF.Error() {
-			t.Errorf("expected '%s' but got '%s'", domain.ErrInvalidCPF.Error(), responseReason.Reason)
-		}
-
+		assert.Equal(t, newResponse.Code, http.StatusBadRequest)
+		assert.Equal(t, newResponse.Header().Get("content-type"), server_http.JSONContentType)
+		assert.Equal(t, responseReason.Reason, domain.ErrInvalidCPF.Error())
 	})
 
 	t.Run("should return 409 and an error when cpf informed already exist", func(t *testing.T) {
@@ -161,18 +118,9 @@ func TestHandlerCreate(t *testing.T) {
 		var responseReason server_http.Error
 		json.Unmarshal(newResponse.Body.Bytes(), &responseReason)
 
-		if newResponse.Code != http.StatusConflict {
-			t.Errorf("expected '%d' but got '%d'", http.StatusConflict, newResponse.Code)
-		}
-
-		if newResponse.Header().Get("content-type") != server_http.JSONContentType {
-			t.Errorf("expected '%s' but got '%s'", server_http.JSONContentType, newResponse.Header().Get("content-type"))
-		}
-
-		if responseReason.Reason != accounts.ErrExistingCPF.Error() {
-			t.Errorf("expected '%s' but got '%s'", accounts.ErrExistingCPF.Error(), responseReason.Reason)
-		}
-
+		assert.Equal(t, newResponse.Code, http.StatusConflict)
+		assert.Equal(t, newResponse.Header().Get("content-type"), server_http.JSONContentType)
+		assert.Equal(t, responseReason.Reason, accounts.ErrExistingCPF.Error())
 	})
 
 	t.Run("should return 400 and an error when an empty secret is informed", func(t *testing.T) {
@@ -190,18 +138,9 @@ func TestHandlerCreate(t *testing.T) {
 		var responseReason server_http.Error
 		json.Unmarshal(newResponse.Body.Bytes(), &responseReason)
 
-		if newResponse.Code != http.StatusBadRequest {
-			t.Errorf("expected '%d' but got '%d'", http.StatusBadRequest, newResponse.Code)
-		}
-
-		if newResponse.Header().Get("content-type") != server_http.JSONContentType {
-			t.Errorf("expected '%s' but got '%s'", server_http.JSONContentType, newResponse.Header().Get("content-type"))
-		}
-
-		if responseReason.Reason != domain.ErrEmptySecret.Error() {
-			t.Errorf("expected '%s' but got '%s'", domain.ErrEmptySecret.Error(), responseReason.Reason)
-		}
-
+		assert.Equal(t, newResponse.Code, http.StatusBadRequest)
+		assert.Equal(t, newResponse.Header().Get("content-type"), server_http.JSONContentType)
+		assert.Equal(t, responseReason.Reason, domain.ErrEmptySecret.Error())
 	})
 
 	t.Run("should return 400 and an error when balance informed is less than zero", func(t *testing.T) {
@@ -219,18 +158,9 @@ func TestHandlerCreate(t *testing.T) {
 		var responseReason server_http.Error
 		json.Unmarshal(newResponse.Body.Bytes(), &responseReason)
 
-		if newResponse.Code != http.StatusBadRequest {
-			t.Errorf("expected '%d' but got '%d'", http.StatusBadRequest, newResponse.Code)
-		}
-
-		if newResponse.Header().Get("content-type") != server_http.JSONContentType {
-			t.Errorf("expected '%s' but got '%s'", server_http.JSONContentType, newResponse.Header().Get("content-type"))
-		}
-
-		if responseReason.Reason != entities.ErrNegativeBalance.Error() {
-			t.Errorf("expected '%s' but got '%s'", entities.ErrNegativeBalance.Error(), responseReason.Reason)
-		}
-
+		assert.Equal(t, newResponse.Code, http.StatusBadRequest)
+		assert.Equal(t, newResponse.Header().Get("content-type"), server_http.JSONContentType)
+		assert.Equal(t, responseReason.Reason, entities.ErrNegativeBalance.Error())
 	})
 
 }
