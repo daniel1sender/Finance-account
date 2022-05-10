@@ -9,6 +9,7 @@ import (
 	"github.com/daniel1sender/Desafio-API/pkg/domain/accounts"
 	"github.com/daniel1sender/Desafio-API/pkg/domain/entities"
 	"github.com/sirupsen/logrus"
+	"github.com/stretchr/testify/assert"
 
 	server_http "github.com/daniel1sender/Desafio-API/pkg/gateways/http"
 )
@@ -32,28 +33,13 @@ func TestHandlerGetAll(t *testing.T) {
 		json.Unmarshal(newResponse.Body.Bytes(), &accountsList)
 
 		for _, value := range accountsList.List {
-			if value.Name != account.Name {
-				t.Errorf("expected '%s' but got '%s'", account.Name, value.Name)
-			}
-			if value.ID != account.ID {
-				t.Errorf("expected '%s' but got '%s'", account.ID, value.ID)
-			}
-			if value.CreatedAt != ExpectedCreateAt {
-				t.Errorf("expected '%s' but got '%s'", value.CreatedAt, account.CreatedAt)
-			}
-			if value.Balance != account.Balance {
-				t.Errorf("expected '%d' but got '%d'", account.Balance, value.Balance)
-			}
+			assert.Equal(t, value.Name, account.Name)
+			assert.Equal(t, value.ID, account.ID)
+			assert.Equal(t, value.CreatedAt, ExpectedCreateAt)
+			assert.Equal(t, value.Balance, account.Balance)
 		}
-
-		if newResponse.Header().Get("content-type") != server_http.JSONContentType {
-			t.Errorf("expected '%s' but got '%s'", server_http.JSONContentType, newResponse.Header().Get("content-type"))
-		}
-
-		if newResponse.Code != http.StatusOK {
-			t.Errorf("expected '%d' but got '%d'", http.StatusOK, newResponse.Code)
-		}
-
+		assert.Equal(t, newResponse.Header().Get("content-type"), server_http.JSONContentType)
+		assert.Equal(t, newResponse.Code, http.StatusOK)
 	})
 
 	t.Run("should return 404 and an empty list of accounts when no account was created", func(t *testing.T) {
@@ -69,18 +55,9 @@ func TestHandlerGetAll(t *testing.T) {
 		var accountsList GetAccountsResponse
 		json.Unmarshal(newResponse.Body.Bytes(), &accountsList)
 
-		if newResponse.Code != http.StatusNotFound {
-			t.Errorf("expected '%d' but got '%d'", http.StatusNotFound, newResponse.Code)
-		}
-
-		if len(accountsList.List) != 0 {
-			t.Errorf("expected empty list of accounts but got '%v'", accountsList.List)
-		}
-
-		if newResponse.Header().Get("content-type") != server_http.JSONContentType {
-			t.Errorf("expected '%s' but got '%s'", server_http.JSONContentType, newResponse.Header().Get("content-type"))
-		}
-
+		assert.Equal(t, newResponse.Code, http.StatusNotFound)
+		assert.Empty(t, accountsList.List)
+		assert.Equal(t, newResponse.Header().Get("content-type"), server_http.JSONContentType)
 	})
 
 	t.Run("should return 500 and an empty list of accounts when some error with database occur", func(t *testing.T) {
@@ -95,17 +72,9 @@ func TestHandlerGetAll(t *testing.T) {
 		var accountsList GetAccountsResponse
 		json.Unmarshal(newResponse.Body.Bytes(), &accountsList)
 
-		if newResponse.Code != http.StatusInternalServerError {
-			t.Errorf("expected '%d' but got '%d'", http.StatusInternalServerError, newResponse.Code)
-		}
-
-		if len(accountsList.List) != 0 {
-			t.Errorf("expected empty list of accounts but got '%v'", accountsList.List)
-		}
-
-		if newResponse.Header().Get("content-type") != server_http.JSONContentType {
-			t.Errorf("expected '%s' but got '%s'", server_http.JSONContentType, newResponse.Header().Get("content-type"))
-		}
+		assert.Equal(t, newResponse.Code, http.StatusInternalServerError)
+		assert.Empty(t, accountsList.List)
+		assert.Equal(t, newResponse.Header().Get("content-type"), server_http.JSONContentType)
 	})
 
 }
