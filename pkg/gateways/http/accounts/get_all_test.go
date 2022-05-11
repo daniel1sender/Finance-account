@@ -27,7 +27,7 @@ func TestHandlerGetAll(t *testing.T) {
 		newResponse := httptest.NewRecorder()
 		h.GetAll(newResponse, newRequest)
 
-		ExpectedCreateAt := account.CreatedAt.Format(server_http.DateLayout)
+		expectedCreateAt := account.CreatedAt.Format(server_http.DateLayout)
 
 		var accountsList GetAccountsResponse
 		json.Unmarshal(newResponse.Body.Bytes(), &accountsList)
@@ -35,7 +35,7 @@ func TestHandlerGetAll(t *testing.T) {
 		for _, value := range accountsList.List {
 			assert.Equal(t, value.Name, account.Name)
 			assert.Equal(t, value.ID, account.ID)
-			assert.Equal(t, value.CreatedAt, ExpectedCreateAt)
+			assert.Equal(t, value.CreatedAt, expectedCreateAt)
 			assert.Equal(t, value.Balance, account.Balance)
 		}
 		assert.Equal(t, newResponse.Header().Get("content-type"), server_http.JSONContentType)
