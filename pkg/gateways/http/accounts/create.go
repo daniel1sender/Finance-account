@@ -83,11 +83,11 @@ func (h Handler) Create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	ExpectedCreateAt := account.CreatedAt.Format(server_http.DateLayout)
-	CreateResponse := CreateAccountResponse{account.ID, account.Name, account.CPF, account.Balance, ExpectedCreateAt}
-	_ = server_http.SendResponse(w, CreateResponse, http.StatusCreated)
+	expectedCreateAt := account.CreatedAt.Format(server_http.DateLayout)
+	createResponse := CreateAccountResponse{account.ID, account.Name, account.CPF, account.Balance, expectedCreateAt}
+	_ = server_http.SendResponse(w, createResponse, http.StatusCreated)
 	log.WithFields(logrus.Fields{
-		"account_id":  CreateResponse.ID,
+		"account_id":  createResponse.ID,
 		"status_code": http.StatusCreated,
 	}).Info("successfully account created")
 

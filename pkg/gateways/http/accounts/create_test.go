@@ -31,7 +31,7 @@ func TestHandlerCreate(t *testing.T) {
 
 		h.Create(newResponse, newRequest)
 
-		ExpectedCreateAt := account.CreatedAt.Format(server_http.DateLayout)
+		expectedCreateAt := account.CreatedAt.Format(server_http.DateLayout)
 
 		var response CreateAccountResponse
 		json.Unmarshal(newResponse.Body.Bytes(), &response)
@@ -41,7 +41,7 @@ func TestHandlerCreate(t *testing.T) {
 		assert.Equal(t, response.Name, createRequest.Name)
 		assert.Equal(t, response.CPF, createRequest.CPF)
 		assert.Equal(t, response.Balance, createRequest.Balance)
-		assert.Equal(t, response.CreatedAt, ExpectedCreateAt)
+		assert.Equal(t, response.CreatedAt, expectedCreateAt)
 	})
 
 	t.Run("should return 400 and an error when it failed to decode the request successfully", func(t *testing.T) {
