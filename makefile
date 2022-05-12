@@ -3,7 +3,7 @@ format:
 	goimports -l -w ./
 	
 .PHONY: lint
-lint:
+lint: format
 	golangci-lint run
 
 .PHONY: test
