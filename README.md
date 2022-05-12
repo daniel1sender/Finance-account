@@ -54,6 +54,25 @@ Para rodar a aplicação via arquivo com comandos shell:
 ./run.sh
 ```
 
+Pode-se buildar e executar a aplicação usando o makefile:
+```bash
+make format
+```
+```bash
+make lint
+```
+```bash
+make test
+```
+```bash
+make build
+```
+```bash
+make build-image
+```
+```bash
+make run-local
+```
 ## Endpoints
 O corpo da resposta e da requisição estão em formato JSON
 
