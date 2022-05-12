@@ -44,32 +44,39 @@ EXP_TIME | Tempo de expiração do Token | "5m" (5 minutos)
 
 A variável de ambiente EXP_TIME é uma string de duração, pode ser definida como um número, decimal ou não e uma unidade de tempo. [Para saber mais opções de valores para essa variável](https://pkg.go.dev/time#Duration)
 
-Para executar via Docker-Compose:
+### Para executar via Docker-Compose:
 ```bash
 docker-compose up --build -d
 ```
 
-Para rodar a aplicação via arquivo com comandos shell:
+### Para rodar a aplicação via arquivo com comandos shell:
 ```bash
 ./run.sh
 ```
 
-Pode-se buildar e executar a aplicação usando o makefile:
+### Pode-se executar a aplicação através dos comandos do makefile:
+
+Além de corrigir os códigos de importação, formata todo o código no padrão gofmt
 ```bash
 make format
 ```
+Expõe partes do código fora do padrão dos linters do golangci-lint
 ```bash
 make lint
 ```
+Executa todos os testes unitários da aplicação
 ```bash
 make test
 ```
+Builda o binário da aplicação
 ```bash
 make build
 ```
+Builda a imagem do docker da aplicação
 ```bash
 make build-image
 ```
+Executa localmente a aplicação
 ```bash
 make run-local
 ```
