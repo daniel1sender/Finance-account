@@ -2,6 +2,7 @@ package accounts
 
 import (
 	"encoding/json"
+	"errors"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -44,7 +45,7 @@ func TestHandlerGetAll(t *testing.T) {
 
 	t.Run("should return 404 and an empty list of accounts when no account was created", func(t *testing.T) {
 
-		useCase := accounts.UseCaseMock{List: []entities.Account{}, Error: accounts.ErrAccountNotFound}
+		useCase := accounts.UseCaseMock{List: []entities.Account{}, Error: accounts.ErrEmptyList}
 		newRequest, _ := http.NewRequest(http.MethodGet, "/accounts", nil)
 		newResponse := httptest.NewRecorder()
 
@@ -55,13 +56,14 @@ func TestHandlerGetAll(t *testing.T) {
 		var accountsList GetAccountsResponse
 		json.Unmarshal(newResponse.Body.Bytes(), &accountsList)
 
-		assert.Equal(t, newResponse.Code, http.StatusNotFound)
+		assert.Equal(t, http.StatusNotFound, newResponse.Code)
 		assert.Empty(t, accountsList.List)
 		assert.Equal(t, newResponse.Header().Get("content-type"), server_http.JSONContentType)
 	})
 
 	t.Run("should return 500 and an empty list of accounts when some error with database occur", func(t *testing.T) {
-		useCase := accounts.UseCaseMock{List: []entities.Account{}, Error: accounts.ErrEmptyList}
+		unexpectedError := errors.New("unexpected error")
+		useCase := accounts.UseCaseMock{List: []entities.Account{}, Error: unexpectedError}
 		newRequest, _ := http.NewRequest(http.MethodGet, "/accounts", nil)
 		newResponse := httptest.NewRecorder()
 
