@@ -9,7 +9,7 @@ import (
 	accounts_usecase "github.com/daniel1sender/Desafio-API/pkg/domain/accounts"
 	server_http "github.com/daniel1sender/Desafio-API/pkg/gateways/http"
 	"github.com/sirupsen/logrus"
-	"gotest.tools/assert"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestHandlerGetBalanceByID(t *testing.T) {
@@ -28,7 +28,7 @@ func TestHandlerGetBalanceByID(t *testing.T) {
 		var response GetBalanceByIdResponse
 		json.Unmarshal(newResponse.Body.Bytes(), &response)
 
-		assert.Equal(t, newResponse.Code, http.StatusOK )
+		assert.Equal(t, newResponse.Code, http.StatusOK)
 		assert.Equal(t, newResponse.Header().Get("content-type"), server_http.JSONContentType)
 		assert.Equal(t, response.Balance, expectedBalance)
 	})
