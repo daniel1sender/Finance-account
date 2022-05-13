@@ -23,18 +23,18 @@ type GetAccountsResponse struct {
 func (h Handler) GetAll(w http.ResponseWriter, r *http.Request) {
 
 	log := h.logger
-	
+
 	accountsList, err := h.useCase.GetAll(r.Context())
 	if len(accountsList) == 0 && err != nil {
 		var statusCode int
-		var responseError GetAccountsResponse
+		var responseError server_http.Error
 		switch {
-		case errors.Is(err, accounts.ErrAccountNotFound):
+		case errors.Is(err, accounts.ErrEmptyList):
 			statusCode = http.StatusNotFound
-			responseError = GetAccountsResponse{[]Account{}}
+			responseError = server_http.Error{Reason: accounts.ErrEmptyList.Error()}
 		default:
 			statusCode = http.StatusInternalServerError
-			responseError = GetAccountsResponse{[]Account{}}
+			responseError = server_http.Error{Reason: err.Error()}
 		}
 		_ = server_http.SendResponse(w, responseError, statusCode)
 		log.WithFields(logrus.Fields{
@@ -53,6 +53,6 @@ func (h Handler) GetAll(w http.ResponseWriter, r *http.Request) {
 	_ = server_http.SendResponse(w, listOfAccountsResponse, http.StatusOK)
 	log.WithFields(logrus.Fields{
 		"number_of_accounts": len(accountsList),
-		"status_code":    http.StatusOK,
+		"status_code":        http.StatusOK,
 	}).Info("accounts listed successfully")
 }
