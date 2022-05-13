@@ -24,7 +24,6 @@ Com o uso da API é possível:
 * [envconfig](https://pkg.go.dev/github.com/kelseyhightower/envconfig@v1.4.0)
 * [crypto](https://pkg.go.dev/golang.org/x/crypto@v0.0.0-20210921155107-089bfa567519/bcrypt)
 * [logrus](https://pkg.go.dev/github.com/sirupsen/logrus@v1.8.1)
-* [pq lib](https://pkg.go.dev/github.com/lib/pq@v1.10.2)
 * [dockertest](https://pkg.go.dev/github.com/ory/dockertest/v3@v3.8.1)
 * [testify](https://pkg.go.dev/github.com/stretchr/testify@v1.7.1/assert)
 
