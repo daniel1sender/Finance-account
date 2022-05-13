@@ -13,7 +13,7 @@ import (
 	"github.com/daniel1sender/Desafio-API/pkg/domain/entities"
 	server_http "github.com/daniel1sender/Desafio-API/pkg/gateways/http"
 	"github.com/sirupsen/logrus"
-	"gotest.tools/assert"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestHandlerCreate(t *testing.T) {
