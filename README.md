@@ -1,19 +1,21 @@
 # Finance account
-Finance account é uma API REST que permite a criação de contas, autenticação e realização transferências entre elas dentro de um simples sistema bancário. A API é escrita em golang e está embasada no paradigma da clean architecture.
 
-**Os valores monetários são tratados em centavos**
+Finance account is a REST API that allows the creation of accounts, authentication, and money transfers between them within a simple banking system. This API is written in Golang and is based on the clean architecture paradigm.
 
-Com o uso da API é possível:
-*  Criar contas
-*  Listar contas criadas
-*  Acessar saldo bancário pelo id da conta
-*  Autenticar um usuário pelo CPF e Senha da conta
-*  Realizar transferências entre usuários autenticados
-*  Listar as transferências da usuária autenticada 
+**Monetary values are handled in cents.**
 
-**Para realizar uma transferência ou lista-las o usuário precisa estar autenticado através de um token JWT**
+With the use of the API, it is possible to:
+*  Create accounts
+*  List created accounts
+*  Access account balance by account ID
+*  Authenticate a user by their CPF and account password
+*  Perform transfers between authenticated users
+*  List transfers made by the authenticated user 
 
-## dependências 
+**To perform a transfer or list them, the user needs to be authenticated using a JWT token.**
+
+## Dependencies
+
 * [go 1.18](https://go.dev/dl/)
 * [JWT](https://pkg.go.dev/github.com/golang-jwt/jwt/v4@v4.4.0)
 * [docker](https://docs.docker.com/)
@@ -27,66 +29,71 @@ Com o uso da API é possível:
 * [dockertest](https://pkg.go.dev/github.com/ory/dockertest/v3@v3.8.1)
 * [testify](https://pkg.go.dev/github.com/stretchr/testify@v1.7.1/assert)
 
-Para baixá-las, com Go instalado na sua máquina:
+To download them, with Go installed on your machine:
 ```bash
 go mod download
 ```
 
-## Como Usar
-#### Variáveis de Ambiente
-Nome | Descrição | Exemplo
+## How to Use
+
+#### Environment Variables
+
+Name | Description | Example
 ------------| ------------------------------------ | -------------------------------------------------
-DB_URL | string com nome, usuário, porta e host do banco de dados | "postgres://postgres:4321@localhost:5432/projeto"
-API_PORT | Porta em que o servidor é executado | ":5000"
-TOKEN_SECRET| Segredo de geração do Token | "AjwMkrz632"
-EXP_TIME | Tempo de expiração do Token | "5m" (5 minutos)
+DB_URL | String with database name, user, port, and host | "postgres://postgres:4321@localhost:5432/projeto"
+API_PORT | Port where the server runs | ":5000"
+TOKEN_SECRET| Token generation secret | "AjwMkrz632"
+EXP_TIME | Token expiration time | "5m" (5 minutes)
 
-A variável de ambiente EXP_TIME é uma string de duração, pode ser definida como um número, decimal ou não e uma unidade de tempo. [Para saber mais opções de valores para essa variável](https://pkg.go.dev/time#Duration)
+The EXP_TIME environment variable is a duration string and can be defined as a number, decimal or not, followed by a unit of time. [For more options for this variable, see here](https://pkg.go.dev/time#Duration)
 
-### Para executar via Docker-Compose:
+### To run via Docker-Compose:
+
 ```bash
 docker-compose up --build -d
 ```
 
-### Para rodar a aplicação via arquivo com comandos shell:
+### To run the application via a shell script:
+
 ```bash
 ./run.sh
 ```
 
-### Pode-se executar a aplicação através dos comandos do makefile:
+### You can also run the application using commands from the Makefile:
 
-Além de corrigir os códigos de importação, formata todo o código no padrão gofmt
+Ensure all code is formatted according to gofmt standards
 ```bash
 make format
 ```
-Expõe partes do código fora do padrão dos linters do golangci-lint
+Identify and fix code issues flagged by golangci-lint linters
 ```bash
 make lint
 ```
-Executa todos os testes unitários da aplicação
+Execute all unit tests of the application
 ```bash
 make test
 ```
-Builda o binário da aplicação
+Build the application binary
 ```bash
 make build
 ```
-Builda a imagem do docker da aplicação
+Build the Docker image of the application
 ```bash
 make build-image
 ```
-Executa localmente a aplicação
+Run the application locally
 ```bash
 make run-local
 ```
 ## Endpoints
-O corpo da resposta e da requisição estão em formato JSON
+
+Request and response bodies are in JSON format.
 
 #### Accounts
 
-**POST /accounts - criação de conta**
+**POST /accounts - account creation**
 
-Corpo da requisição:
+Request Body:
 
 ```json
 {
@@ -97,7 +104,7 @@ Corpo da requisição:
 }
 ```
 
-Resposta de sucesso:
+Successful Response:
 
 * 201 Created
 ```json
@@ -110,17 +117,17 @@ Resposta de sucesso:
 	}
 ```
 
-Resposta de insucesso:
+Unsuccessful Response:
 
 * 400 Bad Request
 
-Caso CPF informado esteja em um formato inválido
+If CPF format is invalid:
 ```json
 {
     "reason": "cpf informed is invalid"
 }
 ```
-Caso o nome informado esteja vazio
+If name is empty:
 ```json
 {
     "reason": "name informed is empty"
@@ -129,7 +136,7 @@ Caso o nome informado esteja vazio
 
 * 409 Conflict
 
-Caso o cpf já exista no banco
+If CPF already exists in the database:
 ```json
 {
     "reason": "cpf informed alredy exists"
@@ -138,16 +145,16 @@ Caso o cpf já exista no banco
 
 * 500 Internal Server Error
 
-Caso algum erro inesperado no servidor ocorra
+If an unexpected server error occurs:
 ```json
 {
     "reason": "internal server error"
 }
 ```
 
-**GET /accounts - listagem de contas**
+**GET /accounts - list accounts**
 
-Resposta de sucesso:
+Successful Response:
 
 * 200 OK
 
@@ -166,14 +173,14 @@ Resposta de sucesso:
 
 * 500 Internal Server Error
 
-Caso algum erro inesperado no servidor ocorra
+If an unexpected server error occurs:
 ```json
 {
     "reason": "internal server error"
 }
 ```
 
-**GET /accounts/{id}/balance - busca de saldo pelo id da conta**
+**GET /accounts/{id}/balance - get balance by account ID**
 
 * 200 OK
 
@@ -185,7 +192,7 @@ Caso algum erro inesperado no servidor ocorra
 
 * 404 Not Found
 
-Caso a conta não tenha sido encontrada
+If the account is not found:
 ```json
 {
 	"reason": "account not found"
@@ -194,7 +201,7 @@ Caso a conta não tenha sido encontrada
 
 * 500 Internal Server Error
 
-Caso algum erro inesperado no servidor ocorra
+If an unexpected server error occurs:
 ```json
 {
     "reason": "internal server error"
@@ -203,15 +210,15 @@ Caso algum erro inesperado no servidor ocorra
 
 #### Transfers
 
-**POST /transfers - criação da transferência**
+**POST /transfers - create transfer**
 
-Cabeçalho da Requisição:
+Request Header::
 
 {
     "Authorization" : "Bearer Token"
 }
 
-Exemplo:
+Example:
 
 ```json
 {
@@ -219,7 +226,7 @@ Exemplo:
 }
 ```
 
-Corpo da requisição:
+Request Body:
 
 ```json
 {
@@ -228,7 +235,7 @@ Corpo da requisição:
 }
 ```
 
-Resposta de sucesso:
+Successful Response:
 
 * 201 Created
 
@@ -242,39 +249,39 @@ Resposta de sucesso:
 }
 ```
 
-Resposta de insucesso:
+Unsuccessful Response:
 
 * 400 Bad Request
 
-Caso a conta de origem da transferência não seja encontrada
+If the origin account is not found:
 ```json
 {
     "reason": "transfer origin account not found"
 }
 ```
 
-Caso a conta de destino da transferência não seja encontrada
+If the destination account is not found:
 ```json
 {
     "reason": "transfer destination account not found"
 }
 ```
 
-Caso a quantia seja menor ou igual a zero
+If the amount is less than or equal to zero:
 ```json
 {
     "reason": "amount is less or equal zero"
 }
 ```
 
-Caso tentativa de transferência seja para a mesma conta
+If the transfer attempt is to the same account:
 ```json
 {
     "reason": "transfer attempt to the same account"
 }
 ```
 
-Caso a conta de origem não tenha saldo suficiente para realizar a transferência 
+If the origin account has insufficient balance: 
 ```json
 {
     "reason": "insufficient balance on account"
@@ -283,22 +290,22 @@ Caso a conta de origem não tenha saldo suficiente para realizar a transferênci
 
 * 500 Internal Server Error
 
-Caso algum erro inesperado no servidor ocorra
+If an unexpected server error occurs:
 ```json
 {
     "reason": "internal server error"
 }
 ```
 
-**GET /transfers - listagem das transferências da usuária autenticada**
+**GET /transfers - list transfers of authenticated user**
 
-Cabeçalho da Requisição:
+Request Header:
 
 {
     "Authorization" : "Bearer Token"
 }
 
-Exemplo:
+Example:
 
 ```json
 {
@@ -306,7 +313,7 @@ Exemplo:
 }
 ```
 
-Resposta de sucesso:
+Successful Response:
 
 * 200 OK
 
@@ -320,11 +327,11 @@ Resposta de sucesso:
 }
 ```
 
-Resposta de insucesso:
+Unsuccessful Response:
 
 * 404 Not Found
 
-Caso não exista transferências pertencentes aquela conta 
+If no transfers are found for the account:
 ```json
 {
     "reason": "no transfer found for this account"
@@ -333,7 +340,7 @@ Caso não exista transferências pertencentes aquela conta
 
 * 500 Internal Server Error
 
-Caso algum erro inesperado no servidor ocorra
+If an unexpected server error occurs:
 ```json
 {
     "reason": "internal server error"
@@ -342,9 +349,9 @@ Caso algum erro inesperado no servidor ocorra
 
 #### Login
 
-**POST /login - autenticação do usuário**
+**POST /login - user authentication**
 
-Corpo da requisição:
+Request Body::
 
 ```json
 {
@@ -353,7 +360,7 @@ Corpo da requisição:
 }
 ```
 
-Resposta de sucesso:
+Successful Response:
 
 * 201 Created
 
@@ -364,18 +371,18 @@ Resposta de sucesso:
 ```
 
 	
-Resposta de insucesso:
+Unsuccessful Response:
 
 * 400 Bad Request
 
-Caso um senha vazia tenha sido informada
+If an empty secret is provided:
 ```json
 {
     "reason": "empty secret was informed"
 }
 ```
 
-Caso o cpf informado esteja em um formato inválido
+If the CPF format is invalid:
 ```json
 {
     "reason": "cpf informed is invalid"
@@ -384,7 +391,7 @@ Caso o cpf informado esteja em um formato inválido
 
 * 403 Forbidden 
 
-Caso exista alguma credencial inválida
+If any credentials are invalid:
 ```json
 {
     "reason": "invalid credentials"
@@ -393,15 +400,17 @@ Caso exista alguma credencial inválida
 
 * 500 Internal Server Error
 
-Caso algum erro inesperado no servidor ocorra
+If an unexpected server error occurs:
 ```json
 {
     "reason": "internal server error"
 }
 ```
 
-## Licença
+## License
+
 [MIT](https://choosealicense.com/licenses/mit/)
 
-## Agradecimentos
-Agradeço ao meu mentor [Pedro](https://github.com/pedroyremolo) e aos colegas de time por me terem me fornecido o conteúdo certo para realização da aplicação.
+## Acknowledgements
+
+Thanks to my mentor [Pedro](https://github.com/pedroyremolo) and my teammates for providing the right content to develop this application.
